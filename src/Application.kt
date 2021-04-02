@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
 
         routing {
             get("/") {
-                call.respond(HelloWorldResponse(hello = "lol", world = "kek"))
+                call.respond(Ca)
             }
         }
     }.start(wait = true)
