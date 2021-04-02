@@ -2,7 +2,6 @@ package com.ilya.shevtsov.casewatcher
 
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
-import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
@@ -14,8 +13,13 @@ fun main(args: Array<String>) {
         install(ContentNegotiation) { json() }
 
         routing {
-            get("/") {
-                call.respond(Ca)
+            get("/getCase") {
+                call.respond(listOf(CaseDto("Chroma Case",
+                        "08.01.2015",
+                        "Inactive (Rare)",
+                        64.23, 3803,
+                        62.54,
+                        "https://api.steamapis.com/image/item/730/Chroma%20Case")))
             }
         }
     }.start(wait = true)
