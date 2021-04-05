@@ -1,4 +1,4 @@
-package com.ilya.shevtsov.casewatcher
+package com.ilya.shevtsov.casewatcher.Model
 
 
 import kotlinx.serialization.Serializable
