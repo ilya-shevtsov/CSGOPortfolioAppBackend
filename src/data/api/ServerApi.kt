@@ -1,9 +1,7 @@
-package com.ilya.shevtsov.casewatcher
+package com.ilya.shevtsov.casewatcher.data.api
 
 
-import com.ilya.shevtsov.casewatcher.Model.SimpleResponse
-import io.reactivex.Single
-import retrofit2.Call
+import com.ilya.shevtsov.casewatcher.Model.CaseDataResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -17,5 +15,5 @@ interface ServerApi {
 
         @Query(value = "market_hash_name", encoded = true) caseName: String
 
-    ): SimpleResponse
+    ): CaseDataResponse
 }

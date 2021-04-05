@@ -1,8 +1,8 @@
 package com.ilya.shevtsov.casewatcher
 
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import com.ilya.shevtsov.casewatcher.Model.CaseDataResponseMapper
+import com.ilya.shevtsov.casewatcher.Model.SimpleCaseDto
+import com.ilya.shevtsov.casewatcher.data.api.ApiTools
 
 class Repository {
 
@@ -43,9 +43,17 @@ class Repository {
         "Winter%20Offensive%20Weapon%20Case"
     )
 
-    fun getCaseList(): String {
-        return "haha"
+    suspend fun getSimpleCaseDto(caseName: String): SimpleCaseDto {
+        val simpleResponse = ApiTools.getApiService()
+            .getCase(
+                appId = 730,
+                currency = 5,
+                caseName = caseName
+            )
+        return CaseDataResponseMapper.map(simpleResponse, caseName)
     }
+
+
 //
 //    private fun Observable<List<String>>.toListOfCaseDto(): Single<List<Pair<CasePreviewDto, String>>> =
 //            flatMap { caseNameList -> Observable.fromIterable(caseNameList) }
