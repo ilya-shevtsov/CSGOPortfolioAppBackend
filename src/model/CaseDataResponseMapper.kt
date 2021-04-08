@@ -1,5 +1,7 @@
 package com.ilya.shevtsov.casewatcher.Model
 
+import model.CaseDataResponse
+
 object CaseDataResponseMapper {
 
     fun map(

@@ -1,4 +1,4 @@
-package com.ilya.shevtsov.casewatcher.data.api.database
+package com.ilya.shevtsov.casewatcher.domain.model
 
 import kotlinx.serialization.Serializable
 

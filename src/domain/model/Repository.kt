@@ -1,10 +1,25 @@
-package com.ilya.shevtsov.casewatcher
+package domain.model
 
 import com.ilya.shevtsov.casewatcher.Model.CaseDataResponseMapper
 import com.ilya.shevtsov.casewatcher.Model.SimpleCaseDto
 import com.ilya.shevtsov.casewatcher.data.api.ApiTools
+import com.ilya.shevtsov.casewatcher.data.api.database.CaseDbo
+import com.ilya.shevtsov.casewatcher.domain.model.CaseDto
 
 class Repository {
+
+    fun toCaseDto(caseDbo: CaseDbo): CaseDto {
+        return CaseDto(
+            name = caseDbo.name,
+            releaseDate = caseDbo.releaseDate,
+            dropStatus = caseDbo.dropStatus,
+            lowestPrice = caseDbo.lowestPrice,
+            volume = caseDbo.volume,
+            medianPrice = caseDbo.medianPrice,
+            imageUrl = caseDbo.imageUrl,
+            description = caseDbo.description
+        )
+    }
 
     suspend fun getSimpleCaseDto(caseName: String): SimpleCaseDto {
         val simpleResponse = ApiTools.getApiService()
