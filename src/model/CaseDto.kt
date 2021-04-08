@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CaseDto(
+        val id: Int,
         val name: String,
         val releaseDate: String,
         val dropStatus: String,

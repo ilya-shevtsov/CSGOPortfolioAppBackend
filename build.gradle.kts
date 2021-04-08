@@ -52,8 +52,8 @@ dependencies {
     // Database
     implementation("org.jetbrains.exposed:exposed-core:0.30.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.30.1")
-
-    }
+    implementation("com.h2database:h2:1.4.199")
+}
 
     kotlin.sourceSets["main"].kotlin.srcDirs("src")
     kotlin.sourceSets["test"].kotlin.srcDirs("test")
