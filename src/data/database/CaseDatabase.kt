@@ -1,11 +1,14 @@
 package data.database
 
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.Table
+import domain.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import org.jetbrains.exposed.sql.*
 
 object CaseDatabase : Table() {
-    private val id: Column<Int> = integer("id").autoIncrement()
+
+    val repository = Repository()
+
+    val id: Column<Int> = integer("id").autoIncrement()
     val caseAccess: Column<String> = varchar("caseAccess", 255)
     val name: Column<String> = varchar("name", 255)
     val releaseDate: Column<String> = varchar("releaseDate", 255)
