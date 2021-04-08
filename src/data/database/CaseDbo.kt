@@ -1,4 +1,4 @@
-package com.ilya.shevtsov.casewatcher.data.api.database
+package data.database
 
 
 import kotlinx.serialization.Serializable
@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CaseDbo(
         val id: Int,
+        val caseAccess:String,
         val name: String,
         val releaseDate: String,
         val dropStatus: String,

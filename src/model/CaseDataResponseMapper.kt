@@ -1,6 +1,4 @@
-package com.ilya.shevtsov.casewatcher.Model
-
-import model.CaseDataResponse
+package model
 
 object CaseDataResponseMapper {
 

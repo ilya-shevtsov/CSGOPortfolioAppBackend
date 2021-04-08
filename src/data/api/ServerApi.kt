@@ -1,4 +1,4 @@
-package com.ilya.shevtsov.casewatcher.data.api
+package data.api
 
 
 import model.CaseDataResponse

@@ -1,10 +1,10 @@
-package domain.model
+package domain.repository
 
-import com.ilya.shevtsov.casewatcher.Model.CaseDataResponseMapper
-import com.ilya.shevtsov.casewatcher.Model.SimpleCaseDto
-import com.ilya.shevtsov.casewatcher.data.api.ApiTools
-import com.ilya.shevtsov.casewatcher.data.api.database.CaseDbo
-import com.ilya.shevtsov.casewatcher.domain.model.CaseDto
+import model.CaseDataResponseMapper
+import model.SimpleCaseDto
+import data.api.ApiTools
+import data.database.CaseDbo
+import domain.model.CaseDto
 
 class Repository {
 

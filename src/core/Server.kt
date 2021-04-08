@@ -1,8 +1,8 @@
 package core
 
-import domain.model.Repository
-import data.api.database.CaseDatabase
-import com.ilya.shevtsov.casewatcher.domain.model.CaseDto
+import domain.repository.Repository
+import data.database.CaseDatabase
+import domain.model.CaseDto
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -15,9 +15,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class Server {
 
-    val repository = Repository()
+    private val repository = Repository()
 
-    fun insertData(){
+    private fun insertData(){
         CaseDatabase.insert {
             it[caseAccess] = "Chroma%20Case"
             it[name] = "Chroma Case"
@@ -42,10 +42,9 @@ class Server {
 
     private fun getCaseResponse(): List<CaseDto> {
         return transaction {
-            CaseDatabase.selectAll().map { CaseDatabase.toCase(it) }
+            CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
         }.map { case -> repository.toCaseDto(case) }
     }
-
 
     fun start() {
         initDatabase()

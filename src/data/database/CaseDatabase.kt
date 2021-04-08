@@ -1,12 +1,11 @@
-package data.api.database
+package data.database
 
-import com.ilya.shevtsov.casewatcher.data.api.database.CaseDbo
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
 
 object CaseDatabase : Table() {
-    val id: Column<Int> = integer("id").autoIncrement()
+    private val id: Column<Int> = integer("id").autoIncrement()
     val caseAccess: Column<String> = varchar("caseAccess", 255)
     val name: Column<String> = varchar("name", 255)
     val releaseDate: Column<String> = varchar("releaseDate", 255)
@@ -19,9 +18,10 @@ object CaseDatabase : Table() {
 
     override val primaryKey = PrimaryKey(id, name = "PK_Case_ID")
 
-    fun toCase(row: ResultRow): CaseDbo {
+    fun toCaseDbo(row: ResultRow): CaseDbo {
         return CaseDbo(
             id = row[id],
+            caseAccess = row[caseAccess],
             name = row[name],
             releaseDate = row[releaseDate],
             dropStatus = row[dropStatus],

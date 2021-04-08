@@ -1,6 +1,4 @@
-package com.ilya.shevtsov.casewatcher.core
-
-import core.Server
+package core
 
 fun main() {
 
