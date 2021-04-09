@@ -52,24 +52,5 @@ class Repository {
             }
         }
     }
-
-//    fun getCaseDto(
-//        simpleCaseDto: SimpleCaseDto,
-//        releaseDate: String,
-//        dropStatus: String,
-//        imageUrl: String,
-//        description: String
-//    ): CaseDto {
-//        return CaseDto(
-//            name = simpleCaseDto.name,
-//            releaseDate = releaseDate,
-//            dropStatus = dropStatus,
-//            lowestPrice = simpleCaseDto.lowestPrice,
-//            volume = simpleCaseDto.volume,
-//            medianPrice = simpleCaseDto.medianPrice,
-//            imageUrl = imageUrl,
-//            description = description
-//        )
-//    }
 }
 

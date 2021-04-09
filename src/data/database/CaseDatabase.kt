@@ -1,12 +1,9 @@
 package data.database
 
 import domain.repository.Repository
-import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.*
 
 object CaseDatabase : Table() {
-
-    val repository = Repository()
 
     val id: Column<Int> = integer("id").autoIncrement()
     val caseAccess: Column<String> = varchar("caseAccess", 255)
