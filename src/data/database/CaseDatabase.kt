@@ -1,6 +1,5 @@
 package data.database
 
-import domain.repository.Repository
 import org.jetbrains.exposed.sql.*
 
 object CaseDatabase : Table() {
