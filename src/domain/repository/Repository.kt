@@ -6,7 +6,6 @@ import data.api.ApiTools
 import data.database.CaseDatabase
 import data.database.CaseDbo
 import domain.model.CaseDto
-import io.ktor.utils.io.errors.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import org.jetbrains.exposed.sql.selectAll
@@ -28,7 +27,7 @@ class Repository {
         )
     }
 
-    suspend fun getMarketOverview(caseName: String): Flow<SimpleCaseDto> = flow {
+    private suspend fun getMarketOverview(caseName: String): Flow<SimpleCaseDto> = flow {
         val response = ApiTools.getApiService()
             .getCase(
                 appId = 730,
@@ -37,13 +36,9 @@ class Repository {
             )
         val simpleCaseDto = CaseDataResponseMapper.map(response, caseName)
         emit(simpleCaseDto)
-    }.retryWhen { cause, _ ->
-        if (cause is IOException) {
-            delay(60000)
-            true
-        } else {
-            false
-        }
+    }.retryWhen { _, _ ->
+        delay(60000)
+        true
     }
 
     suspend fun updateInfo() {
@@ -52,14 +47,14 @@ class Repository {
             getMarketOverview(case.caseAccess)
                 .catch { println("Error") }
                 .collect { simpleCaseDto ->
-                transaction {
-                    CaseDatabase.update({ CaseDatabase.id eq case.id }) { caseDatabase ->
-                        caseDatabase[lowestPrice] = simpleCaseDto.lowestPrice
-                        caseDatabase[volume] = simpleCaseDto.volume
-                        caseDatabase[medianPrice] = simpleCaseDto.medianPrice
+                    transaction {
+                        CaseDatabase.update({ CaseDatabase.id eq case.id }) { caseDatabase ->
+                            caseDatabase[lowestPrice] = simpleCaseDto.lowestPrice
+                            caseDatabase[volume] = simpleCaseDto.volume
+                            caseDatabase[medianPrice] = simpleCaseDto.medianPrice
+                        }
                     }
                 }
-            }
         }
     }
 
