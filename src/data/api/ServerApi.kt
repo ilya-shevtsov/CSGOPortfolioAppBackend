@@ -1,7 +1,7 @@
-package com.ilya.shevtsov.casewatcher.data.api
+package data.api
 
 
-import com.ilya.shevtsov.casewatcher.Model.CaseDataResponse
+import model.CaseDataResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

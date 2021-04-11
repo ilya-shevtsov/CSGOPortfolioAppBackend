@@ -1,4 +1,4 @@
-package com.ilya.shevtsov.casewatcher.data.api
+package data.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

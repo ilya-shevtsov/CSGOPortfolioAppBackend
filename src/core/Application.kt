@@ -1,4 +1,4 @@
-package com.ilya.shevtsov.casewatcher.core
+package core
 
 fun main() {
 
