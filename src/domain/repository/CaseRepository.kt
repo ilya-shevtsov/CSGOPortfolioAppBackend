@@ -6,6 +6,7 @@ import data.api.ApiTools
 import data.database.CaseDatabase
 import data.database.CaseDbo
 import domain.model.CaseDto
+import domain.model.CaseDtoMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
@@ -15,19 +16,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 class CaseRepository {
-
-    private fun toCaseDto(caseDbo: CaseDbo): CaseDto {
-        return CaseDto(
-            name = caseDbo.name,
-            releaseDate = caseDbo.releaseDate,
-            dropStatus = caseDbo.dropStatus,
-            lowestPrice = caseDbo.lowestPrice,
-            volume = caseDbo.volume,
-            medianPrice = caseDbo.medianPrice,
-            imageUrl = caseDbo.imageUrl,
-            description = caseDbo.description
-        )
-    }
 
     suspend fun getMarketOverview(caseName: String): Flow<SimpleCaseDto> = flow {
         val response = ApiTools.getApiService()
@@ -46,7 +34,7 @@ class CaseRepository {
     fun getCaseResponse(): List<CaseDto> {
         return transaction {
             CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
-        }.map { case -> toCaseDto(case) }
+        }.map { case -> CaseDtoMapper.map(case) }
     }
 
     @ExperimentalCoroutinesApi
