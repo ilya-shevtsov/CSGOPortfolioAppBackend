@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseRepository {
 
-    private val repository = CaseRepository()
+    private val caseRepository = CaseRepository()
 
     private val caseDboList = listOf<CaseDbo>(
         CaseDbo(
@@ -455,7 +455,7 @@ class DatabaseRepository {
     suspend fun updateInfo() {
         val caseList = getCaseList()
         caseList.forEach { case ->
-            repository.getMarketOverview(case.caseAccess)
+            caseRepository.getMarketOverview(case.caseAccess)
                 .catch { println("Error") }
                 .collect { simpleCaseDto ->
                     transaction {

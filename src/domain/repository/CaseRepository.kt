@@ -18,8 +18,6 @@ import java.util.*
 
 class CaseRepository {
 
-
-
     private fun toCaseDto(caseDbo: CaseDbo): CaseDto {
         return CaseDto(
             name = caseDbo.name,

@@ -18,16 +18,14 @@ import kotlinx.coroutines.flow.collect
 
 class Server {
 
-    private val repository = CaseRepository()
+    private val caseRepository = CaseRepository()
     private val databaseRepository = DatabaseRepository()
-
-
 
     @ExperimentalCoroutinesApi
     fun start() {
         databaseRepository.initDatabase()
         CoroutineScope(Dispatchers.Default).launch {
-            repository.tickFlow(300000L).collect {
+            caseRepository.tickFlow(300000L).collect {
                 databaseRepository.updateInfo()
             }
         }
@@ -35,7 +33,7 @@ class Server {
             install(ContentNegotiation) { json() }
             routing {
                 get("/getCase") {
-                    val response = repository.getCaseResponse()
+                    val response = caseRepository.getCaseResponse()
                     call.respond(response)
                 }
             }
