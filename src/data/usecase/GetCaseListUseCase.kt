@@ -3,7 +3,7 @@ package data.usecase
 import data.database.CaseDbo
 import data.repository.DatabaseRepository
 
-class getCaseListUseCase(
+class GetCaseListUseCase(
     private val databaseRepository: DatabaseRepository
 ) {
     fun getCaseList(): List<CaseDbo> {
