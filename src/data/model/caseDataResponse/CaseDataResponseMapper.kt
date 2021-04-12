@@ -1,4 +1,6 @@
-package data.model
+package data.model.caseDataResponse
+
+import data.model.MarketOverviewDto
 
 object CaseDataResponseMapper {
 

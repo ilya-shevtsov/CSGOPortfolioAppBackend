@@ -1,8 +1,9 @@
 package data.repository
 
 import data.database.CaseDatabase
-import data.database.CaseDbo
+import data.model.caseDbo.CaseDbo
 import data.model.MarketOverviewDto
+import data.model.caseDbo.CaseDboMapper
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -424,13 +425,13 @@ class DatabaseRepository {
         Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
         transaction {
             SchemaUtils.create(CaseDatabase)
-            insertData()
+            insertInitialData()
         }
     }
 
     fun getCaseList(): List<CaseDbo> {
         return transaction {
-            CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
+            CaseDatabase.selectAll().map { CaseDboMapper.map(it) }
         }
     }
 
@@ -458,7 +459,7 @@ class DatabaseRepository {
         }
     }
 
-    private fun insertData() {
+    private fun insertInitialData() {
         val storedCaseList = getCaseList()
         caseDboList.forEach { caseDbo ->
             if (storedCaseList.all { storedCase -> caseDbo.name != storedCase.name }) {

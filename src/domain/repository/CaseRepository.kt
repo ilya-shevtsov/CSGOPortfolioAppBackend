@@ -1,9 +1,10 @@
 package domain.repository
 
-import data.model.CaseDataResponseMapper
+import data.model.caseDataResponse.CaseDataResponseMapper
 import data.model.MarketOverviewDto
 import data.api.ApiTools
 import data.database.CaseDatabase
+import data.model.caseDbo.CaseDboMapper
 import domain.model.CaseDto
 import domain.model.CaseDtoMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +33,7 @@ class CaseRepository {
 
     fun getCaseResponse(): List<CaseDto> {
         return transaction {
-            CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
+            CaseDatabase.selectAll().map { CaseDboMapper.map(it) }
         }.map { case -> CaseDtoMapper.map(case) }
     }
 

@@ -16,19 +16,4 @@ object CaseDatabase : Table() {
     val description: Column<String> = varchar("description", 1000)
 
     override val primaryKey = PrimaryKey(id, name = "PK_Case_ID")
-
-    fun toCaseDbo(row: ResultRow): CaseDbo {
-        return CaseDbo(
-            id = row[id],
-            caseAccess = row[caseAccess],
-            name = row[name],
-            releaseDate = row[releaseDate],
-            dropStatus = row[dropStatus],
-            lowestPrice = row[lowestPrice],
-            volume = row[volume],
-            medianPrice = row[medianPrice],
-            imageUrl = row[imageUrl],
-            description = row[description]
-        )
-    }
 }

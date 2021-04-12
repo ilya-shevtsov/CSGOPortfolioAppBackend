@@ -1,4 +1,4 @@
-package data.model
+package data.model.caseDataResponse
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
