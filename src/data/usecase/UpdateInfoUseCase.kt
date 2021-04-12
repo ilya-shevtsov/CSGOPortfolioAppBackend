@@ -6,11 +6,12 @@ import domain.usecase.GetMarketOverviewUseCase
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 
-class UpdateInfoUseCase (
-    private val caseRepository: CaseRepository,
-    private val databaseRepository: DatabaseRepository
-){
+class UpdateInfoUseCase(
+    caseRepository: CaseRepository,
+    databaseRepository: DatabaseRepository
+) {
     private val getCaseListUseCase = GetCaseListUseCase(databaseRepository)
+    private val saveMarketOverviewUseCase = SaveMarketOverviewUseCase(databaseRepository)
     private val getMarketOverviewUseCase = GetMarketOverviewUseCase(caseRepository)
 
     suspend fun updateInfo() {
@@ -19,7 +20,7 @@ class UpdateInfoUseCase (
             getMarketOverviewUseCase.getMarketOverviewUseCase(case.caseAccess)
                 .catch { println("Error") }
                 .collect { marketOverviewDto ->
-                    databaseRepository.saveMarketOverview(case.id, marketOverviewDto)
+                    saveMarketOverviewUseCase.saveMarketOverviewUseCase(case.id, marketOverviewDto)
                 }
         }
     }
