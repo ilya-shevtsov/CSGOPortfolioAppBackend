@@ -1,7 +1,7 @@
 package data.api
 
 
-import model.CaseDataResponse
+import data.model.CaseDataResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

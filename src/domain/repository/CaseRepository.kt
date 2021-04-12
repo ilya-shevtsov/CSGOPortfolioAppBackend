@@ -1,7 +1,7 @@
 package domain.repository
 
-import model.CaseDataResponseMapper
-import model.SimpleCaseDto
+import data.model.CaseDataResponseMapper
+import data.model.SimpleCaseDto
 import data.api.ApiTools
 import data.database.CaseDatabase
 import data.database.CaseDbo
@@ -10,10 +10,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import java.util.*
 
 class CaseRepository {

@@ -2,14 +2,13 @@ package data.repository
 
 import data.database.CaseDatabase
 import data.database.CaseDbo
-import data.usecase.GetCaseListUseCase
-import model.SimpleCaseDto
+import data.model.SimpleCaseDto
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseRepository {
 
-    private val caseDboList = listOf<CaseDbo>(
+    private val caseDboList = listOf(
         CaseDbo(
             caseAccess = "Chroma%20Case",
             name = "Chroma Case",
@@ -421,6 +420,20 @@ class DatabaseRepository {
         )
     )
 
+    fun initDatabase() {
+        Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
+        transaction {
+            SchemaUtils.create(CaseDatabase)
+            insertData()
+        }
+    }
+
+    fun getCaseList(): List<CaseDbo> {
+        return transaction {
+            CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
+        }
+    }
+
     private fun insertToDatabase(caseDbo: CaseDbo) {
         CaseDatabase.insert {
             it[name] = caseDbo.name
@@ -432,20 +445,6 @@ class DatabaseRepository {
             it[medianPrice] = caseDbo.medianPrice
             it[imageUrl] = caseDbo.imageUrl
             it[description] = caseDbo.description
-        }
-    }
-
-    fun getCaseList(): List<CaseDbo> {
-        return transaction {
-            CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
-        }
-    }
-
-    fun initDatabase() {
-        Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
-        transaction {
-            SchemaUtils.create(CaseDatabase)
-            insertData()
         }
     }
 
