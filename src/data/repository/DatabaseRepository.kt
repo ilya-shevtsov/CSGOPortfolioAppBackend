@@ -2,7 +2,7 @@ package data.repository
 
 import data.database.CaseDatabase
 import data.database.CaseDbo
-import domain.repository.Repository
+import domain.repository.CaseRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import org.jetbrains.exposed.sql.*
@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseRepository {
 
-    private val repository = Repository()
+    private val repository = CaseRepository()
 
     private val caseDboList = listOf<CaseDbo>(
         CaseDbo(

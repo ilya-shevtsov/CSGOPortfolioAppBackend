@@ -16,7 +16,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.util.*
 
-class Repository {
+class CaseRepository {
 
 
 
