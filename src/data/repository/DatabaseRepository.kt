@@ -2,15 +2,12 @@ package data.repository
 
 import data.database.CaseDatabase
 import data.database.CaseDbo
-import domain.repository.CaseRepository
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import data.usecase.GetCaseListUseCase
+import model.SimpleCaseDto
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseRepository {
-
-    private val caseRepository = CaseRepository()
 
     private val caseDboList = listOf<CaseDbo>(
         CaseDbo(
@@ -452,20 +449,13 @@ class DatabaseRepository {
         }
     }
 
-    suspend fun updateInfo() {
-        val caseList = getCaseList()
-        caseList.forEach { case ->
-            caseRepository.getMarketOverview(case.caseAccess)
-                .catch { println("Error") }
-                .collect { simpleCaseDto ->
-                    transaction {
-                        CaseDatabase.update({ CaseDatabase.id eq case.id }) { caseDatabase ->
-                            caseDatabase[lowestPrice] = simpleCaseDto.lowestPrice
-                            caseDatabase[volume] = simpleCaseDto.volume
-                            caseDatabase[medianPrice] = simpleCaseDto.medianPrice
-                        }
-                    }
-                }
+    fun saveMarketOverview(caseId: Int, simpleCaseDto: SimpleCaseDto) {
+        transaction {
+            CaseDatabase.update({ CaseDatabase.id eq caseId }) { caseDatabase ->
+                caseDatabase[lowestPrice] = simpleCaseDto.lowestPrice
+                caseDatabase[volume] = simpleCaseDto.volume
+                caseDatabase[medianPrice] = simpleCaseDto.medianPrice
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package core
 
 import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
+import data.usecase.UpdateInfoUseCase
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -19,14 +20,17 @@ import kotlinx.coroutines.flow.collect
 class Server {
 
     private val caseRepository = CaseRepository()
+
     private val databaseRepository = DatabaseRepository()
+
+    private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
 
     @ExperimentalCoroutinesApi
     fun start() {
         databaseRepository.initDatabase()
         CoroutineScope(Dispatchers.Default).launch {
             caseRepository.tickFlow(300000L).collect {
-                databaseRepository.updateInfo()
+                updateInfoUseCase.updateInfo()
             }
         }
         embeddedServer(Netty, 8080) {
