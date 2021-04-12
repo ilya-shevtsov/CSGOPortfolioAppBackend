@@ -4,6 +4,7 @@ import domain.repository.Repository
 import data.database.CaseDatabase
 import data.database.CaseDbo
 import domain.model.CaseDto
+import data.repository.DatabaseRepository
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -26,44 +27,16 @@ import java.util.*
 class Server {
 
     private val repository = Repository()
+    private val databaseRepository = DatabaseRepository()
 
-    @ExperimentalCoroutinesApi
-    private fun tickFlow(millis: Long) = callbackFlow<Int> {
-        val timer = Timer()
-        var time = 0
-        timer.scheduleAtFixedRate(
-            object : TimerTask() {
-                override fun run() {
-                    try {
-                        offer(time)
-                    } catch (e: Exception) {
-                    }
-                    time += 1
-                }
-            },
-            0,
-            millis
-        )
-        awaitClose {
-            timer.cancel()
-        }
-    }
-
-    private fun initDatabase() {
-        Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
-        transaction {
-            SchemaUtils.create(CaseDatabase)
-            repository.insertData()
-        }
-    }
 
 
     @ExperimentalCoroutinesApi
     fun start() {
-        initDatabase()
+        databaseRepository.initDatabase()
         CoroutineScope(Dispatchers.Default).launch {
-            tickFlow(300000L).collect {
-                repository.updateInfo()
+            repository.tickFlow(300000L).collect {
+                databaseRepository.updateInfo()
             }
         }
         embeddedServer(Netty, 8080) {
