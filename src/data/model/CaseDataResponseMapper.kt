@@ -5,7 +5,7 @@ object CaseDataResponseMapper {
     fun map(
         caseDataResponse: CaseDataResponse,
         caseName: String,
-    ): SimpleCaseDto {
+    ): MarketOverviewDto {
 
         val newCaseName = caseName
             .replace("%20", " ")
@@ -25,7 +25,7 @@ object CaseDataResponseMapper {
             .replace(",", ".")
             .toDouble()
 
-        return SimpleCaseDto(
+        return MarketOverviewDto(
             name = newCaseName,
             lowestPrice = newLowestPrice,
             volume = newVolume,

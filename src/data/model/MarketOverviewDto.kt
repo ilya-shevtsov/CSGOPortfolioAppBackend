@@ -3,7 +3,7 @@ package data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SimpleCaseDto(
+data class MarketOverviewDto(
     val name: String,
     val lowestPrice: Double,
     val volume: Int,

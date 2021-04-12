@@ -19,9 +19,7 @@ import kotlinx.coroutines.flow.collect
 class Server {
 
     private val caseRepository = CaseRepository()
-
     private val databaseRepository = DatabaseRepository()
-
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
 
     @ExperimentalCoroutinesApi

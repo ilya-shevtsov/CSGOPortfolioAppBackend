@@ -2,7 +2,7 @@ package data.repository
 
 import data.database.CaseDatabase
 import data.database.CaseDbo
-import data.model.SimpleCaseDto
+import data.model.MarketOverviewDto
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -448,12 +448,12 @@ class DatabaseRepository {
         }
     }
 
-    fun saveMarketOverview(caseId: Int, simpleCaseDto: SimpleCaseDto) {
+    fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverviewDto) {
         transaction {
             CaseDatabase.update({ CaseDatabase.id eq caseId }) { caseDatabase ->
-                caseDatabase[lowestPrice] = simpleCaseDto.lowestPrice
-                caseDatabase[volume] = simpleCaseDto.volume
-                caseDatabase[medianPrice] = simpleCaseDto.medianPrice
+                caseDatabase[lowestPrice] = marketOverviewDto.lowestPrice
+                caseDatabase[volume] = marketOverviewDto.volume
+                caseDatabase[medianPrice] = marketOverviewDto.medianPrice
             }
         }
     }

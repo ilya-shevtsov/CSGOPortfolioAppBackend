@@ -1,10 +1,9 @@
 package domain.repository
 
 import data.model.CaseDataResponseMapper
-import data.model.SimpleCaseDto
+import data.model.MarketOverviewDto
 import data.api.ApiTools
 import data.database.CaseDatabase
-import data.database.CaseDbo
 import domain.model.CaseDto
 import domain.model.CaseDtoMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,15 +16,15 @@ import java.util.*
 
 class CaseRepository {
 
-    suspend fun getMarketOverview(caseName: String): Flow<SimpleCaseDto> = flow {
+    suspend fun getMarketOverview(caseName: String): Flow<MarketOverviewDto> = flow {
         val response = ApiTools.getApiService()
             .getCase(
                 appId = 730,
                 currency = 5,
                 caseName = caseName
             )
-        val simpleCaseDto = CaseDataResponseMapper.map(response, caseName)
-        emit(simpleCaseDto)
+        val marketOverviewDto = CaseDataResponseMapper.map(response, caseName)
+        emit(marketOverviewDto)
     }.retryWhen { _, _ ->
         delay(60000)
         true

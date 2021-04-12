@@ -18,8 +18,8 @@ class UpdateInfoUseCase (
         caseList.forEach { case ->
             getMarketOverviewUseCase.getMarketOverviewUseCase(case.caseAccess)
                 .catch { println("Error") }
-                .collect { simpleCaseDto ->
-                    databaseRepository.saveMarketOverview(case.id, simpleCaseDto)
+                .collect { marketOverviewDto ->
+                    databaseRepository.saveMarketOverview(case.id, marketOverviewDto)
                 }
         }
     }
