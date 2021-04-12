@@ -1,12 +1,12 @@
-package data.usecase
+package domain.usecase
 
-import data.model.MarketOverviewDto
+import domain.model.MarketOverview
 import data.repository.DatabaseRepository
 
 class SaveMarketOverviewUseCase(
     private val databaseRepository: DatabaseRepository
 ) {
-    fun saveMarketOverviewUseCase(caseId: Int, marketOverviewDto: MarketOverviewDto) {
+    fun saveMarketOverviewUseCase(caseId: Int, marketOverviewDto: MarketOverview) {
         return databaseRepository.saveMarketOverview(caseId, marketOverviewDto)
     }
 }

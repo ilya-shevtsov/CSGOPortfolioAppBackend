@@ -1,8 +1,9 @@
 package core
 
+import data.database.CaseStorage
 import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
-import data.usecase.UpdateInfoUseCase
+import domain.usecase.UpdateInfoUseCase
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -24,7 +25,9 @@ class Server {
 
     @ExperimentalCoroutinesApi
     fun start() {
-        databaseRepository.initDatabase()
+        CaseStorage.createCaseDatabase()
+        databaseRepository.insertInitialData()
+
         CoroutineScope(Dispatchers.Default).launch {
             caseRepository.tickFlow(300000L).collect {
                 updateInfoUseCase.updateInfo()

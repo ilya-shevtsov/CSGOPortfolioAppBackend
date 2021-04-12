@@ -2,12 +2,12 @@ package domain.usecase
 
 import domain.repository.CaseRepository
 import kotlinx.coroutines.flow.Flow
-import data.model.MarketOverviewDto
+import domain.model.MarketOverview
 
 class GetMarketOverviewUseCase(
     private val caseRepository: CaseRepository
 ) {
-    suspend fun getMarketOverviewUseCase(caseName: String): Flow<MarketOverviewDto> {
+    suspend fun getMarketOverviewUseCase(caseName: String): Flow<MarketOverview> {
         return caseRepository.getMarketOverview(caseName)
     }
 }

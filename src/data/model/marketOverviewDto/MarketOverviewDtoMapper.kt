@@ -1,33 +1,33 @@
-package data.model.caseDataResponse
+package data.model.marketOverviewDto
 
-import data.model.MarketOverviewDto
+import domain.model.MarketOverview
 
-object CaseDataResponseMapper {
+object MarketOverviewDtoMapper {
 
     fun map(
-        caseDataResponse: CaseDataResponse,
+        marketOverviewDto: MarketOverviewDto,
         caseName: String,
-    ): MarketOverviewDto {
+    ): MarketOverview {
 
         val newCaseName = caseName
             .replace("%20", " ")
             .replace("%3A", ":")
 
-        val newLowestPrice = caseDataResponse.lowestPrice
+        val newLowestPrice = marketOverviewDto.lowestPrice
             .replace(" pуб.", "")
             .replace(",", ".")
             .toDouble()
 
-        val newVolume = caseDataResponse.volume
+        val newVolume = marketOverviewDto.volume
             .replace(",", "")
             .toInt()
 
-        val newMedianPrice = caseDataResponse.medianPrice
+        val newMedianPrice = marketOverviewDto.medianPrice
             .replace(" pуб.", "")
             .replace(",", ".")
             .toDouble()
 
-        return MarketOverviewDto(
+        return MarketOverview(
             name = newCaseName,
             lowestPrice = newLowestPrice,
             volume = newVolume,

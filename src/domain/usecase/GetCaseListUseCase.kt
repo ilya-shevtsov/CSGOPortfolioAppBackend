@@ -1,4 +1,4 @@
-package data.usecase
+package domain.usecase
 
 import data.model.caseDbo.CaseDbo
 import data.repository.DatabaseRepository

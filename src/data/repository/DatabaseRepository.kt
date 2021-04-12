@@ -1,8 +1,9 @@
 package data.repository
 
 import data.database.CaseDatabase
+import data.database.CaseStorage
 import data.model.caseDbo.CaseDbo
-import data.model.MarketOverviewDto
+import domain.model.MarketOverview
 import data.model.caseDbo.CaseDboMapper
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -421,49 +422,21 @@ class DatabaseRepository {
         )
     )
 
-    fun initDatabase() {
-        Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
-        transaction {
-            SchemaUtils.create(CaseDatabase)
-            insertInitialData()
-        }
-    }
-
     fun getCaseList(): List<CaseDbo> {
         return transaction {
             CaseDatabase.selectAll().map { CaseDboMapper.map(it) }
         }
     }
 
-    private fun insertToDatabase(caseDbo: CaseDbo) {
-        CaseDatabase.insert {
-            it[name] = caseDbo.name
-            it[caseAccess] = caseDbo.caseAccess
-            it[releaseDate] = caseDbo.releaseDate
-            it[dropStatus] = caseDbo.dropStatus
-            it[lowestPrice] = caseDbo.lowestPrice
-            it[volume] = caseDbo.volume
-            it[medianPrice] = caseDbo.medianPrice
-            it[imageUrl] = caseDbo.imageUrl
-            it[description] = caseDbo.description
-        }
+    fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverview) {
+        CaseStorage.saveMarketOverview(caseId, marketOverviewDto)
     }
 
-    fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverviewDto) {
-        transaction {
-            CaseDatabase.update({ CaseDatabase.id eq caseId }) { caseDatabase ->
-                caseDatabase[lowestPrice] = marketOverviewDto.lowestPrice
-                caseDatabase[volume] = marketOverviewDto.volume
-                caseDatabase[medianPrice] = marketOverviewDto.medianPrice
-            }
-        }
-    }
-
-    private fun insertInitialData() {
+    fun insertInitialData() {
         val storedCaseList = getCaseList()
         caseDboList.forEach { caseDbo ->
             if (storedCaseList.all { storedCase -> caseDbo.name != storedCase.name }) {
-                insertToDatabase(caseDbo)
+                CaseStorage.insertToDatabase(caseDbo)
             }
         }
     }
