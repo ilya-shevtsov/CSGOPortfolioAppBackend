@@ -1,4 +1,4 @@
-package data.model.marketOverviewDto
+package data.model.marketoverview
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable

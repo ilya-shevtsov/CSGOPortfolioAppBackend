@@ -1,6 +1,6 @@
 package domain.usecase
 
-import data.model.caseDbo.CaseDbo
+import data.model.case.CaseDbo
 import data.repository.DatabaseRepository
 
 class GetCaseListUseCase(

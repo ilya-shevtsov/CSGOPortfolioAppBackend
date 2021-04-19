@@ -1,4 +1,4 @@
-package data.model.caseDbo
+package data.model.case
 
 import data.database.CaseDatabase
 import org.jetbrains.exposed.sql.ResultRow

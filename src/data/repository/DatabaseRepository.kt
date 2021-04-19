@@ -2,9 +2,9 @@ package data.repository
 
 import data.database.CaseDatabase
 import data.database.CaseStorage
-import data.model.caseDbo.CaseDbo
-import domain.model.MarketOverview
-import data.model.caseDbo.CaseDboMapper
+import data.model.case.CaseDbo
+import domain.model.marketoverview.MarketOverview
+import data.model.case.CaseDboMapper
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

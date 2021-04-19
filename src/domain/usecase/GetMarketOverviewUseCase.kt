@@ -2,7 +2,7 @@ package domain.usecase
 
 import domain.repository.CaseRepository
 import kotlinx.coroutines.flow.Flow
-import domain.model.MarketOverview
+import domain.model.marketoverview.MarketOverview
 
 class GetMarketOverviewUseCase(
     private val caseRepository: CaseRepository

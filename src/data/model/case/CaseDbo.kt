@@ -1,4 +1,4 @@
-package data.model.caseDbo
+package data.model.case
 
 import kotlinx.serialization.Serializable
 

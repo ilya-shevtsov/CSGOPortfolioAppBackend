@@ -1,6 +1,6 @@
 package domain.usecase
 
-import domain.model.MarketOverview
+import domain.model.marketoverview.MarketOverview
 import data.repository.DatabaseRepository
 
 class SaveMarketOverviewUseCase(

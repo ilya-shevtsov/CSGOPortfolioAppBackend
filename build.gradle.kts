@@ -32,6 +32,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-html-builder:$ktor_version")
     implementation("io.ktor:ktor-serialization:$ktor_version")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation ("io.ktor:ktor-client-cio-jvm:$ktor_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
@@ -55,6 +57,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.30.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.30.1")
     implementation("com.h2database:h2:1.4.199")
+
 }
 
     kotlin.sourceSets["main"].kotlin.srcDirs("src")
@@ -62,3 +65,4 @@ dependencies {
 
     sourceSets["main"].resources.srcDirs("resources")
     sourceSets["test"].resources.srcDirs("testresources")
+

@@ -1,7 +1,7 @@
 package data.database
 
-import domain.model.MarketOverview
-import data.model.caseDbo.CaseDbo
+import domain.model.marketoverview.MarketOverview
+import data.model.case.CaseDbo
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert

@@ -1,12 +1,12 @@
 package domain.repository
 
-import data.model.marketOverviewDto.MarketOverviewDtoMapper
-import domain.model.MarketOverview
+import data.model.marketoverview.MarketOverviewDtoMapper
+import domain.model.marketoverview.MarketOverview
 import data.api.ApiTools
 import data.database.CaseDatabase
-import data.model.caseDbo.CaseDboMapper
-import domain.model.CaseDto
-import domain.model.CaseDtoMapper
+import data.model.case.CaseDboMapper
+import domain.model.case.CaseDto
+import domain.model.case.CaseDtoMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
