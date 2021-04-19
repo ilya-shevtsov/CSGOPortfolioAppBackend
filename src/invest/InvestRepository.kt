@@ -1,14 +1,22 @@
 package invest
 
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.request.*
+import invest.domain.DailySellData
+import invest.domain.InvestDataResponse
 
-class InvestRepository{
+class InvestRepository {
 
-    suspend fun getCasePriceData():String{
-        val client = HttpClient(CIO)
-        return client.request("http://127.0.0.1:8080/getInvest") {
-        }
-    }
+    val investDataResponse = InvestDataResponse(
+        success = true,
+        pricePrefix = "",
+        priceSuffix = "pуб.",
+        prices = listOf(
+            DailySellData(
+                date = "Feb 16 2018 01: +0",
+                price = 678.837,
+                volume = "58774"
+            )
+        )
+    )
 }
+
+
