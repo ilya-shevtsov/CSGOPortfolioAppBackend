@@ -1,8 +1,6 @@
-package data.database
-
+package data.model.case
 
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 data class CaseDbo(

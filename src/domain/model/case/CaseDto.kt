@@ -1,7 +1,6 @@
-package domain.model
+package domain.model.case
 
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 data class CaseDto(

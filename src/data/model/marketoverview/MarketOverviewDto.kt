@@ -1,10 +1,10 @@
-package model
+package data.model.marketoverview
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CaseDataResponse(
+data class MarketOverviewDto(
 
     @SerializedName("success")
     val success: Boolean,

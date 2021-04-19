@@ -1,9 +1,6 @@
-package model
+package domain.model.marketoverview
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class SimpleCaseDto(
+data class MarketOverview(
     val name: String,
     val lowestPrice: Double,
     val volume: Int,

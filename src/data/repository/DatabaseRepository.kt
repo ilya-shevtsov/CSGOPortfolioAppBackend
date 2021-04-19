@@ -1,21 +1,16 @@
-package domain.repository
+package data.repository
 
-import model.CaseDataResponseMapper
-import model.SimpleCaseDto
-import data.api.ApiTools
 import data.database.CaseDatabase
-import data.database.CaseDbo
-import domain.model.CaseDto
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import data.database.CaseStorage
+import data.model.case.CaseDbo
+import domain.model.marketoverview.MarketOverview
+import data.model.case.CaseDboMapper
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
-class Repository {
+class DatabaseRepository {
 
-    private val caseDboList = listOf<CaseDbo>(
+    private val caseDboList = listOf(
         CaseDbo(
             caseAccess = "Chroma%20Case",
             name = "Chroma Case",
@@ -427,82 +422,22 @@ class Repository {
         )
     )
 
-    private fun toCaseDto(caseDbo: CaseDbo): CaseDto {
-        return CaseDto(
-            name = caseDbo.name,
-            releaseDate = caseDbo.releaseDate,
-            dropStatus = caseDbo.dropStatus,
-            lowestPrice = caseDbo.lowestPrice,
-            volume = caseDbo.volume,
-            medianPrice = caseDbo.medianPrice,
-            imageUrl = caseDbo.imageUrl,
-            description = caseDbo.description
-        )
-    }
-
-    private suspend fun getMarketOverview(caseName: String): Flow<SimpleCaseDto> = flow {
-        val response = ApiTools.getApiService()
-            .getCase(
-                appId = 730,
-                currency = 5,
-                caseName = caseName
-            )
-        val simpleCaseDto = CaseDataResponseMapper.map(response, caseName)
-        emit(simpleCaseDto)
-    }.retryWhen { _, _ ->
-        delay(60000)
-        true
-    }
-
-    suspend fun updateInfo() {
-        val caseList = getCaseList()
-        caseList.forEach { case ->
-            getMarketOverview(case.caseAccess)
-                .catch { println("Error") }
-                .collect { simpleCaseDto ->
-                    transaction {
-                        CaseDatabase.update({ CaseDatabase.id eq case.id }) { caseDatabase ->
-                            caseDatabase[lowestPrice] = simpleCaseDto.lowestPrice
-                            caseDatabase[volume] = simpleCaseDto.volume
-                            caseDatabase[medianPrice] = simpleCaseDto.medianPrice
-                        }
-                    }
-                }
+    fun getCaseList(): List<CaseDbo> {
+        return transaction {
+            CaseDatabase.selectAll().map { CaseDboMapper.map(it) }
         }
     }
 
-    private fun insertToDatabase(caseDbo: CaseDbo) {
-        CaseDatabase.insert {
-            it[name] = caseDbo.name
-            it[caseAccess] = caseDbo.caseAccess
-            it[releaseDate] = caseDbo.releaseDate
-            it[dropStatus] = caseDbo.dropStatus
-            it[lowestPrice] = caseDbo.lowestPrice
-            it[volume] = caseDbo.volume
-            it[medianPrice] = caseDbo.medianPrice
-            it[imageUrl] = caseDbo.imageUrl
-            it[description] = caseDbo.description
-        }
+    fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverview) {
+        CaseStorage.saveMarketOverview(caseId, marketOverviewDto)
     }
 
-    fun insertData() {
+    fun insertInitialData() {
         val storedCaseList = getCaseList()
         caseDboList.forEach { caseDbo ->
             if (storedCaseList.all { storedCase -> caseDbo.name != storedCase.name }) {
-                insertToDatabase(caseDbo)
+                CaseStorage.insertToDatabase(caseDbo)
             }
         }
-    }
-
-    private fun getCaseList(): List<CaseDbo> {
-        return transaction {
-            CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
-        }
-    }
-
-    fun getCaseResponse(): List<CaseDto> {
-        return transaction {
-            CaseDatabase.selectAll().map { CaseDatabase.toCaseDbo(it) }
-        }.map { case -> toCaseDto(case) }
     }
 }

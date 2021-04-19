@@ -12,16 +12,15 @@ class ApiTools {
         private var serverApi: ServerApi? = null
 
         private fun getClient(): OkHttpClient = OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build()
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .build()
 
         private fun getRetrofit(): Retrofit {
             return Retrofit.Builder()
-                    .baseUrl("https://steamcommunity.com/market/")
-                    .client(getClient())
-                    .addConverterFactory(GsonConverterFactory.create())
-//                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
+                .baseUrl("https://steamcommunity.com/market/")
+                .client(getClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         }
 
         fun getApiService(): ServerApi {

@@ -1,7 +1,6 @@
 package data.api
 
-
-import model.CaseDataResponse
+import data.model.marketoverview.MarketOverviewDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,5 +14,5 @@ interface ServerApi {
 
         @Query(value = "market_hash_name", encoded = true) caseName: String
 
-    ): CaseDataResponse
+    ): MarketOverviewDto
 }
