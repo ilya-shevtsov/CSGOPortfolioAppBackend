@@ -49,9 +49,9 @@ class Server {
                 get("/getData") {
                     val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
                     val parsed: SellHistoryDto = Json.decodeFromString(jsonFileText)
-                    val calculateReturnSD = sellHistoryRepository.calculateSharpRatio(
+                    val calculateSharpPatio = sellHistoryRepository.calculateSharpRatio(
                         SellHistoryMapper.map(parsed))
-                    call.respond(calculateReturnSD)
+                    call.respond(calculateSharpPatio)
                 }
             }
         }.start(wait = true)
