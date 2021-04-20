@@ -1,4 +1,4 @@
-package invest.data
+package invest.data.database
 
 object SellHistoryDatabase {
 }

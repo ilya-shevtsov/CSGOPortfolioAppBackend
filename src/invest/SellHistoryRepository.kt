@@ -1,14 +1,17 @@
 package invest
 
+
 import data.api.ApiTools
-import data.model.marketoverview.MarketOverviewDtoMapper
-import domain.model.marketoverview.MarketOverview
-import invest.data.model.DailySellHistoryDto
-import invest.data.model.SellHistoryDto
-import kotlinx.coroutines.delay
+import invest.data.model.dailysellhistory.DailySellHistoryDto
+import invest.data.model.sellhistory.SellHistoryDto
+import invest.data.model.sellhistory.SellHistoryMapper
+import invest.domain.DailySellHistory
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.retryWhen
+
+
 
 class SellHistoryRepository {
 
@@ -25,12 +28,30 @@ class SellHistoryRepository {
         )
     )
 
-    suspend fun getSellHistoryOverview(caseName: String): Flow<MarketOverview> = flow {
-        val response = ApiTools.getSellHistoryApiService()
-            .getData()
+    suspend fun getSellHistoryOverview(): Flow<List<DailySellHistory>> = flow {
+        val response = ApiTools.getCaseApiService()
+            .getSellHistory(
+                country = "US",
+                appId = 730,
+                currency = 5,
+                caseName = "Clutch%20Case"
+            )
+        println("getSellHistoryOverview: $response")
+        val sellHistoryDto = SellHistoryMapper.map(response)
+        println(sellHistoryDto)
 
-//        val sellHistoryDto = MarketOverviewDtoMapper.map(response)
-//        emit(marketOverviewDto)
+        emit(sellHistoryDto)
+    }
+
+    suspend fun getSellHistoryOverviewResponse(): List<DailySellHistory> {
+        val sellHistoryOverviewFlow = getSellHistoryOverview()
+        println(sellHistoryOverviewFlow)
+        var haha: List<DailySellHistory> = emptyList()
+        sellHistoryOverviewFlow.collect { case ->
+            haha = case
+        }
+        println(haha)
+        return haha
     }
 }
 

@@ -1,6 +1,7 @@
 package data.api
 
 import data.model.marketoverview.MarketOverviewDto
+import invest.data.model.sellhistory.SellHistoryDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -16,6 +17,15 @@ interface ServerApi {
 
     ): MarketOverviewDto
 
-    @GET("getData")
-    suspend fun getData()
+    @GET("pricehistory/")
+    suspend fun getSellHistory(
+        @Query("country")  country: String,
+
+        @Query("currency") currency: Int,
+
+        @Query("appid") appId: Long,
+
+        @Query(value = "market_hash_name", encoded = true) caseName: String
+
+    ): SellHistoryDto
 }

@@ -29,19 +29,19 @@ class ApiTools {
             }
             return serverApi!!
         }
-        private fun getSellHistoryRetrofit(): Retrofit {
-            return Retrofit.Builder()
-                .baseUrl("http://192.168.1.89:8080/")
-                .client(getClient())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        }
-
-        fun getSellHistoryApiService(): ServerApi {
-            if (serverApi == null) {
-                serverApi = getSellHistoryRetrofit().create(ServerApi::class.java)
-            }
-            return serverApi!!
-        }
+//        private fun getSellHistoryRetrofit(): Retrofit {
+//            return Retrofit.Builder()
+//                .baseUrl("http://192.168.1.89:8080/")
+//                .client(getClient())
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build()
+//        }
+//
+//        fun getSellHistoryApiService(): ServerApi {
+//            if (serverApi == null) {
+//                serverApi = getSellHistoryRetrofit().create(ServerApi::class.java)
+//            }
+//            return serverApi!!
+//        }
     }
 }

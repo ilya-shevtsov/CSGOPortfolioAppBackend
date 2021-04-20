@@ -21,14 +21,13 @@ import kotlinx.coroutines.flow.collect
 class Server {
 
     private val caseRepository = CaseRepository()
-    private val investRepository = SellHistoryRepository()
+    private val sellHistoryRepository = SellHistoryRepository()
     private val databaseRepository = DatabaseRepository()
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
 
     @ExperimentalCoroutinesApi
     fun start() {
         CaseStorage.createCaseDatabase()
-
         CoroutineScope(Dispatchers.Default).launch {
             caseRepository.tickFlow(300000L).collect {
                 updateInfoUseCase.updateInfo()
@@ -42,7 +41,13 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData"){
-                    val response = investRepository.sellHistoryDto
+                    val response = sellHistoryRepository.sellHistoryDto
+                    call.respond(response)
+                }
+                get("/getSellHistory"){
+                    println("haha")
+                    val response = sellHistoryRepository.getSellHistoryOverviewResponse()
+                    println(response)
                     call.respond(response)
                 }
             }
