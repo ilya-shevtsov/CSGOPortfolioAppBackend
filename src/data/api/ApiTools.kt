@@ -1,13 +1,32 @@
 package data.api
 
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+
 
 class ApiTools {
 
     companion object {
+
+        fun createNonPersistentCookie(
+            name: String,
+            value: String
+        ): Cookie {
+            return Cookie.Builder()
+                .domain("steamcommunity.com")
+                .path("/")
+                .name(name)
+                .value(value)
+                .httpOnly()
+                .secure()
+                .build()
+        }
 
         private var serverApi: ServerApi? = null
 
@@ -29,19 +48,5 @@ class ApiTools {
             }
             return serverApi!!
         }
-//        private fun getSellHistoryRetrofit(): Retrofit {
-//            return Retrofit.Builder()
-//                .baseUrl("http://192.168.1.89:8080/")
-//                .client(getClient())
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build()
-//        }
-//
-//        fun getSellHistoryApiService(): ServerApi {
-//            if (serverApi == null) {
-//                serverApi = getSellHistoryRetrofit().create(ServerApi::class.java)
-//            }
-//            return serverApi!!
-//        }
     }
 }

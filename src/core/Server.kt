@@ -45,9 +45,9 @@ class Server {
                     call.respond(response)
                 }
                 get("/getSellHistory"){
-                    println("haha")
+//                    println("/getSellHistory")
                     val response = sellHistoryRepository.getSellHistoryOverviewResponse()
-                    println(response)
+//                    println("Function response: $response")
                     call.respond(response)
                 }
             }

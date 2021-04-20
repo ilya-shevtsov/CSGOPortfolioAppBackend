@@ -33,9 +33,9 @@ dependencies {
     implementation("io.ktor:ktor-html-builder:$ktor_version")
     implementation("io.ktor:ktor-serialization:$ktor_version")
     implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation ("io.ktor:ktor-client-cio-jvm:$ktor_version")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
     implementation("io.ktor:ktor-client-apache:$ktor_version")
-    implementation ("io.ktor:ktor-client-gson:$ktor_version")
+    implementation("io.ktor:ktor-client-gson:$ktor_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
@@ -62,9 +62,9 @@ dependencies {
 
 }
 
-    kotlin.sourceSets["main"].kotlin.srcDirs("src")
-    kotlin.sourceSets["test"].kotlin.srcDirs("test")
+kotlin.sourceSets["main"].kotlin.srcDirs("src")
+kotlin.sourceSets["test"].kotlin.srcDirs("test")
 
-    sourceSets["main"].resources.srcDirs("resources")
-    sourceSets["test"].resources.srcDirs("testresources")
+sourceSets["main"].resources.srcDirs("resources")
+sourceSets["test"].resources.srcDirs("testresources")
 

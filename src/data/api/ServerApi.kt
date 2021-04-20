@@ -16,16 +16,4 @@ interface ServerApi {
         @Query(value = "market_hash_name", encoded = true) caseName: String
 
     ): MarketOverviewDto
-
-    @GET("pricehistory/")
-    suspend fun getSellHistory(
-        @Query("country")  country: String,
-
-        @Query("currency") currency: Int,
-
-        @Query("appid") appId: Long,
-
-        @Query(value = "market_hash_name", encoded = true) caseName: String
-
-    ): SellHistoryDto
 }
