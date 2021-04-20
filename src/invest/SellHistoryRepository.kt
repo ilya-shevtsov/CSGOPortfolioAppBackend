@@ -7,14 +7,6 @@ import kotlin.math.sqrt
 
 class SellHistoryRepository {
 
-    fun calculateSharpRatio(dailySellHistoryList: List<DailySellHistory>): Double {
-        val extractDSHData = extractDSHData(dailySellHistoryList)
-        val calculateReturn = calculateReturn(extractDSHData)
-        val calculateSD = calculateSD(calculateReturn)
-        val calculateMean = calculateMean(calculateReturn)
-        val calculateSharpRatio = calculateSharpRatio(calculateMean, calculateSD)
-        return calculateSharpRatio
-    }
     val casePrices = listOf(
         DailySellHistory("Apr 19 2021 00: +0", 7.76, "2893"),
         DailySellHistory("Apr 19 2021 01: +0", 10.03, "2528"),
@@ -48,7 +40,15 @@ class SellHistoryRepository {
         DailySellHistory("Apr 19 2021 23: +0", 19.094, "3499")
     )
 
-    fun extractDSHData(dailySellHistoryList: List<DailySellHistory>): List<Double> {
+    fun calculateSharpRatio(dailySellHistoryList: List<DailySellHistory>): Double {
+        val extractDSHData = extractPrices(dailySellHistoryList)
+        val calculatedReturn = calculateReturn(extractDSHData)
+        val standardDeviation = calculateSD(calculatedReturn)
+        val mean = calculateMean(calculatedReturn)
+        return calculateSharpRatio(mean, standardDeviation)
+    }
+
+    fun extractPrices(dailySellHistoryList: List<DailySellHistory>): List<Double> {
         val pricesList = mutableListOf<Double>()
         dailySellHistoryList.map { day ->
             pricesList.add(day.price)
@@ -78,7 +78,6 @@ class SellHistoryRepository {
     fun calculateSharpRatio(mean: Double, standardDeviation: Double): Double {
         return mean / standardDeviation
     }
-
 
     fun calculateMean(pricesList: List<Double>): Double {
         var sum = 0.0
