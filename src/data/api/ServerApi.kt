@@ -15,4 +15,7 @@ interface ServerApi {
         @Query(value = "market_hash_name", encoded = true) caseName: String
 
     ): MarketOverviewDto
+
+    @GET("getData")
+    suspend fun getData()
 }

@@ -1,9 +1,9 @@
-package invest.domain
+package invest.data.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DailySellData(
+data class DailySellHistoryDto(
     val date: String,
     val price: Double,
     val volume: String

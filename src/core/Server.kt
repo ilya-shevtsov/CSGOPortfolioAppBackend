@@ -1,11 +1,10 @@
 package core
 
-import com.google.gson.JsonObject
 import data.database.CaseStorage
 import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
 import domain.usecase.UpdateInfoUseCase
-import invest.InvestRepository
+import invest.SellHistoryRepository
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -22,20 +21,19 @@ import kotlinx.coroutines.flow.collect
 class Server {
 
     private val caseRepository = CaseRepository()
-    private val investRepository = InvestRepository()
+    private val investRepository = SellHistoryRepository()
     private val databaseRepository = DatabaseRepository()
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
 
     @ExperimentalCoroutinesApi
     fun start() {
-//        CaseStorage.createCaseDatabase()
-//        databaseRepository.insertInitialData()
-//
-//        CoroutineScope(Dispatchers.Default).launch {
-//            caseRepository.tickFlow(300000L).collect {
-//                updateInfoUseCase.updateInfo()
-//            }
-//        }
+        CaseStorage.createCaseDatabase()
+
+        CoroutineScope(Dispatchers.Default).launch {
+            caseRepository.tickFlow(300000L).collect {
+                updateInfoUseCase.updateInfo()
+            }
+        }
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {
@@ -44,7 +42,7 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData"){
-                    val response = investRepository.investDataResponse
+                    val response = investRepository.sellHistoryDto
                     call.respond(response)
                 }
             }

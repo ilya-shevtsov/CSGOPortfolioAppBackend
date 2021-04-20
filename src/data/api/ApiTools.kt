@@ -15,7 +15,7 @@ class ApiTools {
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
 
-        private fun getRetrofit(): Retrofit {
+        private fun getCaseRetrofit(): Retrofit {
             return Retrofit.Builder()
                 .baseUrl("https://steamcommunity.com/market/")
                 .client(getClient())
@@ -23,9 +23,23 @@ class ApiTools {
                 .build()
         }
 
-        fun getApiService(): ServerApi {
+        fun getCaseApiService(): ServerApi {
             if (serverApi == null) {
-                serverApi = getRetrofit().create(ServerApi::class.java)
+                serverApi = getCaseRetrofit().create(ServerApi::class.java)
+            }
+            return serverApi!!
+        }
+        private fun getSellHistoryRetrofit(): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl("http://192.168.1.89:8080/")
+                .client(getClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+
+        fun getSellHistoryApiService(): ServerApi {
+            if (serverApi == null) {
+                serverApi = getSellHistoryRetrofit().create(ServerApi::class.java)
             }
             return serverApi!!
         }

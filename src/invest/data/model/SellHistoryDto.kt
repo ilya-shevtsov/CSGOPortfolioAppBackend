@@ -1,11 +1,11 @@
-package invest.domain
+package invest.data.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class InvestDataResponse(
+data class SellHistoryDto(
     val success: Boolean,
     val pricePrefix: String,
     val priceSuffix: String,
-    val prices: List<DailySellData>
+    val prices: List<DailySellHistoryDto>
 )
