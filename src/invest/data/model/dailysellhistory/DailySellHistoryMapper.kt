@@ -10,7 +10,7 @@ object DailySellHistoryMapper {
 
         val newPrice = dailySellHistoryDto.price
 
-        val newVolume = dailySellHistoryDto.volume.toInt()
+        val newVolume = dailySellHistoryDto.volume
 
         return DailySellHistory(
             date = newDate,

@@ -40,15 +40,9 @@ class Server {
                     val response = caseRepository.getCaseResponse()
                     call.respond(response)
                 }
-                get("/getData"){
-                    val response = sellHistoryRepository.sellHistoryDto
-                    call.respond(response)
-                }
-                get("/getSellHistory"){
-//                    println("/getSellHistory")
-                    val response = sellHistoryRepository.getSellHistoryOverviewResponse()
-//                    println("Function response: $response")
-                    call.respond(response)
+                get("/getData") {
+                    val calculateReturnSD = sellHistoryRepository.calculateSharpRatio(sellHistoryRepository.casePrices)
+                    call.respond(calculateReturnSD)
                 }
             }
         }.start(wait = true)

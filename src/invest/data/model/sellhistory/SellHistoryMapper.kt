@@ -10,9 +10,8 @@ object SellHistoryMapper {
     ): List<DailySellHistory> {
 
         val sellHistoryDtoList = sellHistoryDto.prices
-        val sellHistoryList = sellHistoryDtoList.map { day ->
+        return sellHistoryDtoList.map { day ->
             DailySellHistoryMapper.map(day)
         }
-        return sellHistoryList
     }
 }
