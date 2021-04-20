@@ -5,6 +5,8 @@ import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
 import domain.usecase.UpdateInfoUseCase
 import invest.SellHistoryRepository
+import invest.data.model.sellhistory.SellHistoryDto
+import invest.data.model.sellhistory.SellHistoryMapper
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -17,6 +19,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class Server {
 
@@ -26,6 +31,7 @@ class Server {
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
 
     @ExperimentalCoroutinesApi
+    @ExperimentalSerializationApi
     fun start() {
         CaseStorage.createCaseDatabase()
         CoroutineScope(Dispatchers.Default).launch {
@@ -41,10 +47,16 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val calculateReturnSD = sellHistoryRepository.calculateSharpRatio(sellHistoryRepository.casePrices)
+                    val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
+                    val parsed: SellHistoryDto = Json.decodeFromString(jsonFileText)
+                    val calculateReturnSD = sellHistoryRepository.calculateSharpRatio(
+                        SellHistoryMapper.map(parsed))
                     call.respond(calculateReturnSD)
                 }
             }
         }.start(wait = true)
+    }
+    private fun getResourceAsText(path: String): String {
+        return object {}.javaClass.getResource(path).readText()
     }
 }

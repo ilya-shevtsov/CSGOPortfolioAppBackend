@@ -86,4 +86,6 @@ class SellHistoryRepository {
         }
         return sum / pricesList.size
     }
+
+
 }
