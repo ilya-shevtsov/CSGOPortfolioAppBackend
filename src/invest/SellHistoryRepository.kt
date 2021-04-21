@@ -11,64 +11,17 @@ import kotlin.math.sqrt
 
 class SellHistoryRepository {
 
-    val casePrices = listOf(
-        DailySellHistory("Apr 19 2021 00: +0", 7.76, "2893"),
-        DailySellHistory("Apr 19 2021 01: +0", 10.03, "2528"),
-        DailySellHistory("Apr 19 2021 02: +0", 19.46, "3235"),
-        DailySellHistory("Apr 19 2021 03: +0", 19.68, "3399"),
-    )
 
-    val dailySellHistoryListClass = listOf(
-        DailySellHistory("Apr 19 2021 00: +0", 18.33, "2893"),
-        DailySellHistory("Apr 19 2021 01: +0", 18.361, "2528"),
-        DailySellHistory("Apr 19 2021 02: +0", 19.094, "3235"),
-        DailySellHistory("Apr 19 2021 03: +0", 19.414, "3399"),
-        DailySellHistory("Apr 19 2021 04: +0", 19.414, "2932"),
-        DailySellHistory("Apr 19 2021 05: +0", 20.232, "3437"),
-        DailySellHistory("Apr 19 2021 06: +0", 19.858, "2492"),
-        DailySellHistory("Apr 19 2021 07: +0", 19.858, "2719"),
-        DailySellHistory("Apr 19 2021 08: +0", 19.764, "3779"),
-        DailySellHistory("Apr 19 2021 09: +0", 19.606, "3904"),
-        DailySellHistory("Apr 19 2021 10: +0", 19.983, "5379"),
-        DailySellHistory("Apr 19 2021 11: +0", 19.881, "5685"),
-        DailySellHistory("Apr 19 2021 12: +0", 19.775, "5931"),
-        DailySellHistory("Apr 19 2021 13: +0", 19.881, "6320"),
-        DailySellHistory("Apr 19 2021 14: +0", 19.531, "5821"),
-        DailySellHistory("Apr 19 2021 15: +0", 19.506, "6581"),
-        DailySellHistory("Apr 19 2021 16: +0", 19.647, "7517"),
-        DailySellHistory("Apr 19 2021 17: +0", 19.104, "6368"),
-        DailySellHistory("Apr 19 2021 18: +0", 19.094, "6461"),
-        DailySellHistory("Apr 19 2021 19: +0", 19.212, "7320"),
-        DailySellHistory("Apr 19 2021 20: +0", 19.094, "6813"),
-        DailySellHistory("Apr 19 2021 21: +0", 19.094, "6961"),
-        DailySellHistory("Apr 19 2021 22: +0", 19.094, "4487"),
-        DailySellHistory("Apr 19 2021 23: +0", 19.094, "3499")
-    )
-
-
-    val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
-    val parsed: SellHistoryDto = Json.decodeFromString(jsonFileText)
-    val mappedSellHistory = SellHistoryMapper.map(parsed)
-
-
-    val dailySellHistoryList = mappedSellHistory.dropLast(725)
-    val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-
-
-    fun textSharpRatio(listofDuble: List<Double>): Double {
-        val calculateReturn = calculateReturn(listofDuble)
-        println("Return: $calculateReturn")
-        val standardDeviation = calculateSD(calculateReturn)
-        println("Standard Deviation: $standardDeviation")
-        val mean = calculateMean(calculateReturn)
-        println("Mean: $mean")
-        return calculateSharpRatio(mean, standardDeviation)
+    fun extractDailySellHistoryFromJSON(jSONPath: String):Double {
+        val jsonFileText = getResourceAsText(jSONPath)
+        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
+        val dailySellHistoryList = mappedSellHistory.dropLast(725)
+        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
+        return calculateSharpRatioFromAllJSONData(dailySellHistoryList, hourlyDataToDaily)
     }
 
-
-
-
-    fun calculateSharpRatioFromAllData(
+    fun calculateSharpRatioFromAllJSONData(
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>
     ): Double {
@@ -82,10 +35,10 @@ class SellHistoryRepository {
     }
 
 
-    fun toListOfDailyAvgPrices(hoursDaysList: List<List<DailySellHistory>>): MutableList<Double> {
+    fun toListOfDailyAvgPrices(HourlyDays: List<List<DailySellHistory>>): MutableList<Double> {
         val averageDailyPriceList = mutableListOf<Double>()
         val hourlyPriceList = mutableListOf<Double>()
-        hoursDaysList.map { day -> day.map { hour -> hourlyPriceList.add(hour.price) } }
+        HourlyDays.map { day -> day.map { hour -> hourlyPriceList.add(hour.price) } }
         hourlyPriceList.chunked(24).map { day -> averageDailyPriceList.add(day.sum() / 24) }
         return averageDailyPriceList
     }
