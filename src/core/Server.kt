@@ -47,7 +47,7 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val response = sellHistoryRepository.takeHourlyDays
+                    val response = sellHistoryRepository.thisSouldBe
                     call.respond(response)
                 }
             }

@@ -1,7 +1,5 @@
 package invest.data.model.sellhistory
 
-import com.google.gson.JsonElement
-import invest.data.model.dailysellhistory.DailySellHistoryDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
