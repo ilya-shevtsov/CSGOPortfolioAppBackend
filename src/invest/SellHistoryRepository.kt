@@ -54,20 +54,31 @@ class SellHistoryRepository {
     val dailySellHistoryList = mappedSellHistory.dropLast(725)
     val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
 
-    val letsGO = calculateSharpRatioFromAllData(
-        dailySellHistoryList = dailySellHistoryList,
-        hoursDaysList = hourlyDataToDaily
-    )
+
+    fun textSharpRatio(listofDuble: List<Double>): Double {
+        val calculateReturn = calculateReturn(listofDuble)
+        println("Return: $calculateReturn")
+        val standardDeviation = calculateSD(calculateReturn)
+        println("Standard Deviation: $standardDeviation")
+        val mean = calculateMean(calculateReturn)
+        println("Mean: $mean")
+        return calculateSharpRatio(mean, standardDeviation)
+    }
+
+
 
 
     fun calculateSharpRatioFromAllData(
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>
-    ): List<Double> {
-        val dailyData = extractPrices(dailySellHistoryList)
-        val hourlyDataToDaily = toListOfDailyAvgPrices(hoursDaysList)
-        val fullList = dailyData + hourlyDataToDaily
-        return fullList
+    ): Double {
+        val dailyAvgPrices = extractPrices(dailySellHistoryList)
+        val hourlyAvgPricesToDaily = toListOfDailyAvgPrices(hoursDaysList)
+        val fullDailyAvgPrices = dailyAvgPrices + hourlyAvgPricesToDaily
+        val calculatedReturn = calculateReturn(fullDailyAvgPrices)
+        val standardDeviation = calculateSD(calculatedReturn)
+        val mean = calculateMean(calculatedReturn)
+        return calculateSharpRatio(mean, standardDeviation)
     }
 
 
@@ -96,13 +107,13 @@ class SellHistoryRepository {
         return pricesList
     }
 
-    fun calculateReturn(pricesList: MutableList<Double>): MutableList<Double> {
+    fun calculateReturn(pricesList: List<Double>): List<Double> {
         val previousArray = pricesList.slice(0 until pricesList.size - 1)
         val nextArray = pricesList.slice(1 until pricesList.size)
         val pairedArray = previousArray.zip(nextArray)
         return pairedArray.map { (first, second) ->
             (second - first) / first
-        }.toMutableList()
+        }
     }
 
     fun calculateSD(pricesList: List<Double>): Double {
