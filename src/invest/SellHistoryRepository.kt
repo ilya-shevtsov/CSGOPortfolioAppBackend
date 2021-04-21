@@ -18,7 +18,7 @@ class SellHistoryRepository {
         DailySellHistory("Apr 19 2021 03: +0", 19.68, "3399"),
     )
 
-    val dailySellHistoryList = listOf(
+    val dailySellHistoryListClass = listOf(
         DailySellHistory("Apr 19 2021 00: +0", 18.33, "2893"),
         DailySellHistory("Apr 19 2021 01: +0", 18.361, "2528"),
         DailySellHistory("Apr 19 2021 02: +0", 19.094, "3235"),
@@ -50,24 +50,32 @@ class SellHistoryRepository {
     val parsed: SellHistoryDto = Json.decodeFromString(jsonFileText)
     val mappedSellHistory = SellHistoryMapper.map(parsed)
 
-    val beforeHourlyAndBad = mappedSellHistory.dropLast(725)
-    val hourlyDays = mappedSellHistory.takeLast(720)
-    val hourlyDaysByDays = hourlyDays.chunked(24)
 
-    val thisSouldBe = toListOfDailyAvgPrices(hourlyDaysByDays)
+    val dailySellHistoryList = mappedSellHistory.dropLast(725)
+    val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
+
+    val letsGO = calculateSharpRatioFromAllData(
+        dailySellHistoryList = dailySellHistoryList,
+        hoursDaysList = hourlyDataToDaily
+    )
+
+
+    fun calculateSharpRatioFromAllData(
+        dailySellHistoryList: List<DailySellHistory>,
+        hoursDaysList: List<List<DailySellHistory>>
+    ): List<Double> {
+        val dailyData = extractPrices(dailySellHistoryList)
+        val hourlyDataToDaily = toListOfDailyAvgPrices(hoursDaysList)
+        val fullList = dailyData + hourlyDataToDaily
+        return fullList
+    }
 
 
     fun toListOfDailyAvgPrices(hoursDaysList: List<List<DailySellHistory>>): MutableList<Double> {
-        val hourlyPriceList = mutableListOf<Double>()
         val averageDailyPriceList = mutableListOf<Double>()
-        hoursDaysList.map { day ->
-            day.map { hour ->
-                hourlyPriceList.add(hour.price)
-            }
-        }
-        hourlyPriceList.chunked(24).map { day ->
-            averageDailyPriceList.add(day.sum() / 24)
-        }
+        val hourlyPriceList = mutableListOf<Double>()
+        hoursDaysList.map { day -> day.map { hour -> hourlyPriceList.add(hour.price) } }
+        hourlyPriceList.chunked(24).map { day -> averageDailyPriceList.add(day.sum() / 24) }
         return averageDailyPriceList
     }
 

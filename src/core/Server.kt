@@ -47,7 +47,7 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val response = sellHistoryRepository.thisSouldBe
+                    val response = sellHistoryRepository.letsGO
                     call.respond(response)
                 }
             }
