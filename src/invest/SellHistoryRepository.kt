@@ -12,42 +12,41 @@ import kotlin.math.sqrt
 class SellHistoryRepository {
 
 
-//    fun extractDailySellHistoryFromJSON(jSONPath: String): Double {
-//        val jsonFileText = getResourceAsText(jSONPath)
-//        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
-//        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
-//        val dailySellHistoryList = mappedSellHistory.dropLast(725)
-//        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-//        return calculateSharpRatioFromAllJSONData(dailySellHistoryList, hourlyDataToDaily)
-//    }
+    fun calculateSharpRatioFromJSON(jSONPath: String): Double {
+        val jsonFileText = getResourceAsText(jSONPath)
+        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
+        val dailySellHistoryList = mappedSellHistory.dropLast(725)
+        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
+        return calculateSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily)
+    }
 
     val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
     val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
     val mappedSellHistory = SellHistoryMapper.map(parsedJson)
     val dailySellHistoryList = mappedSellHistory.dropLast(725)
     val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-    val haha = calculateSharpRatioFromAllJSONData(dailySellHistoryList, hourlyDataToDaily)
+    val haha = calculateSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily)
 
-    fun calculateSharpRatioFromAllJSONData(
+    fun calculateSharpRatioFromDailyAndHourlySellHistory(
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>
-    ): List<Double> {
+    ): Double {
         val dailyAvgPrices = extractPrices(dailySellHistoryList)
         val hourlyAvgPricesToDaily = toListOfDailyAvgPrices(hoursDaysList)
-
         val fullDailyAvgPrices = dailyAvgPrices + hourlyAvgPricesToDaily
-        val yeah = FromMinUntillTheEnd(fullDailyAvgPrices)
-        val calculatedReturn = calculateReturn(fullDailyAvgPrices)
+        val growthPeriodList = BuildGrowthPeriodList(fullDailyAvgPrices)
+        println(growthPeriodList)
+        val calculatedReturn = calculateReturn(growthPeriodList)
+        println(calculatedReturn)
         val standardDeviation = calculateSD(calculatedReturn)
         val mean = calculateMean(calculatedReturn)
-//        return calculateSharpRatio(mean, standardDeviation)
-        return yeah
+        return calculateSharpRatio(mean, standardDeviation)
     }
 
-    fun FromMinUntillTheEnd(fullDailyAvgPrices: List<Double>): List<Double> {
+    fun BuildGrowthPeriodList(fullDailyAvgPrices: List<Double>): List<Double> {
         val minPrice = fullDailyAvgPrices.minOrNull()!!
-        val iThinkThisWorks = fullDailyAvgPrices.takeLastWhile { it != minPrice }
-        return iThinkThisWorks
+        return fullDailyAvgPrices.takeLastWhile { it != minPrice }
     }
 
 

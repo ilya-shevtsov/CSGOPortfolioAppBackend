@@ -5,8 +5,6 @@ import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
 import domain.usecase.UpdateInfoUseCase
 import invest.SellHistoryRepository
-import invest.data.model.sellhistory.SellHistoryDto
-import invest.data.model.sellhistory.SellHistoryMapper
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -20,8 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 
 class Server {
 
@@ -47,7 +43,8 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val response = sellHistoryRepository.haha
+                    val response = sellHistoryRepository
+                        .calculateSharpRatioFromJSON("/clutchCaseDSH.json")
                     call.respond(response)
                 }
             }
