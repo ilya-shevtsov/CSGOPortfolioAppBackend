@@ -47,7 +47,7 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val response = sellHistoryRepository.extractDailySellHistoryFromJSON( "/clutchCaseDSH.json")
+                    val response = sellHistoryRepository.haha
                     call.respond(response)
                 }
             }

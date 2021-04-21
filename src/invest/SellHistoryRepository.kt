@@ -12,26 +12,42 @@ import kotlin.math.sqrt
 class SellHistoryRepository {
 
 
-    fun extractDailySellHistoryFromJSON(jSONPath: String):Double {
-        val jsonFileText = getResourceAsText(jSONPath)
-        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
-        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
-        val dailySellHistoryList = mappedSellHistory.dropLast(725)
-        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-        return calculateSharpRatioFromAllJSONData(dailySellHistoryList, hourlyDataToDaily)
-    }
+//    fun extractDailySellHistoryFromJSON(jSONPath: String): Double {
+//        val jsonFileText = getResourceAsText(jSONPath)
+//        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+//        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
+//        val dailySellHistoryList = mappedSellHistory.dropLast(725)
+//        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
+//        return calculateSharpRatioFromAllJSONData(dailySellHistoryList, hourlyDataToDaily)
+//    }
+
+    val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
+    val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+    val mappedSellHistory = SellHistoryMapper.map(parsedJson)
+    val dailySellHistoryList = mappedSellHistory.dropLast(725)
+    val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
+    val haha = calculateSharpRatioFromAllJSONData(dailySellHistoryList, hourlyDataToDaily)
 
     fun calculateSharpRatioFromAllJSONData(
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>
-    ): Double {
+    ): List<Double> {
         val dailyAvgPrices = extractPrices(dailySellHistoryList)
         val hourlyAvgPricesToDaily = toListOfDailyAvgPrices(hoursDaysList)
+
         val fullDailyAvgPrices = dailyAvgPrices + hourlyAvgPricesToDaily
+        val yeah = FromMinUntillTheEnd(fullDailyAvgPrices)
         val calculatedReturn = calculateReturn(fullDailyAvgPrices)
         val standardDeviation = calculateSD(calculatedReturn)
         val mean = calculateMean(calculatedReturn)
-        return calculateSharpRatio(mean, standardDeviation)
+//        return calculateSharpRatio(mean, standardDeviation)
+        return yeah
+    }
+
+    fun FromMinUntillTheEnd(fullDailyAvgPrices: List<Double>): List<Double> {
+        val minPrice = fullDailyAvgPrices.minOrNull()!!
+        val iThinkThisWorks = fullDailyAvgPrices.takeLastWhile { it != minPrice }
+        return iThinkThisWorks
     }
 
 
@@ -44,7 +60,7 @@ class SellHistoryRepository {
     }
 
 
-    fun calculateSharpRatio(dailySellHistoryList: List<DailySellHistory>): Double {
+    fun calculateSharpRatioFromDSH(dailySellHistoryList: List<DailySellHistory>): Double {
         val extractDSHData = extractPrices(dailySellHistoryList)
         val calculatedReturn = calculateReturn(extractDSHData)
         val standardDeviation = calculateSD(calculatedReturn)
@@ -94,6 +110,4 @@ class SellHistoryRepository {
     private fun getResourceAsText(path: String): String {
         return object {}.javaClass.getResource(path).readText()
     }
-
-
 }
