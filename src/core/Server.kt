@@ -47,16 +47,11 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
-                    val parsed: SellHistoryDto = Json.decodeFromString(jsonFileText)
-                    val calculateSharpPatio = sellHistoryRepository.calculateSharpRatio(
-                        SellHistoryMapper.map(parsed))
-                    call.respond(calculateSharpPatio)
+                    val response = sellHistoryRepository.takeHourlyDays
+                    call.respond(response)
                 }
             }
         }.start(wait = true)
     }
-    private fun getResourceAsText(path: String): String {
-        return object {}.javaClass.getResource(path).readText()
-    }
+
 }

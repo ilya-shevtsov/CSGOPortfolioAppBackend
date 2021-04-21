@@ -1,6 +1,10 @@
 package invest
 
+import invest.data.model.sellhistory.SellHistoryDto
+import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.DailySellHistory
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -39,6 +43,19 @@ class SellHistoryRepository {
         DailySellHistory("Apr 19 2021 22: +0", 19.094, "4487"),
         DailySellHistory("Apr 19 2021 23: +0", 19.094, "3499")
     )
+
+
+    val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
+    val parsed: SellHistoryDto = Json.decodeFromString(jsonFileText)
+    val mappedSellHistory = SellHistoryMapper.map(parsed)
+
+    val beforeHourlyAndBad = mappedSellHistory.dropLast(725)
+    val takeHourlyDays = mappedSellHistory.takeLast(720)
+
+
+
+
+
 
     fun calculateSharpRatio(dailySellHistoryList: List<DailySellHistory>): Double {
         val extractDSHData = extractPrices(dailySellHistoryList)
@@ -85,6 +102,10 @@ class SellHistoryRepository {
             sum += num
         }
         return sum / pricesList.size
+    }
+
+    private fun getResourceAsText(path: String): String {
+        return object {}.javaClass.getResource(path).readText()
     }
 
 
