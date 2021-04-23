@@ -1,8 +1,9 @@
 package invest
 
-import invest.data.model.sellhistory.SellHistoryDto
+
 import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.DailySellHistory
+import invest.serializer.invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlin.math.pow
@@ -15,18 +16,14 @@ class SellHistoryRepository {
     fun calculateSharpRatioFromJSON(jSONPath: String): Double {
         val jsonFileText = getResourceAsText(jSONPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+
         val mappedSellHistory = SellHistoryMapper.map(parsedJson)
+
         val dailySellHistoryList = mappedSellHistory.dropLast(725)
         val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
+
         return calculateSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily)
     }
-
-    val jsonFileText = getResourceAsText("/clutchCaseDSH.json")
-    val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
-    val mappedSellHistory = SellHistoryMapper.map(parsedJson)
-    val dailySellHistoryList = mappedSellHistory.dropLast(725)
-    val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-    val haha = calculateSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily)
 
     fun calculateSharpRatioFromDailyAndHourlySellHistory(
         dailySellHistoryList: List<DailySellHistory>,

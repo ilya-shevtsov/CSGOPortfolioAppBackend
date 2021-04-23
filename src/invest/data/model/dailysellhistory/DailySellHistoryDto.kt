@@ -1,10 +1,11 @@
-package invest.data.model.dailysellhistory
+package invest.serializer.invest.data.model.dailysellhistory
 
+import invest.serializer.DailySellHistorySerializer
 import kotlinx.serialization.Serializable
 
-@Serializable
+@Serializable(with = DailySellHistorySerializer::class)
 data class DailySellHistoryDto(
     val date: String,
     val price: Double,
-    val volume: String
+    val volume: Int
 )

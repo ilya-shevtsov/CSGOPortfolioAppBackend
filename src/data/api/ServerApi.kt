@@ -1,7 +1,6 @@
 package data.api
 
 import data.model.marketoverview.MarketOverviewDto
-import invest.data.model.sellhistory.SellHistoryDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

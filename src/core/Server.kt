@@ -43,9 +43,8 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val response = sellHistoryRepository
-                        .calculateSharpRatioFromJSON("/clutchCaseDSH.json")
-                    call.respond(response)
+                    val response = sellHistoryRepository.calculateSharpRatioFromJSON("/chromaCaseDSH.json")
+                    call.respond("This is the Sharp Ratio: $response")
                 }
             }
         }.start(wait = true)
