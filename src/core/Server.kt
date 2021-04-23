@@ -44,7 +44,7 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val sharpRatioList = checkSharpRatio("resources/caseJson",30)
+                    val sharpRatioList = checkSharpRatio("resources/hh",30)
                     call.respond(sharpRatioList)
 
                 }
@@ -53,6 +53,7 @@ class Server {
     }
 
     fun checkSharpRatio(resourcePath:String,period: Int):List<String> {
+        val errorMessage = "Case price is currently in decline"
         val outputList = mutableListOf<String>()
         val haha = File(resourcePath).walk().toMutableList().drop(1)
 
@@ -65,7 +66,11 @@ class Server {
                 .replace(".json","")
                 .replace("caseJson/","")
             val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew,period)
-            outputList.add("$fileName Sharp Ratio is: $response")
+            if (response.isNaN()){
+                outputList.add("$fileName Sharp Ratio is: $errorMessage")
+            }else{
+                outputList.add("$fileName Sharp Ratio is: $response")
+            }
         }
         return outputList
     }

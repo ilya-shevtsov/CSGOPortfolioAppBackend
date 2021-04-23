@@ -28,9 +28,13 @@ class SellHistoryRepository {
         val dailyPriceList = toDailyPriceList(dailySellHistoryList, period)
         val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList, period)
         val fullDailyPriceLise = (dailyPriceList + hourlyToDailyPriceList).toMutableList()
+        println("fullDailyPriceLise: $fullDailyPriceLise")
         val growthPeriodList = BuildGrowthPeriodList(fullDailyPriceLise)
+        println("growthPeriodList: $growthPeriodList")
         val calculatedReturn = calculateReturn(growthPeriodList)
+        println("calculatedReturn: $calculatedReturn")
         val standardDeviation = calculateSD(calculatedReturn)
+        println("standardDeviation: $standardDeviation")
         val mean = calculateMean(calculatedReturn)
 
         return calculateSharpRatio(mean, standardDeviation)
