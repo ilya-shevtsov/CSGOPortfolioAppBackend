@@ -54,16 +54,13 @@ class Server {
 
     fun checkSharpRatio(resourcePath:String):List<String> {
         val outputList = mutableListOf<String>()
-
         val haha = File(resourcePath).walk().toMutableList().drop(1)
 
         haha.forEach {file ->
             val filePath = file.toString()
                 .replace("resources\\","")
                 .replace("""\""","/")
-            println(filePath)
             val filePathNew = "/$filePath"
-
             val fileName = filePath
                 .replace(".json","")
                 .replace("caseJson/","")

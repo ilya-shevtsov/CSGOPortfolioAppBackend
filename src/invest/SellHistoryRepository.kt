@@ -30,13 +30,17 @@ class SellHistoryRepository {
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>
     ): Double {
+
         val dailyAvgPrices = extractPrices(dailySellHistoryList)
         val hourlyAvgPricesToDaily = toListOfDailyAvgPrices(hoursDaysList)
         val fullDailyAvgPrices = dailyAvgPrices + hourlyAvgPricesToDaily
+
         val growthPeriodList = BuildGrowthPeriodList(fullDailyAvgPrices)
+
         val calculatedReturn = calculateReturn(growthPeriodList)
         val standardDeviation = calculateSD(calculatedReturn)
         val mean = calculateMean(calculatedReturn)
+
         return calculateSharpRatio(mean, standardDeviation)
     }
 
@@ -52,15 +56,6 @@ class SellHistoryRepository {
         HourlyDays.map { day -> day.map { hour -> hourlyPriceList.add(hour.price) } }
         hourlyPriceList.chunked(24).map { day -> averageDailyPriceList.add(day.sum() / 24) }
         return averageDailyPriceList
-    }
-
-
-    fun calculateSharpRatioFromDSH(dailySellHistoryList: List<DailySellHistory>): Double {
-        val extractDSHData = extractPrices(dailySellHistoryList)
-        val calculatedReturn = calculateReturn(extractDSHData)
-        val standardDeviation = calculateSD(calculatedReturn)
-        val mean = calculateMean(calculatedReturn)
-        return calculateSharpRatio(mean, standardDeviation)
     }
 
     fun extractPrices(dailySellHistoryList: List<DailySellHistory>): MutableList<Double> {
