@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class DailySellHistoryDto(
     val date: String,
     val price: Double,
-    val volume: String
+    val volume: Int
 )
