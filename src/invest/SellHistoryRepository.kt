@@ -29,7 +29,9 @@ class SellHistoryRepository {
     ): Double {
 
         val dailyAvgPrices = extractPrices(dailySellHistoryList)
+
         val hourlyAvgPricesToDaily = toListOfDailyAvgPrices(hoursDaysList)
+
         val fullDailyAvgPrices = (dailyAvgPrices + hourlyAvgPricesToDaily).toMutableList()
         println(fullDailyAvgPrices.size)
         val analyzedPeriod = analyzedPeriod(fullDailyAvgPrices,30)
@@ -60,11 +62,23 @@ class SellHistoryRepository {
         return pricesList
     }
 
+
     fun toListOfDailyAvgPrices(HourlyDays: List<List<DailySellHistory>>): MutableList<Double> {
+
         val averageDailyPriceList = mutableListOf<Double>()
+
         val hourlyPriceList = mutableListOf<Double>()
-        HourlyDays.map { day -> day.map { hour -> hourlyPriceList.add(hour.price) } }
+
+//        ["Apr 19 2021 01: +0",18.235,"2528"]
+
+        HourlyDays.map { day -> day.map { hour ->
+
+            val hourSplit = hour.date.split(" ")
+
+            hourlyPriceList.add(hour.price) } }
+
         hourlyPriceList.chunked(24).map { day -> averageDailyPriceList.add(day.sum() / 24) }
+
         return averageDailyPriceList
     }
 
