@@ -4,40 +4,35 @@ import invest.domain.DailySellHistory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import java.io.File
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class SellHistoryRepositoryTest {
 
+    val sellHistoryRepository = SellHistoryRepository()
+
     @Test
     fun haha() {
-        val haha = toDailyPriceList(inputList, 30)
-        Assertions.assertEquals(outputListPeriodTwo, haha)
+        val haha = checkSharpRatio("resources/hh",30)
+        Assertions.assertEquals("Case is currently in decline", haha)
     }
 
-    val inputList = listOf<DailySellHistory>(
-        DailySellHistory(
-            date = "Apr 01 2021 01: +0",
-            price = 22.193,
-            volume = 3996
-        ),
-        DailySellHistory(
-            date = "Apr 01 2021 02: +0",
-            price = 22.714,
-            volume = 3340
-        )
-    )
+    fun checkSharpRatio(resourcePath:String,period: Int):List<String> {
+        val outputList = mutableListOf<String>()
+        val haha = File(resourcePath).walk().toMutableList().drop(1)
 
-    fun toDailyPriceList(dailySellHistoryList: List<DailySellHistory>, period: Int): List<String> {
-        val pricesList = mutableListOf<Double>()
-        var hah = listOf<String>()
-        dailySellHistoryList.map { day ->
-            val hourSplit = day.date.split(" ")
-            hah = hourSplit
-            if (hourSplit[3] == "01:") {
-                pricesList.add(day.price)
-            }
+        haha.forEach {file ->
+            val filePath = file.toString()
+                .replace("resources\\","")
+                .replace("""\""","/")
+            val filePathNew = "/$filePath"
+            val fileName = filePath
+                .replace(".json","")
+                .replace("caseJson/","")
+            val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew,period)
+            outputList.add("$fileName Sharp Ratio is: $response")
         }
-        return hah
+        return outputList
     }
 
 

@@ -11,73 +11,68 @@ import kotlin.math.sqrt
 class SellHistoryRepository {
 
 
-//    fun calculateSharpRatioFromJSON(jSONPath: String): Double {
-//        val jsonFileText = getResourceDirectory(jSONPath)
-//        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
-//
-//        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
-//
-//        val dailySellHistoryList = mappedSellHistory.dropLast(725)
-//        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-//
-//        return calculateSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily)
-//    }
-//
-//    fun calculateSharpRatioFromDailyAndHourlySellHistory(
-//        dailySellHistoryList: List<DailySellHistory>,
-//        hoursDaysList: List<List<DailySellHistory>>
-//    ): Double {
-//
-//        val dailyPriceList = toDailyPriceList(dailySellHistoryList)
-//        val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList)
-//
-//        val fullDailyPriceLise = (dailyPriceList + hourlyToDailyPriceList).toMutableList()
-//        println(fullDailyPriceLise.size)
-//        val analyzedPeriod = analyzedPeriod(fullDailyPriceLise,30)
-//        println(analyzedPeriod.size)
-//
-//        // here I am working with Doubles, so before this I need to figure out if I want daily of monthly data
-//        val growthPeriodList = BuildGrowthPeriodList(analyzedPeriod)
-//        val calculatedReturn = calculateReturn(growthPeriodList)
-//        val standardDeviation = calculateSD(calculatedReturn)
-//        val mean = calculateMean(calculatedReturn)
-//
-//        return calculateSharpRatio(mean, standardDeviation)
-//    }
+    fun calculateSharpRatioFromJSON(jSONPath: String,period: Int): Double {
+        val jsonFileText = getResourceDirectory(jSONPath)
+        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
+        val dailySellHistoryList = mappedSellHistory.dropLast(725)
+        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
+        return calculateSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily,period)
+    }
 
-//    private fun analyzedPeriod(fullDailyAvgPrices: List<Double>, period: Int): List<Double> {
-//
-//        val haha = mutableListOf<Double>()
-//        when (period){
-//            1 -> haha == fullDailyAvgPrices
-//            30 -> haha == fullDailyAvgPrices.chunked(30)
-//        }
-//        return haha
-//    }
+    fun calculateSharpRatioFromDailyAndHourlySellHistory(
+        dailySellHistoryList: List<DailySellHistory>,
+        hoursDaysList: List<List<DailySellHistory>>,
+        period: Int
+    ): Double {
+        val dailyPriceList = toDailyPriceList(dailySellHistoryList, period)
+        val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList, period)
+        val fullDailyPriceLise = (dailyPriceList + hourlyToDailyPriceList).toMutableList()
+        val growthPeriodList = BuildGrowthPeriodList(fullDailyPriceLise)
+        val calculatedReturn = calculateReturn(growthPeriodList)
+        val standardDeviation = calculateSD(calculatedReturn)
+        val mean = calculateMean(calculatedReturn)
 
-    fun toDailyPriceList(dailySellHistoryList: List<DailySellHistory>): MutableList<Double> {
+        return calculateSharpRatio(mean, standardDeviation)
+    }
+
+    fun toDailyPriceList(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
         val pricesList = mutableListOf<Double>()
-        dailySellHistoryList.map { day ->
-            pricesList.add(day.price)
+        when (period) {
+            1 -> {
+                dailySellHistoryList.map { day -> pricesList.add(day.price) }
+            }
+            30 -> {
+                dailySellHistoryList.map { day ->
+                    val dateSplit = day.date.split(" ")
+                    if (dateSplit[1] == "13") {
+                        pricesList.add(day.price)
+                    }
+                }
+            }
         }
         return pricesList
     }
 
 
-    fun fromHourlyToDailyPriceList(HourlyDays: List<List<DailySellHistory>>): MutableList<Double> {
+    fun fromHourlyToDailyPriceList(HourlyDays: List<List<DailySellHistory>>, period: Int): MutableList<Double> {
 
         val hourlyPriceList = mutableListOf<Double>()
-
         HourlyDays.map { day ->
             day.map { hour ->
-
-                val hourSplit = hour.date.split(" ")
-                if (hourSplit[3] == "01:") {
-                    hourlyPriceList.add(hour.price)
+                val dateSplit = hour.date.split(" ")
+                when (period) {
+                    1 -> {
+                        if (dateSplit[3] == "01:") {
+                            hourlyPriceList.add(hour.price)
+                        }
+                    }
+                    30 -> if (dateSplit[3] == "01:" && dateSplit[1] == "13") {
+                        hourlyPriceList.add(hour.price)
+                    }
                 }
             }
         }
-        println(hourlyPriceList)
         return hourlyPriceList
     }
 

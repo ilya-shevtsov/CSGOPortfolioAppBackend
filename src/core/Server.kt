@@ -30,12 +30,12 @@ class Server {
     @ExperimentalCoroutinesApi
     @ExperimentalSerializationApi
     fun start() {
-        CaseStorage.createCaseDatabase()
-        CoroutineScope(Dispatchers.Default).launch {
-            caseRepository.tickFlow(300000L).collect {
-                updateInfoUseCase.updateInfo()
-            }
-        }
+//        CaseStorage.createCaseDatabase()
+//        CoroutineScope(Dispatchers.Default).launch {
+//            caseRepository.tickFlow(300000L).collect {
+//                updateInfoUseCase.updateInfo()
+//            }
+//        }
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {
@@ -44,7 +44,7 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val sharpRatioList = checkSharpRatio("resources/caseJson")
+                    val sharpRatioList = checkSharpRatio("resources/caseJson",30)
                     call.respond(sharpRatioList)
 
                 }
@@ -52,7 +52,7 @@ class Server {
         }.start(wait = true)
     }
 
-    fun checkSharpRatio(resourcePath:String):List<String> {
+    fun checkSharpRatio(resourcePath:String,period: Int):List<String> {
         val outputList = mutableListOf<String>()
         val haha = File(resourcePath).walk().toMutableList().drop(1)
 
@@ -64,7 +64,7 @@ class Server {
             val fileName = filePath
                 .replace(".json","")
                 .replace("caseJson/","")
-            val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew)
+            val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew,period)
             outputList.add("$fileName Sharp Ratio is: $response")
         }
         return outputList
