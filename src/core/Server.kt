@@ -44,33 +44,32 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-//                    val response = sellHistoryRepository.calculateSharpRatioFromJSON("/caseJson/Clutch Case.json")
-                    val response = notSure("resources/caseJson")
-                    call.respond(response)
+                    val sharpRatioList = checkSharpRatio("resources/caseJson")
+                    call.respond(sharpRatioList)
 
                 }
             }
         }.start(wait = true)
-
-
     }
 
-    fun notSure(resourcePath:String) {
+    fun checkSharpRatio(resourcePath:String):List<String> {
+        val outputList = mutableListOf<String>()
 
-        File(resourcePath).walk().forEach {file ->
-            val fileToString = file.toString()
+        val haha = File(resourcePath).walk().toMutableList().drop(1)
 
-            val filePath = fileToString
+        haha.forEach {file ->
+            val filePath = file.toString()
                 .replace("resources\\","")
                 .replace("""\""","/")
+            println(filePath)
             val filePathNew = "/$filePath"
 
             val fileName = filePath
                 .replace(".json","")
-                .replace("resources\\caseJson\\","")
-            println(filePathNew)
+                .replace("caseJson/","")
             val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew)
-            println(response)
+            outputList.add("$fileName Sharp Ratio is: $response")
         }
+        return outputList
     }
 }
