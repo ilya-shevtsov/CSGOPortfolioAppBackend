@@ -1,15 +1,12 @@
 package invest
 
-
 import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.DailySellHistory
 import invest.serializer.invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.net.URL
 import kotlin.math.pow
 import kotlin.math.sqrt
-
 
 class SellHistoryRepository {
 
@@ -33,9 +30,11 @@ class SellHistoryRepository {
 
         val dailyAvgPrices = extractPrices(dailySellHistoryList)
         val hourlyAvgPricesToDaily = toListOfDailyAvgPrices(hoursDaysList)
-        val fullDailyAvgPrices = dailyAvgPrices + hourlyAvgPricesToDaily
-
-        val growthPeriodList = BuildGrowthPeriodList(fullDailyAvgPrices)
+        val fullDailyAvgPrices = (dailyAvgPrices + hourlyAvgPricesToDaily).toMutableList()
+        println(fullDailyAvgPrices.size)
+        val analyzedPeriod = analyzedPeriod(fullDailyAvgPrices,30)
+        println(analyzedPeriod.size)
+        val growthPeriodList = BuildGrowthPeriodList(analyzedPeriod)
 
         val calculatedReturn = calculateReturn(growthPeriodList)
         val standardDeviation = calculateSD(calculatedReturn)
@@ -44,11 +43,22 @@ class SellHistoryRepository {
         return calculateSharpRatio(mean, standardDeviation)
     }
 
-    fun BuildGrowthPeriodList(fullDailyAvgPrices: List<Double>): List<Double> {
-        val minPrice = fullDailyAvgPrices.minOrNull()!!
-        return fullDailyAvgPrices.takeLastWhile { it != minPrice }
+    private fun analyzedPeriod(fullDailyAvgPrices: List<Double>, period: Int): List<Double> {
+        val haha = mutableListOf<Double>()
+        when (period){
+            1 -> haha == fullDailyAvgPrices
+            30 -> haha == fullDailyAvgPrices.chunked(30)
+        }
+        return haha
     }
 
+    fun extractPrices(dailySellHistoryList: List<DailySellHistory>): MutableList<Double> {
+        val pricesList = mutableListOf<Double>()
+        dailySellHistoryList.map { day ->
+            pricesList.add(day.price)
+        }
+        return pricesList
+    }
 
     fun toListOfDailyAvgPrices(HourlyDays: List<List<DailySellHistory>>): MutableList<Double> {
         val averageDailyPriceList = mutableListOf<Double>()
@@ -58,12 +68,9 @@ class SellHistoryRepository {
         return averageDailyPriceList
     }
 
-    fun extractPrices(dailySellHistoryList: List<DailySellHistory>): MutableList<Double> {
-        val pricesList = mutableListOf<Double>()
-        dailySellHistoryList.map { day ->
-            pricesList.add(day.price)
-        }
-        return pricesList
+    fun BuildGrowthPeriodList(fullDailyAvgPrices: List<Double>): List<Double> {
+        val minPrice = fullDailyAvgPrices.minOrNull()!!
+        return fullDailyAvgPrices.takeLastWhile { it != minPrice }
     }
 
     fun calculateReturn(pricesList: List<Double>): List<Double> {
