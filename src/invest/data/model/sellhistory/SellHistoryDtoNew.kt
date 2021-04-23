@@ -1,11 +1,12 @@
-package invest.data.model.sellhistory
+package invest.serializer.invest.data.model.sellhistory
 
 import invest.data.model.dailysellhistory.DailySellHistoryDto
+import invest.serializer.invest.data.model.dailysellhistory.DailySellHistoryDtoNew
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SellHistoryDto(
+data class SellHistoryDtoNew(
 
     val success: Boolean,
 
@@ -15,5 +16,5 @@ data class SellHistoryDto(
     @SerialName("price_suffix")
     val priceSuffix: String,
 
-    val prices: List<List<String>>
+    val prices: List<DailySellHistoryDtoNew>
 )

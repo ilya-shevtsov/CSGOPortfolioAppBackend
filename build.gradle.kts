@@ -59,17 +59,27 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.30.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.30.1")
     implementation("com.h2database:h2:1.4.199")
-    
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
-    testImplementation("io.mockk:mockk:1.9.3")
+    implementation("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 
-    testImplementation("io.kotest:kotest-runner-junit5:4.3.1")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:4.3.1")
-    testImplementation("io.kotest:kotest-property:4.3.1")
+    implementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+    implementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
+    implementation("io.mockk:mockk:1.9.3")
+
+    implementation("io.kotest:kotest-runner-junit5:4.3.1")
+    implementation("io.kotest:kotest-assertions-core-jvm:4.3.1")
+    implementation("io.kotest:kotest-property:4.3.1")
+
+//    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+//
+//    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+//    testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
+//    testImplementation("io.mockk:mockk:1.9.3")
+//
+//    testImplementation("io.kotest:kotest-runner-junit5:4.3.1")
+//    testImplementation("io.kotest:kotest-assertions-core-jvm:4.3.1")
+//    testImplementation("io.kotest:kotest-property:4.3.1")
 
 }
 
