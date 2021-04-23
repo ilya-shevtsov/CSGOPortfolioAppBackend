@@ -5,6 +5,7 @@ import invest.domain.DailySellHistory
 import invest.serializer.invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.io.File
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -118,5 +119,28 @@ class SellHistoryRepository {
 
     private fun getResourceDirectory(path: String): String {
         return object {}.javaClass.getResource(path).readText()
+    }
+
+    fun checkSharpRatio(resourcePath:String,period: Int):List<String> {
+        val errorMessage = "Case price is currently in decline"
+        val outputList = mutableListOf<String>()
+        val haha = File(resourcePath).walk().toMutableList().drop(1)
+
+        haha.forEach {file ->
+            val filePath = file.toString()
+                .replace("resources\\","")
+                .replace("""\""","/")
+            val filePathNew = "/$filePath"
+            val fileName = filePath
+                .replace(".json","")
+                .replace("caseJson/","")
+            val response = calculateSharpRatioFromJSON(filePathNew,period)
+            if (response.isNaN()){
+                outputList.add("$fileName Sharp Ratio is: $errorMessage")
+            }else{
+                outputList.add("$fileName Sharp Ratio is: $response")
+            }
+        }
+        return outputList
     }
 }

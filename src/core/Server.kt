@@ -30,12 +30,12 @@ class Server {
     @ExperimentalCoroutinesApi
     @ExperimentalSerializationApi
     fun start() {
-//        CaseStorage.createCaseDatabase()
-//        CoroutineScope(Dispatchers.Default).launch {
-//            caseRepository.tickFlow(300000L).collect {
-//                updateInfoUseCase.updateInfo()
-//            }
-//        }
+        CaseStorage.createCaseDatabase()
+        CoroutineScope(Dispatchers.Default).launch {
+            caseRepository.tickFlow(300000L).collect {
+                updateInfoUseCase.updateInfo()
+            }
+        }
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {
@@ -44,34 +44,10 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val sharpRatioList = checkSharpRatio("resources/hh",30)
+                    val sharpRatioList = sellHistoryRepository.checkSharpRatio("resources/caseJson",30)
                     call.respond(sharpRatioList)
-
                 }
             }
         }.start(wait = true)
-    }
-
-    fun checkSharpRatio(resourcePath:String,period: Int):List<String> {
-        val errorMessage = "Case price is currently in decline"
-        val outputList = mutableListOf<String>()
-        val haha = File(resourcePath).walk().toMutableList().drop(1)
-
-        haha.forEach {file ->
-            val filePath = file.toString()
-                .replace("resources\\","")
-                .replace("""\""","/")
-            val filePathNew = "/$filePath"
-            val fileName = filePath
-                .replace(".json","")
-                .replace("caseJson/","")
-            val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew,period)
-            if (response.isNaN()){
-                outputList.add("$fileName Sharp Ratio is: $errorMessage")
-            }else{
-                outputList.add("$fileName Sharp Ratio is: $response")
-            }
-        }
-        return outputList
     }
 }
