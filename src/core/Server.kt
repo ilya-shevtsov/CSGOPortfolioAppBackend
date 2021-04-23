@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.io.File
-import java.net.URL
 
 class Server {
 
@@ -45,9 +44,9 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-//                    val response = sellHistoryRepository.calculateSharpRatioFromJSON("/chromaCaseDSH.json")
-                    val haha = checkSharpRatio()
-                    call.respond(haha)
+//                    val response = sellHistoryRepository.calculateSharpRatioFromJSON("/caseJson/Clutch Case.json")
+                    val response = notSure("resources/caseJson")
+                    call.respond(response)
 
                 }
             }
@@ -56,14 +55,22 @@ class Server {
 
     }
 
-    fun checkSharpRatio() {
+    fun notSure(resourcePath:String) {
 
-        File("resources/caseJson").walk().forEach {file ->
+        File(resourcePath).walk().forEach {file ->
             val fileToString = file.toString()
-            val fileName = fileToString
-                .replace("resources\\caseJson\\","")
+
+            val filePath = fileToString
+                .replace("resources\\","")
+                .replace("""\""","/")
+            val filePathNew = "/$filePath"
+
+            val fileName = filePath
                 .replace(".json","")
-            println(fileName)
+                .replace("resources\\caseJson\\","")
+            println(filePathNew)
+            val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew)
+            println(response)
         }
     }
 }

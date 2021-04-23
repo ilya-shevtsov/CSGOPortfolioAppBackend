@@ -6,6 +6,7 @@ import invest.domain.DailySellHistory
 import invest.serializer.invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.net.URL
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -14,7 +15,7 @@ class SellHistoryRepository {
 
 
     fun calculateSharpRatioFromJSON(jSONPath: String): Double {
-        val jsonFileText = getResourceAsText(jSONPath)
+        val jsonFileText = getResourceDirectory(jSONPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
 
         val mappedSellHistory = SellHistoryMapper.map(parsedJson)
@@ -101,7 +102,7 @@ class SellHistoryRepository {
         return sum / pricesList.size
     }
 
-    private fun getResourceAsText(path: String): String {
+    private fun getResourceDirectory(path: String): String {
         return object {}.javaClass.getResource(path).readText()
     }
 }
