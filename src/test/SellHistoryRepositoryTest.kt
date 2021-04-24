@@ -4,6 +4,7 @@ import invest.domain.DailySellHistory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import kotlin.math.roundToInt
 import java.io.File
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -11,32 +12,31 @@ internal class SellHistoryRepositoryTest {
 
     val sellHistoryRepository = SellHistoryRepository()
 
+    val inputList = listOf(7.76, 10.03, 19.46, 19.68)
+
     @Test
     fun haha() {
-        val haha = checkSharpRatio("resources/hh",30)
-        Assertions.assertEquals("Case is currently in decline", haha)
+        val haha = calculateAvgReturn(inputList, 1)
+        Assertions.assertEquals(41.47, haha)
     }
 
-    fun checkSharpRatio(resourcePath:String,period: Int):List<String> {
-        val errorMessage = "Case price is currently in decline"
-        val outputList = mutableListOf<String>()
-        val haha = File(resourcePath).walk().toMutableList().drop(1)
-
-        haha.forEach {file ->
-            val filePath = file.toString()
-                .replace("resources\\","")
-                .replace("""\""","/")
-            val filePathNew = "/$filePath"
-            val fileName = filePath
-                .replace(".json","")
-                .replace("caseJson/","")
-            val response = sellHistoryRepository.calculateSharpRatioFromJSON(filePathNew,period)
-            if (response.isNaN()){
-                outputList.add("$fileName Sharp Ratio is: $errorMessage")
-            }else{
-                outputList.add("$fileName Sharp Ratio is: $response")
+    fun calculateAvgReturn(pricesList: List<Double>, type: Int): Double {
+        var roundedAvgReturn = 0.0
+        val previousArray = pricesList.slice(0 until pricesList.size - 1)
+        val nextArray = pricesList.slice(1 until pricesList.size)
+        val pairedArray = previousArray.zip(nextArray)
+        when (type) {
+            1 -> {
+                val returnList = pairedArray.map { (first, second) -> (second - first) / first }
+                val avgReturn = (returnList.sum() / pairedArray.size) * 100
+                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
+            }
+            2 -> {
+                val returnList = pairedArray.map { (first, second) -> (second - first) }
+                val avgReturn = returnList.sum() / pairedArray.size
+                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
             }
         }
-        return outputList
+        return roundedAvgReturn
     }
 }

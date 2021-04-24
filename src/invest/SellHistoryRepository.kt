@@ -7,6 +7,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
 import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class SellHistoryRepository {
@@ -108,6 +109,26 @@ class SellHistoryRepository {
         val nextArray = pricesList.slice(1 until pricesList.size)
         val pairedArray = previousArray.zip(nextArray)
         return pairedArray.map { (first, second) -> (second - first) / first }
+    }
+
+    fun calculateAvgReturn(pricesList: List<Double>, type: Int): Double {
+        var roundedAvgReturn = 0.0
+        val previousArray = pricesList.slice(0 until pricesList.size - 1)
+        val nextArray = pricesList.slice(1 until pricesList.size)
+        val pairedArray = previousArray.zip(nextArray)
+        when (type) {
+            1 -> {
+                val returnList = pairedArray.map { (first, second) -> (second - first) / first }
+                val avgReturn = (returnList.sum() / pairedArray.size) * 100
+                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
+            }
+            2 -> {
+                val returnList = pairedArray.map { (first, second) -> (second - first) }
+                val avgReturn = returnList.sum() / pairedArray.size
+                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
+            }
+        }
+        return roundedAvgReturn
     }
 
     private fun calculateStandardDeviation(pricesList: List<Double>): Double {
