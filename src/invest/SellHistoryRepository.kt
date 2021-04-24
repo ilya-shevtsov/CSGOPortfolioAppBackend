@@ -13,7 +13,7 @@ import kotlin.math.sqrt
 class SellHistoryRepository {
 
     fun checkSharpRatio(resourcePath: String, period: Int): List<String> {
-        val errorMessage = "Case price is currently in decline"
+        val errorMessage = "price is currently in decline"
         val outputList = mutableListOf<String>()
         val haha = File(resourcePath).walk().toMutableList().drop(1)
 
@@ -25,9 +25,9 @@ class SellHistoryRepository {
             val fileName = filePath
                 .replace(".json", "")
                 .replace("caseJson/", "")
-            val response = calculateSharpRatioFromJSON(filePathNew, period)
+            val response = getSharpRatioFromJSON(filePathNew, period)
             if (response.isNaN()) {
-                outputList.add("$fileName Sharp Ratio is: $errorMessage")
+                outputList.add("$fileName $errorMessage")
             } else {
                 outputList.add("$fileName Sharp Ratio is: $response")
             }
@@ -35,16 +35,16 @@ class SellHistoryRepository {
         return outputList
     }
 
-    private fun calculateSharpRatioFromJSON(jSONPath: String, period: Int): Double {
+    private fun getSharpRatioFromJSON(jSONPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jSONPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val mappedSellHistory = SellHistoryMapper.map(parsedJson)
         val dailySellHistoryList = mappedSellHistory.dropLast(725)
         val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-        return calculateSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily, period)
+        return getSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily, period)
     }
 
-    private fun calculateSharpRatioFromDailyAndHourlySellHistory(
+    private fun getSharpRatioFromDailyAndHourlySellHistory(
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>,
         period: Int
@@ -53,12 +53,12 @@ class SellHistoryRepository {
         val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList, period)
         val fullDailyPriceLise = (dailyPriceList + hourlyToDailyPriceList).toMutableList()
 
-        val growthPeriodList = buildGrowthPeriodList(fullDailyPriceLise)
-        val calculatedReturn = calculateReturn(growthPeriodList)
-        val standardDeviation = calculateStandardDeviation(calculatedReturn)
-        val mean = calculateMean(calculatedReturn)
+        val growthPeriodList = getGrowthPeriodList(fullDailyPriceLise)
+        val calculatedReturn = getReturnList(growthPeriodList)
+        val standardDeviation = getStandardDeviation(calculatedReturn)
+        val mean = getMean(calculatedReturn)
 
-        return calculateSharpRatio(mean, standardDeviation)
+        return getSharpRatio(mean, standardDeviation)
     }
 
     private fun toDailyPriceList(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
@@ -99,18 +99,18 @@ class SellHistoryRepository {
         return hourlyPriceList
     }
 
-    private fun buildGrowthPeriodList(fullDailyAvgPrices: List<Double>): List<Double> {
+    private fun getGrowthPeriodList(fullDailyAvgPrices: List<Double>): List<Double> {
         val minPrice = fullDailyAvgPrices.minOrNull()!!
         return fullDailyAvgPrices.takeLastWhile { price -> price != minPrice }
     }
 
-    private fun calculateReturn(pricesList: List<Double>): List<Double> {
-        val pairedArray = buildPairedPriceList(pricesList)
+    private fun getReturnList(pricesList: List<Double>): List<Double> {
+        val pairedArray = getPairedPriceList(pricesList)
         return getPercentReturnList(pairedArray)
     }
 
-    fun calculateAvgReturn(pricesList: List<Double>, averageReturnType: Int): Double {
-        val pairedArray = buildPairedPriceList(pricesList)
+    fun getAverageReturn(pricesList: List<Double>, averageReturnType: Int): Double {
+        val pairedArray = getPairedPriceList(pricesList)
         return when (averageReturnType) {
             1 -> {
                 myRound(((getPercentReturnList(pairedArray).sum() / pairedArray.size) * 100))
@@ -122,21 +122,19 @@ class SellHistoryRepository {
         }
     }
 
-    private fun calculateStandardDeviation(pricesList: List<Double>): Double {
+    private fun getStandardDeviation(pricesList: List<Double>): Double {
         var standardDeviation = 0.0
-        val mean = calculateMean(pricesList)
-
         for (num in pricesList) {
-            standardDeviation += (num - mean).pow(2.0)
+            standardDeviation += (num - (getMean(pricesList))).pow(2.0)
         }
         return sqrt(standardDeviation / pricesList.size)
     }
 
-    private fun calculateSharpRatio(mean: Double, standardDeviation: Double): Double {
+    private fun getSharpRatio(mean: Double, standardDeviation: Double): Double {
         return mean / standardDeviation
     }
 
-    private fun calculateMean(pricesList: List<Double>): Double {
+    private fun getMean(pricesList: List<Double>): Double {
         var sum = 0.0
         for (num in pricesList) {
             sum += num
@@ -152,7 +150,7 @@ class SellHistoryRepository {
     private fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> (second - first) / first }
 
-    private fun buildPairedPriceList(pricesList: List<Double>): List<Pair<Double, Double>> {
+    private fun getPairedPriceList(pricesList: List<Double>): List<Pair<Double, Double>> {
         val previousArray = pricesList.slice(0 until pricesList.size - 1)
         val nextArray = pricesList.slice(1 until pricesList.size)
         return previousArray.zip(nextArray)
