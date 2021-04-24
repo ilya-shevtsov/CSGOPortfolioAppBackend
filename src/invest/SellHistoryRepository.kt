@@ -41,23 +41,26 @@ class SellHistoryRepository {
         val mappedSellHistory = SellHistoryMapper.map(parsedJson)
         val dailySellHistoryList = mappedSellHistory.dropLast(725)
         val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-        return getSharpRatioFromDailyAndHourlySellHistory(dailySellHistoryList, hourlyDataToDaily, period)
+        val getFullDailyPriceList = getFullDailyPriceList(dailySellHistoryList, hourlyDataToDaily, period)
+        return getSharpRatioFromDailyPriceList(getFullDailyPriceList)
     }
 
-    private fun getSharpRatioFromDailyAndHourlySellHistory(
+    private fun getFullDailyPriceList(
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>,
         period: Int
-    ): Double {
+    ): MutableList<Double> {
         val dailyPriceList = toDailyPriceList(dailySellHistoryList, period)
         val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList, period)
-        val fullDailyPriceLise = (dailyPriceList + hourlyToDailyPriceList).toMutableList()
 
+        return (dailyPriceList + hourlyToDailyPriceList).toMutableList()
+    }
+
+    fun getSharpRatioFromDailyPriceList(fullDailyPriceLise: MutableList<Double>): Double {
         val growthPeriodList = getGrowthPeriodList(fullDailyPriceLise)
         val calculatedReturn = getReturnList(growthPeriodList)
         val standardDeviation = getStandardDeviation(calculatedReturn)
         val mean = getMean(calculatedReturn)
-
         return getSharpRatio(mean, standardDeviation)
     }
 
