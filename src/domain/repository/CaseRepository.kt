@@ -18,7 +18,7 @@ import java.util.*
 class CaseRepository {
 
     suspend fun getMarketOverview(caseName: String): Flow<MarketOverview> = flow {
-        val response = ApiTools.getApiService()
+        val response = ApiTools.getCaseApiService()
             .getCase(
                 appId = 730,
                 currency = 5,

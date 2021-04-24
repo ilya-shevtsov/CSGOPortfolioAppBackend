@@ -1,20 +1,20 @@
 package data.model.marketoverview
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class MarketOverviewDto(
 
-    @SerializedName("success")
+    @SerialName("success")
     val success: Boolean,
 
-    @SerializedName("lowest_price")
+    @SerialName("lowest_price")
     val lowestPrice: String,
 
-    @SerializedName("volume")
+    @SerialName("volume")
     val volume: String,
 
-    @SerializedName("median_price")
+    @SerialName("median_price")
     val medianPrice: String,
 )

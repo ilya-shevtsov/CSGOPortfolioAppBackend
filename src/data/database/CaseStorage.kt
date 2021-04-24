@@ -2,6 +2,7 @@ package data.database
 
 import domain.model.marketoverview.MarketOverview
 import data.model.case.CaseDbo
+import data.repository.DatabaseRepository
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
@@ -9,12 +10,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 object CaseStorage {
+    private val databaseRepository = DatabaseRepository()
 
     fun createCaseDatabase() {
         Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
         transaction {
             SchemaUtils.create(CaseDatabase)
-//                insertInitialData()
+            databaseRepository.insertInitialData()
         }
     }
 

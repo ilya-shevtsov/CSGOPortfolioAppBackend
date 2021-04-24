@@ -33,7 +33,9 @@ dependencies {
     implementation("io.ktor:ktor-html-builder:$ktor_version")
     implementation("io.ktor:ktor-serialization:$ktor_version")
     implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation ("io.ktor:ktor-client-cio-jvm:$ktor_version")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
+    implementation("io.ktor:ktor-client-apache:$ktor_version")
+    implementation("io.ktor:ktor-client-gson:$ktor_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
@@ -58,11 +60,32 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.30.1")
     implementation("com.h2database:h2:1.4.199")
 
+
+    implementation("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+
+    implementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+    implementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
+    implementation("io.mockk:mockk:1.9.3")
+
+    implementation("io.kotest:kotest-runner-junit5:4.3.1")
+    implementation("io.kotest:kotest-assertions-core-jvm:4.3.1")
+    implementation("io.kotest:kotest-property:4.3.1")
+
+//    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+//
+//    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+//    testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
+//    testImplementation("io.mockk:mockk:1.9.3")
+//
+//    testImplementation("io.kotest:kotest-runner-junit5:4.3.1")
+//    testImplementation("io.kotest:kotest-assertions-core-jvm:4.3.1")
+//    testImplementation("io.kotest:kotest-property:4.3.1")
+
 }
 
-    kotlin.sourceSets["main"].kotlin.srcDirs("src")
-    kotlin.sourceSets["test"].kotlin.srcDirs("test")
+kotlin.sourceSets["main"].kotlin.srcDirs("src")
+kotlin.sourceSets["test"].kotlin.srcDirs("test")
 
-    sourceSets["main"].resources.srcDirs("resources")
-    sourceSets["test"].resources.srcDirs("testresources")
+sourceSets["main"].resources.srcDirs("resources")
+sourceSets["test"].resources.srcDirs("testresources")
 
