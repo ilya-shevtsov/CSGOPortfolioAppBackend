@@ -12,110 +12,58 @@ import kotlin.math.sqrt
 
 class SellHistoryRepository {
 
-    fun checkSharpRatio(resourcePath: String, period: Int): List<String> {
+    fun getSharpRatioFromResourcePath(resourcePath: String, period: Int): List<String> {
         val errorMessage = "price is currently in decline"
         val outputList = mutableListOf<String>()
-        val haha = File(resourcePath).walk().toMutableList().drop(1)
+        val resourceList = File(resourcePath).walk().toMutableList().drop(1)
+        resourceList.forEach { file ->
+            val filePath = handleFilePath(file)
+            val fileName = handleFileName(filePath)
+            val sharpRatio = getSharpRatioFromJSON(filePath, period)
 
-        haha.forEach { file ->
-            val filePath = file.toString()
-                .replace("resources\\", "")
-                .replace("""\""", "/")
-            val filePathNew = "/$filePath"
-            val fileName = filePath
-                .replace(".json", "")
-                .replace("caseJson/", "")
-            val response = getSharpRatioFromJSON(filePathNew, period)
-            if (response.isNaN()) {
+            if (sharpRatio.isNaN()) {
                 outputList.add("$fileName $errorMessage")
             } else {
-                outputList.add("$fileName Sharp Ratio is: $response")
+                outputList.add("$fileName Sharp Ratio is: $sharpRatio")
             }
         }
         return outputList
     }
+    
 
+
+    private fun handleFileName(filePath: String): String {
+        return filePath
+            .replace(".json", "")
+            .replace("caseJson/", "")
+            .replace("/", "")
+    }
+
+    private fun handleFilePath(file: File): String {
+        val filePath = file.toString()
+            .replace("resources\\", "")
+            .replace("""\""", "/")
+        return "/$filePath"
+    }
 
 
     private fun getSharpRatioFromJSON(jsonPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
-
-        val getDailySellHistoryList =
-            getDailySellHistoryList(parsedJson)
-
-        val getDailyFromHourlySellHistoryList =
-            getDailyFromHourlySellHistoryList(parsedJson)
-
-
-        val getDailyPriceList = getDailyPriceList(
-            getDailySellHistoryList,
-            getDailyFromHourlySellHistoryList,
-            period
-        )
-        return getSharpRatioFromDailyPriceList(getDailyPriceList)
+        val priceList = getPriceList(parsedJson, period)
+        return getSharpRatioFromPriceList(priceList)
     }
 
-    private fun getDailyPriceList(
-        dailySellHistoryList: List<DailySellHistory>,
-        hoursDaysList: List<List<DailySellHistory>>,
-        period: Int
-    ): MutableList<Double> {
 
-
-
-        val dailyPriceList = toDailyPriceList(dailySellHistoryList, period)
-        val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList, period)
-        return (dailyPriceList + hourlyToDailyPriceList).toMutableList()
-    }
-
-    private fun getSharpRatioFromDailyPriceList(dailyPriceList: MutableList<Double>): Double {
-        val growthPeriod = getGrowthPeriodList(dailyPriceList)
+    private fun getSharpRatioFromPriceList(priceList: MutableList<Double>): Double {
+        val growthPeriod = getGrowthPeriodList(priceList)
         val returnList = getReturnList(growthPeriod)
         return getSharpRatio(getMean(returnList), getStandardDeviation(returnList))
     }
 
-    private fun toDailyPriceList(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
-        val priceList = mutableListOf<Double>()
-        when (period) {
-            1 -> {
-                dailySellHistoryList.map { day -> priceList.add(day.price) }
-            }
-            30 -> {
-                dailySellHistoryList.map { day ->
-                    val dateSplit = day.date.split(" ")
-                    if (dateSplit[1] == "13") {
-                        priceList.add(day.price)
-                    }
-                }
-            }
-        }
-        return priceList
-    }
-
-    private fun fromHourlyToDailyPriceList(HourlyDays: List<List<DailySellHistory>>, period: Int): MutableList<Double> {
-        val hourlyPriceList = mutableListOf<Double>()
-        HourlyDays.map { day ->
-            day.map { hour ->
-                val dateSplit = hour.date.split(" ")
-                when (period) {
-                    1 -> {
-                        if (dateSplit[3] == "01:") {
-                            hourlyPriceList.add(hour.price)
-                        }
-                    }
-                    30 -> if (dateSplit[3] == "01:" && dateSplit[1] == "13") {
-                        hourlyPriceList.add(hour.price)
-                    }
-                }
-            }
-        }
-        return hourlyPriceList
-    }
-
-    private fun getGrowthPeriodList(dailyPriceList: List<Double>): List<Double> {
-        val minPrice = dailyPriceList.minOrNull()!!
-        return dailyPriceList.takeLastWhile { price -> price != minPrice }
+    private fun getGrowthPeriodList(priceList: List<Double>): List<Double> {
+        val minPrice = priceList.minOrNull()!!
+        return priceList.takeLastWhile { price -> price != minPrice }
     }
 
     private fun getReturnList(priceList: List<Double>): List<Double> {
@@ -158,12 +106,6 @@ class SellHistoryRepository {
 
     private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
 
-    private fun getDailyFromHourlySellHistoryList(parsedJson: SellHistoryDto) =
-        SellHistoryMapper.map(parsedJson).takeLast(720).chunked(24)
-
-    private fun getDailySellHistoryList(parsedJson: SellHistoryDto) =
-        SellHistoryMapper.map(parsedJson).dropLast(725)
-
     private fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> (second - first) }
 
@@ -175,6 +117,64 @@ class SellHistoryRepository {
         val nextArray = priceList.slice(1 until priceList.size)
         return previousArray.zip(nextArray)
     }
+
+    private fun getPriceList(
+        parsedJson: SellHistoryDto,
+        period: Int
+    ): MutableList<Double> {
+
+        val dailyPriceList = getPriceList(getDailySellHistoryList(parsedJson), period)
+
+        val dailyPriceListFromHourly = toPriceListFromHourly(
+            getDailyFromHourlySellHistoryList(parsedJson), period
+        )
+
+        return (dailyPriceList + dailyPriceListFromHourly).toMutableList()
+    }
+
+    private fun getPriceList(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
+        val priceList = mutableListOf<Double>()
+        when (period) {
+            1 -> {
+                dailySellHistoryList.map { day -> priceList.add(day.price) }
+            }
+            30 -> {
+                dailySellHistoryList.map { day ->
+                    val dateSplit = day.date.split(" ")
+                    if (dateSplit[1] == "13") {
+                        priceList.add(day.price)
+                    }
+                }
+            }
+        }
+        return priceList
+    }
+
+    private fun toPriceListFromHourly(hourlyDayList: List<List<DailySellHistory>>, period: Int): MutableList<Double> {
+        val hourlyPriceList = mutableListOf<Double>()
+        hourlyDayList.map { day ->
+            day.map { hour ->
+                val dateSplit = hour.date.split(" ")
+                when (period) {
+                    1 -> {
+                        if (dateSplit[3] == "01:") {
+                            hourlyPriceList.add(hour.price)
+                        }
+                    }
+                    30 -> if (dateSplit[3] == "01:" && dateSplit[1] == "13") {
+                        hourlyPriceList.add(hour.price)
+                    }
+                }
+            }
+        }
+        return hourlyPriceList
+    }
+
+    private fun getDailyFromHourlySellHistoryList(parsedJson: SellHistoryDto) =
+        SellHistoryMapper.map(parsedJson).takeLast(720).chunked(24)
+
+    private fun getDailySellHistoryList(parsedJson: SellHistoryDto) =
+        SellHistoryMapper.map(parsedJson).dropLast(725)
 
     private fun getResourceDirectory(path: String): String {
         return object {}.javaClass.getResource(path).readText()

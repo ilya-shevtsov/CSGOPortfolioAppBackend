@@ -18,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
 import kotlinx.serialization.ExperimentalSerializationApi
-import java.io.File
 
 class Server {
 
@@ -44,7 +43,7 @@ class Server {
                     call.respond(response)
                 }
                 get("/getData") {
-                    val sharpRatioList = sellHistoryRepository.checkSharpRatio("resources/caseJson",30)
+                    val sharpRatioList = sellHistoryRepository.getSharpRatioFromResourcePath("resources/caseJson",30)
                     call.respond(sharpRatioList)
                 }
             }
