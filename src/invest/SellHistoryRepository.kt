@@ -12,8 +12,7 @@ import kotlin.math.sqrt
 
 class SellHistoryRepository {
 
-    fun getSharpRatioFromResourcePath(resourcePath: String, period: Int): List<String> {
-        val errorMessage = "price is currently in decline"
+    fun prepareSharpRatioResponse(resourcePath: String, period: Int): List<String> {
         val outputList = mutableListOf<String>()
         val resourceList = File(resourcePath).walk().toMutableList().drop(1)
         resourceList.forEach { file ->
@@ -22,30 +21,13 @@ class SellHistoryRepository {
             val sharpRatio = getSharpRatioFromJSON(filePath, period)
 
             if (sharpRatio.isNaN()) {
-                outputList.add("$fileName $errorMessage")
+                outputList.add("$fileName price is currently in decline")
             } else {
                 outputList.add("$fileName Sharp Ratio is: $sharpRatio")
             }
         }
         return outputList
     }
-    
-
-
-    private fun handleFileName(filePath: String): String {
-        return filePath
-            .replace(".json", "")
-            .replace("caseJson/", "")
-            .replace("/", "")
-    }
-
-    private fun handleFilePath(file: File): String {
-        val filePath = file.toString()
-            .replace("resources\\", "")
-            .replace("""\""", "/")
-        return "/$filePath"
-    }
-
 
     private fun getSharpRatioFromJSON(jsonPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jsonPath)
@@ -116,6 +98,20 @@ class SellHistoryRepository {
         val previousArray = priceList.slice(0 until priceList.size - 1)
         val nextArray = priceList.slice(1 until priceList.size)
         return previousArray.zip(nextArray)
+    }
+
+    private fun handleFileName(filePath: String): String {
+        return filePath
+            .replace(".json", "")
+            .replace("caseJson/", "")
+            .replace("/", "")
+    }
+
+    private fun handleFilePath(file: File): String {
+        val filePath = file.toString()
+            .replace("resources\\", "")
+            .replace("""\""", "/")
+        return "/$filePath"
     }
 
     private fun getPriceList(
