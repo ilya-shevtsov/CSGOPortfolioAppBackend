@@ -35,51 +35,49 @@ class SellHistoryRepository {
         return outputList
     }
 
-    private fun getSharpRatioFromJSON(jSONPath: String, period: Int): Double {
-        val jsonFileText = getResourceDirectory(jSONPath)
+    private fun getSharpRatioFromJSON(jsonPath: String, period: Int): Double {
+        val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
-        val mappedSellHistory = SellHistoryMapper.map(parsedJson)
-        val dailySellHistoryList = mappedSellHistory.dropLast(725)
-        val hourlyDataToDaily = mappedSellHistory.takeLast(720).chunked(24)
-        val getFullDailyPriceList = getFullDailyPriceList(dailySellHistoryList, hourlyDataToDaily, period)
-        return getSharpRatioFromDailyPriceList(getFullDailyPriceList)
+        val getDailyPriceList = getDailyPriceList(
+            getDailySellHistoryList(parsedJson),
+            getDailyFromHourlySellHistoryList(parsedJson),
+            period
+        )
+        return getSharpRatioFromDailyPriceList(getDailyPriceList)
     }
 
-    private fun getFullDailyPriceList(
+    private fun getDailyPriceList(
         dailySellHistoryList: List<DailySellHistory>,
         hoursDaysList: List<List<DailySellHistory>>,
         period: Int
     ): MutableList<Double> {
         val dailyPriceList = toDailyPriceList(dailySellHistoryList, period)
         val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList, period)
-
         return (dailyPriceList + hourlyToDailyPriceList).toMutableList()
     }
 
-    fun getSharpRatioFromDailyPriceList(fullDailyPriceLise: MutableList<Double>): Double {
-        val growthPeriodList = getGrowthPeriodList(fullDailyPriceLise)
-        val calculatedReturn = getReturnList(growthPeriodList)
-        val standardDeviation = getStandardDeviation(calculatedReturn)
-        val mean = getMean(calculatedReturn)
-        return getSharpRatio(mean, standardDeviation)
+    private fun getSharpRatioFromDailyPriceList(dailyPriceList: MutableList<Double>): Double {
+        val growthPeriod = getGrowthPeriodList(dailyPriceList)
+        val returnList = getReturnList(growthPeriod)
+        return getSharpRatio(getMean(returnList), getStandardDeviation(returnList))
     }
 
     private fun toDailyPriceList(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
-        val pricesList = mutableListOf<Double>()
+        val priceList = mutableListOf<Double>()
         when (period) {
             1 -> {
-                dailySellHistoryList.map { day -> pricesList.add(day.price) }
+                dailySellHistoryList.map { day -> priceList.add(day.price) }
             }
             30 -> {
                 dailySellHistoryList.map { day ->
                     val dateSplit = day.date.split(" ")
                     if (dateSplit[1] == "13") {
-                        pricesList.add(day.price)
+                        priceList.add(day.price)
                     }
                 }
             }
         }
-        return pricesList
+        return priceList
     }
 
     private fun fromHourlyToDailyPriceList(HourlyDays: List<List<DailySellHistory>>, period: Int): MutableList<Double> {
@@ -102,18 +100,18 @@ class SellHistoryRepository {
         return hourlyPriceList
     }
 
-    private fun getGrowthPeriodList(fullDailyAvgPrices: List<Double>): List<Double> {
-        val minPrice = fullDailyAvgPrices.minOrNull()!!
-        return fullDailyAvgPrices.takeLastWhile { price -> price != minPrice }
+    private fun getGrowthPeriodList(dailyPriceList: List<Double>): List<Double> {
+        val minPrice = dailyPriceList.minOrNull()!!
+        return dailyPriceList.takeLastWhile { price -> price != minPrice }
     }
 
-    private fun getReturnList(pricesList: List<Double>): List<Double> {
-        val pairedArray = getPairedPriceList(pricesList)
+    private fun getReturnList(priceList: List<Double>): List<Double> {
+        val pairedArray = getPairedPriceArray(priceList)
         return getPercentReturnList(pairedArray)
     }
 
-    fun getAverageReturn(pricesList: List<Double>, averageReturnType: Int): Double {
-        val pairedArray = getPairedPriceList(pricesList)
+    fun getAverageReturn(priceList: List<Double>, averageReturnType: Int): Double {
+        val pairedArray = getPairedPriceArray(priceList)
         return when (averageReturnType) {
             1 -> {
                 myRound(((getPercentReturnList(pairedArray).sum() / pairedArray.size) * 100))
@@ -125,27 +123,33 @@ class SellHistoryRepository {
         }
     }
 
-    private fun getStandardDeviation(pricesList: List<Double>): Double {
+    private fun getStandardDeviation(priceList: List<Double>): Double {
         var standardDeviation = 0.0
-        for (num in pricesList) {
-            standardDeviation += (num - (getMean(pricesList))).pow(2.0)
+        for (num in priceList) {
+            standardDeviation += (num - (getMean(priceList))).pow(2.0)
         }
-        return sqrt(standardDeviation / pricesList.size)
+        return sqrt(standardDeviation / priceList.size)
     }
 
     private fun getSharpRatio(mean: Double, standardDeviation: Double): Double {
         return mean / standardDeviation
     }
 
-    private fun getMean(pricesList: List<Double>): Double {
+    private fun getMean(priceList: List<Double>): Double {
         var sum = 0.0
-        for (num in pricesList) {
+        for (num in priceList) {
             sum += num
         }
-        return sum / pricesList.size
+        return sum / priceList.size
     }
 
     private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
+
+    private fun getDailyFromHourlySellHistoryList(parsedJson: SellHistoryDto) =
+        SellHistoryMapper.map(parsedJson).takeLast(720).chunked(24)
+
+    private fun getDailySellHistoryList(parsedJson: SellHistoryDto) =
+        SellHistoryMapper.map(parsedJson).dropLast(725)
 
     private fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> (second - first) }
@@ -153,9 +157,9 @@ class SellHistoryRepository {
     private fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> (second - first) / first }
 
-    private fun getPairedPriceList(pricesList: List<Double>): List<Pair<Double, Double>> {
-        val previousArray = pricesList.slice(0 until pricesList.size - 1)
-        val nextArray = pricesList.slice(1 until pricesList.size)
+    private fun getPairedPriceArray(priceList: List<Double>): List<Pair<Double, Double>> {
+        val previousArray = priceList.slice(0 until priceList.size - 1)
+        val nextArray = priceList.slice(1 until priceList.size)
         return previousArray.zip(nextArray)
     }
 
