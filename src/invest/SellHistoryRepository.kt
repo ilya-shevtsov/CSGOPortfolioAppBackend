@@ -105,17 +105,13 @@ class SellHistoryRepository {
     }
 
     private fun calculateReturn(pricesList: List<Double>): List<Double> {
-        val previousArray = pricesList.slice(0 until pricesList.size - 1)
-        val nextArray = pricesList.slice(1 until pricesList.size)
-        val pairedArray = previousArray.zip(nextArray)
+        val pairedArray = buildPairedPriceList(pricesList)
         return pairedArray.map { (first, second) -> (second - first) / first }
     }
 
     fun calculateAvgReturn(pricesList: List<Double>, type: Int): Double {
         var roundedAvgReturn = 0.0
-        val previousArray = pricesList.slice(0 until pricesList.size - 1)
-        val nextArray = pricesList.slice(1 until pricesList.size)
-        val pairedArray = previousArray.zip(nextArray)
+        val pairedArray = buildPairedPriceList(pricesList)
         when (type) {
             1 -> {
                 val returnList = pairedArray.map { (first, second) -> (second - first) / first }
@@ -151,6 +147,12 @@ class SellHistoryRepository {
             sum += num
         }
         return sum / pricesList.size
+    }
+
+    private fun buildPairedPriceList(pricesList: List<Double>): List<Pair<Double, Double>> {
+        val previousArray = pricesList.slice(0 until pricesList.size - 1)
+        val nextArray = pricesList.slice(1 until pricesList.size)
+        return previousArray.zip(nextArray)
     }
 
     private fun getResourceDirectory(path: String): String {
