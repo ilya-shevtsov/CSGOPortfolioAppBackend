@@ -35,12 +35,22 @@ class SellHistoryRepository {
         return outputList
     }
 
+
+
     private fun getSharpRatioFromJSON(jsonPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+
+        val getDailySellHistoryList =
+            getDailySellHistoryList(parsedJson)
+
+        val getDailyFromHourlySellHistoryList =
+            getDailyFromHourlySellHistoryList(parsedJson)
+
+
         val getDailyPriceList = getDailyPriceList(
-            getDailySellHistoryList(parsedJson),
-            getDailyFromHourlySellHistoryList(parsedJson),
+            getDailySellHistoryList,
+            getDailyFromHourlySellHistoryList,
             period
         )
         return getSharpRatioFromDailyPriceList(getDailyPriceList)
@@ -51,6 +61,9 @@ class SellHistoryRepository {
         hoursDaysList: List<List<DailySellHistory>>,
         period: Int
     ): MutableList<Double> {
+
+
+
         val dailyPriceList = toDailyPriceList(dailySellHistoryList, period)
         val hourlyToDailyPriceList = fromHourlyToDailyPriceList(hoursDaysList, period)
         return (dailyPriceList + hourlyToDailyPriceList).toMutableList()
