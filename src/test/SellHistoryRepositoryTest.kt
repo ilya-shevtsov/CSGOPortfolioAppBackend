@@ -16,27 +16,33 @@ internal class SellHistoryRepositoryTest {
 
     @Test
     fun haha() {
-        val haha = calculateAvgReturn(inputList, 1)
-        Assertions.assertEquals(41.47, haha)
+        val haha = calculateAvgReturn(inputList, 2)
+        Assertions.assertEquals(3.97, haha)
     }
 
     fun calculateAvgReturn(pricesList: List<Double>, type: Int): Double {
-        var roundedAvgReturn = 0.0
-        val previousArray = pricesList.slice(0 until pricesList.size - 1)
-        val nextArray = pricesList.slice(1 until pricesList.size)
-        val pairedArray = previousArray.zip(nextArray)
-        when (type) {
+        val pairedArray = buildPairedPriceList(pricesList)
+        return when (type) {
             1 -> {
-                val returnList = pairedArray.map { (first, second) -> (second - first) / first }
-                val avgReturn = (returnList.sum() / pairedArray.size) * 100
-                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
+                myRound(((getPercentReturnList(pairedArray).sum() / pairedArray.size) * 100))
             }
             2 -> {
-                val returnList = pairedArray.map { (first, second) -> (second - first) }
-                val avgReturn = returnList.sum() / pairedArray.size
-                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
+                myRound(getCurrencyReturnList(pairedArray).sum() / pairedArray.size)
             }
+            else -> throw Exception("The type of average return that your provided is not supported")
         }
-        return roundedAvgReturn
+    }
+    private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
+
+    private fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
+        pairedArray.map { (first, second) -> (second - first) }
+
+    private fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
+        pairedArray.map { (first, second) -> (second - first) / first }
+
+    private fun buildPairedPriceList(pricesList: List<Double>): List<Pair<Double, Double>> {
+        val previousArray = pricesList.slice(0 until pricesList.size - 1)
+        val nextArray = pricesList.slice(1 until pricesList.size)
+        return previousArray.zip(nextArray)
     }
 }

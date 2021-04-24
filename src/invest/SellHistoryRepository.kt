@@ -106,25 +106,20 @@ class SellHistoryRepository {
 
     private fun calculateReturn(pricesList: List<Double>): List<Double> {
         val pairedArray = buildPairedPriceList(pricesList)
-        return pairedArray.map { (first, second) -> (second - first) / first }
+        return getPercentReturnList(pairedArray)
     }
 
-    fun calculateAvgReturn(pricesList: List<Double>, type: Int): Double {
-        var roundedAvgReturn = 0.0
+    fun calculateAvgReturn(pricesList: List<Double>, averageReturnType: Int): Double {
         val pairedArray = buildPairedPriceList(pricesList)
-        when (type) {
+        return when (averageReturnType) {
             1 -> {
-                val returnList = pairedArray.map { (first, second) -> (second - first) / first }
-                val avgReturn = (returnList.sum() / pairedArray.size) * 100
-                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
+                myRound(((getPercentReturnList(pairedArray).sum() / pairedArray.size) * 100))
             }
             2 -> {
-                val returnList = pairedArray.map { (first, second) -> (second - first) }
-                val avgReturn = returnList.sum() / pairedArray.size
-                roundedAvgReturn = (avgReturn * 100).roundToInt() / 100.0
+                myRound(getCurrencyReturnList(pairedArray).sum() / pairedArray.size)
             }
+            else -> throw Exception("The type of average return that your provided is not supported")
         }
-        return roundedAvgReturn
     }
 
     private fun calculateStandardDeviation(pricesList: List<Double>): Double {
@@ -148,6 +143,14 @@ class SellHistoryRepository {
         }
         return sum / pricesList.size
     }
+
+    private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
+
+    private fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
+        pairedArray.map { (first, second) -> (second - first) }
+
+    private fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
+        pairedArray.map { (first, second) -> (second - first) / first }
 
     private fun buildPairedPriceList(pricesList: List<Double>): List<Pair<Double, Double>> {
         val previousArray = pricesList.slice(0 until pricesList.size - 1)
