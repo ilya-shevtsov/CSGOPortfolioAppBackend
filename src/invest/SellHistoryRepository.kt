@@ -11,6 +11,29 @@ import kotlin.math.sqrt
 
 class SellHistoryRepository {
 
+    fun checkSharpRatio(resourcePath: String, period: Int): List<String> {
+        val errorMessage = "Case price is currently in decline"
+        val outputList = mutableListOf<String>()
+        val haha = File(resourcePath).walk().toMutableList().drop(1)
+
+        haha.forEach { file ->
+            val filePath = file.toString()
+                .replace("resources\\", "")
+                .replace("""\""", "/")
+            val filePathNew = "/$filePath"
+            val fileName = filePath
+                .replace(".json", "")
+                .replace("caseJson/", "")
+            val response = calculateSharpRatioFromJSON(filePathNew, period)
+            if (response.isNaN()) {
+                outputList.add("$fileName Sharp Ratio is: $errorMessage")
+            } else {
+                outputList.add("$fileName Sharp Ratio is: $response")
+            }
+        }
+        return outputList
+    }
+
     private fun calculateSharpRatioFromJSON(jSONPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jSONPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
@@ -56,7 +79,6 @@ class SellHistoryRepository {
     }
 
     private fun fromHourlyToDailyPriceList(HourlyDays: List<List<DailySellHistory>>, period: Int): MutableList<Double> {
-
         val hourlyPriceList = mutableListOf<Double>()
         HourlyDays.map { day ->
             day.map { hour ->
@@ -112,28 +134,5 @@ class SellHistoryRepository {
 
     private fun getResourceDirectory(path: String): String {
         return object {}.javaClass.getResource(path).readText()
-    }
-
-    fun checkSharpRatio(resourcePath: String, period: Int): List<String> {
-        val errorMessage = "Case price is currently in decline"
-        val outputList = mutableListOf<String>()
-        val haha = File(resourcePath).walk().toMutableList().drop(1)
-
-        haha.forEach { file ->
-            val filePath = file.toString()
-                .replace("resources\\", "")
-                .replace("""\""", "/")
-            val filePathNew = "/$filePath"
-            val fileName = filePath
-                .replace(".json", "")
-                .replace("caseJson/", "")
-            val response = calculateSharpRatioFromJSON(filePathNew, period)
-            if (response.isNaN()) {
-                outputList.add("$fileName Sharp Ratio is: $errorMessage")
-            } else {
-                outputList.add("$fileName Sharp Ratio is: $response")
-            }
-        }
-        return outputList
     }
 }
