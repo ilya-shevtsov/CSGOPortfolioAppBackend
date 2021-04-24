@@ -18,7 +18,7 @@ class SellHistoryRepository {
         resourceList.forEach { file ->
             val filePath = handleFilePath(file)
             val fileName = handleFileName(filePath)
-            val sharpRatio = getSharpRatioFromJSON(filePath, period)
+            val sharpRatio = getSharpRatioFromJson(filePath, period)
 
             if (sharpRatio.isNaN()) {
                 outputList.add("$fileName price is currently in decline")
@@ -29,18 +29,29 @@ class SellHistoryRepository {
         return outputList
     }
 
-    private fun getSharpRatioFromJSON(jsonPath: String, period: Int): Double {
+    private fun getSharpRatioFromJson(jsonPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val priceList = getPriceList(parsedJson, period)
         return getSharpRatioFromPriceList(priceList)
     }
 
+    private fun getStandardDeviationFromJson(jsonPath: String, period: Int): Double {
+        val jsonFileText = getResourceDirectory(jsonPath)
+        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+        val priceList = getPriceList(parsedJson, period)
+        val growthPeriod = getGrowthPeriodList(priceList)
+        val returnList = getReturnList(growthPeriod)
+        return getStandardDeviation(returnList)
+    }
+
 
     private fun getSharpRatioFromPriceList(priceList: MutableList<Double>): Double {
         val growthPeriod = getGrowthPeriodList(priceList)
         val returnList = getReturnList(growthPeriod)
-        return getSharpRatio(getMean(returnList), getStandardDeviation(returnList))
+        val hh = getStandardDeviation(returnList)
+        println(hh)
+        return getSharpRatio(getMean(returnList),hh )
     }
 
     private fun getGrowthPeriodList(priceList: List<Double>): List<Double> {

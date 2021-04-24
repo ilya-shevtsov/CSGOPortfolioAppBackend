@@ -43,7 +43,8 @@ class Server {
                     call.respond(response)
                 }
                 get("/getSharpRatio") {
-                    val sharpRatioList = sellHistoryRepository.prepareSharpRatioResponse("resources/caseJson",30)
+                    val sharpRatioList = sellHistoryRepository
+                        .prepareSharpRatioResponse("resources/caseJson",30)
                     call.respond(sharpRatioList)
                 }
             }
