@@ -12,8 +12,28 @@ internal class MathRepositoryTest {
 
     private lateinit var mathRepository: MathRepository
 
-    val input = mutableListOf(7.76, 10.03, 19.46, 19.68)
-    val inputForSD = mutableListOf(0.29252577319587625, 0.9401794616151548, 0.0113052415210688)
+    val input = mutableListOf(
+        94.00,
+        101.00,
+        102.00,
+        98.00,
+        101.00,
+        95.00,
+        97.00,
+        97.00,
+        104.00,
+        97.00,
+        95.00,
+        99.00,
+        100.00,
+        101.00,
+        101.00,
+        95.00,
+        95.00,
+        99.00,
+        103.00,
+        102.00
+    )
 
     @BeforeEach
     fun onSetup() {
@@ -21,9 +41,14 @@ internal class MathRepositoryTest {
     }
 
     @Test
-    fun testGetCurrencyReturnList() {
-        val input: List<Pair<Double, Double>> = listOf(Pair(95.0,101.0))
-        val output = mathRepository.getCurrencyReturnList(input)
-        assertEquals(listOf(6.0),output)
+    fun testGetStandardDeviation() {
+        val output = mathRepository.getStandardDeviation(input)
+        assertEquals(0.041339265683302234, output)
+    }
+
+    @Test
+    fun testGetSharpRatio() {
+        val output = mathRepository.getSharpRatio(input)
+        assertEquals(0.10398935894329135, output)
     }
 }

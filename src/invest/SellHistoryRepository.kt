@@ -32,7 +32,6 @@ class SellHistoryRepository {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val priceList = getPriceList(parsedJson, period)
-        println(priceList)
         return mathRepository.getSharpRatio(priceList)
     }
 
@@ -40,9 +39,7 @@ class SellHistoryRepository {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val priceList = getPriceList(parsedJson, period)
-        val growthPeriod = mathRepository.getGrowthPeriodList(priceList)
-        val returnList = mathRepository.getLogReturnList(growthPeriod)
-        return mathRepository.getStandardDeviation(returnList)
+        return mathRepository.getStandardDeviation(priceList)
     }
 
     private fun getAverageReturnFromJson(
