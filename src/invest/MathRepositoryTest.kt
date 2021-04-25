@@ -11,7 +11,7 @@ internal class MathRepositoryTest {
 
     private lateinit var mathRepository: MathRepository
 
-    val input = mutableListOf(7.76,10.03, 19.46, 19.68)
+    val input = mutableListOf(7.76, 10.03, 19.46, 19.68)
     val inputForSD = mutableListOf(0.29252577319587625, 0.9401794616151548, 0.0113052415210688)
 
     @BeforeEach
@@ -20,9 +20,9 @@ internal class MathRepositoryTest {
     }
 
     @Test
-    fun testGetMean(){
+    fun testGetMean() {
         val output = mathRepository.getMean(inputForSD)
-        assertEquals(	0.4146701587773666, output)
+        assertEquals(0.4146701587773666, output)
     }
 
 
@@ -35,7 +35,7 @@ internal class MathRepositoryTest {
     @Test
     fun testGetGrowthPeriodList() {
         val output = mathRepository.getGrowthPeriodList(input)
-        assertEquals(listOf(10.03, 19.46, 19.68), output)
+        assertEquals(listOf(7.76, 10.03, 19.46, 19.68), output)
     }
 
     @Test
@@ -59,6 +59,6 @@ internal class MathRepositoryTest {
     @Test
     fun testGetStandardDeviation() {
         val output = mathRepository.getStandardDeviation(inputForSD)
-        assertEquals(0.46, output)
+        assertEquals(0.4763310481016947, output)
     }
 }

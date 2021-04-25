@@ -6,15 +6,22 @@ import kotlin.math.sqrt
 
 class MathRepository {
 
+
+    fun newTrySD(priceList:List<Double>):Double{
+        
+    }
+
+
     fun getSharpRatioFromPriceList(priceList: MutableList<Double>): Double {
         val growthPeriod = getGrowthPeriodList(priceList)
         val returnList = getReturnList(growthPeriod)
-        return getSharpRatio(getMean(returnList), getStandardDeviation(returnList))
+        val mean = returnList.average()
+        return getSharpRatio(mean, getStandardDeviation(returnList))
     }
 
     fun getGrowthPeriodList(priceList: List<Double>): List<Double> {
         val minPrice = priceList.minOrNull()!!
-        return priceList.takeLastWhile { price -> price != minPrice }
+        return priceList.takeLastWhile { price -> price + 1 != minPrice }
     }
 
     fun getReturnList(priceList: List<Double>): List<Double> {
@@ -36,23 +43,16 @@ class MathRepository {
     }
 
     fun getStandardDeviation(returnList: List<Double>): Double {
-        var standardDeviation = 0.0
+        val mean = returnList.average()
+        var variance = 0.0
         for (num in returnList) {
-            standardDeviation += (num - (getMean(returnList))).pow(2.0)
+            variance += (num - mean).pow(2.0)
         }
-        return sqrt(standardDeviation / returnList.size)
+        return sqrt(variance / (returnList.size - 1))
     }
 
     private fun getSharpRatio(mean: Double, standardDeviation: Double): Double {
         return mean / standardDeviation
-    }
-
-    fun getMean(priceList: List<Double>): Double {
-        var sum = 0.0
-        for (num in priceList) {
-            sum += num
-        }
-        return sum / priceList.size
     }
 
     private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
