@@ -6,9 +6,6 @@ import invest.serializer.invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
-import kotlin.math.pow
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
 
 class SellHistoryRepository {
 
@@ -36,7 +33,7 @@ class SellHistoryRepository {
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val priceList = getPriceList(parsedJson, period)
         println(priceList)
-        return mathRepository.getSharpRatioFromPriceList(priceList)
+        return mathRepository.getSharpRatio(priceList)
     }
 
     private fun getStandardDeviationFromJson(jsonPath: String, period: Int): Double {
@@ -44,7 +41,7 @@ class SellHistoryRepository {
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val priceList = getPriceList(parsedJson, period)
         val growthPeriod = mathRepository.getGrowthPeriodList(priceList)
-        val returnList = mathRepository.getReturnList(growthPeriod)
+        val returnList = mathRepository.getLogReturnList(growthPeriod)
         return mathRepository.getStandardDeviation(returnList)
     }
 
@@ -78,7 +75,7 @@ class SellHistoryRepository {
         period: Int
     ): MutableList<Double> {
 
-        val dailyPriceList = getPriceList(getDailySellHistoryList(parsedJson), period)
+        val dailyPriceList = getPriceListFromDaily(getDailySellHistoryList(parsedJson), period)
 
         val dailyPriceListFromHourly = toPriceListFromHourly(
             getDailyFromHourlySellHistoryList(parsedJson), period
@@ -87,7 +84,7 @@ class SellHistoryRepository {
         return (dailyPriceList + dailyPriceListFromHourly).toMutableList()
     }
 
-    private fun getPriceList(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
+    private fun getPriceListFromDaily(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
         val priceList = mutableListOf<Double>()
         when (period) {
             1 -> {

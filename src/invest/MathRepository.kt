@@ -1,22 +1,30 @@
 package invest
 
+import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class MathRepository {
 
-
-    fun newTrySD(priceList:List<Double>):Double{
-        
+    fun getStandardDeviation(priceList: List<Double>): Double {
+        val growthPeriod = getGrowthPeriodList(priceList)
+        val logReturnList = getLogReturnList(growthPeriod)
+        val mean = logReturnList.average()
+        val squaredDeviationSum = logReturnList
+            .fold(0.0, { accumulator, next -> accumulator + (next - mean).pow(2.0) })
+        return sqrt(squaredDeviationSum / (logReturnList.size - 1))
     }
 
 
-    fun getSharpRatioFromPriceList(priceList: MutableList<Double>): Double {
+    fun getSharpRatio(priceList: MutableList<Double>): Double {
         val growthPeriod = getGrowthPeriodList(priceList)
-        val returnList = getReturnList(growthPeriod)
-        val mean = returnList.average()
-        return getSharpRatio(mean, getStandardDeviation(returnList))
+        val logReturnList = getLogReturnList(growthPeriod)
+        val mean = logReturnList.average()
+        val squaredDeviationSum = logReturnList
+            .fold(0.0, { accumulator, next -> accumulator + (next - mean).pow(2.0) })
+        val standardDeviation = sqrt(squaredDeviationSum / (logReturnList.size - 1))
+        return mean / standardDeviation
     }
 
     fun getGrowthPeriodList(priceList: List<Double>): List<Double> {
@@ -24,16 +32,16 @@ class MathRepository {
         return priceList.takeLastWhile { price -> price + 1 != minPrice }
     }
 
-    fun getReturnList(priceList: List<Double>): List<Double> {
-        val pairedArray = getPairedPriceArray(priceList)
-        return getPercentReturnList(pairedArray)
+    fun getLogReturnList(priceList: List<Double>): List<Double> {
+        return getPairedPriceArray(priceList).map { (first, second) -> ln(second / first) }
     }
+
 
     fun getAverageReturn(priceList: List<Double>, averageReturnType: Int): Double {
         val pairedArray = getPairedPriceArray(priceList)
         return when (averageReturnType) {
             1 -> {
-                myRound(((getPercentReturnList(pairedArray).sum() / pairedArray.size) * 100))
+                myRound((getPercentReturnList(pairedArray).sum() / pairedArray.size))
             }
             2 -> {
                 myRound(getCurrencyReturnList(pairedArray).sum() / pairedArray.size)
@@ -42,26 +50,13 @@ class MathRepository {
         }
     }
 
-    fun getStandardDeviation(returnList: List<Double>): Double {
-        val mean = returnList.average()
-        var variance = 0.0
-        for (num in returnList) {
-            variance += (num - mean).pow(2.0)
-        }
-        return sqrt(variance / (returnList.size - 1))
-    }
-
-    private fun getSharpRatio(mean: Double, standardDeviation: Double): Double {
-        return mean / standardDeviation
-    }
-
     private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
 
-    private fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
+    fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> (second - first) }
 
-    private fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
-        pairedArray.map { (first, second) -> (second - first) / first }
+    fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
+        pairedArray.map { (first, second) -> ((second - first) / first) * 100 }
 
     private fun getPairedPriceArray(priceList: List<Double>): List<Pair<Double, Double>> {
         val previousArray = priceList.slice(0 until priceList.size - 1)
