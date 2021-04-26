@@ -28,6 +28,23 @@ class SellHistoryRepository {
         return outputList
     }
 
+    fun prepareStandardDeviationResponse(resourcePath: String, period: Int): List<String> {
+        val outputList = mutableListOf<String>()
+        val resourceList = File(resourcePath).walk().toMutableList().drop(1)
+        resourceList.forEach { file ->
+            val filePath = handleFilePath(file)
+            val fileName = handleFileName(filePath)
+            val standardDeviation = getStandardDeviationFromJson(filePath, period)
+
+            if (standardDeviation.isNaN()) {
+                outputList.add("$fileName price is currently in decline")
+            } else {
+                outputList.add("$fileName Sharp Ratio is: $standardDeviation")
+            }
+        }
+        return outputList
+    }
+
     private fun getSharpRatioFromJson(jsonPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)

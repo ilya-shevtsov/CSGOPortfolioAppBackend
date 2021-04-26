@@ -30,12 +30,12 @@ class MathRepository {
         return mean / standardDeviation
     }
 
-    fun getGrowthPeriodList(priceList: List<Double>): List<Double> {
+    private fun getGrowthPeriodList(priceList: List<Double>): List<Double> {
         val minPrice = priceList.minOrNull()!!
         return priceList.takeLastWhile { price -> price != minPrice }
     }
 
-    fun getLogReturnList(priceList: List<Double>): List<Double> {
+    private fun getLogReturnList(priceList: List<Double>): List<Double> {
         return getPairedPriceArray(priceList).map { (first, second) -> ln(second / first) }
     }
 
@@ -55,10 +55,10 @@ class MathRepository {
 
     private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
 
-    fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
+    private fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> (second - first) }
 
-    fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
+    private fun getPercentReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> ((second - first) / first) * 100 }
 
     private fun getPairedPriceArray(priceList: List<Double>): List<Pair<Double, Double>> {

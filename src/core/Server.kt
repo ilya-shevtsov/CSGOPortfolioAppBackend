@@ -42,10 +42,25 @@ class Server {
                     val response = caseRepository.getCaseResponse()
                     call.respond(response)
                 }
-                get("/getSharpRatio") {
+                get("/getSharpRatio/monthly") {
                     val sharpRatioList = sellHistoryRepository
                         .prepareSharpRatioResponse("resources/caseJson",30)
                     call.respond(sharpRatioList)
+                }
+                get("/getSharpRatio/daily") {
+                    val sharpRatioList = sellHistoryRepository
+                        .prepareSharpRatioResponse("resources/caseJson",1)
+                    call.respond(sharpRatioList)
+                }
+                get("/getStandardDeviation/monthly") {
+                    val standardDeviationList = sellHistoryRepository
+                        .prepareStandardDeviationResponse("resources/caseJson",30)
+                    call.respond(standardDeviationList)
+                }
+                get("/getStandardDeviation/daily") {
+                    val standardDeviationList = sellHistoryRepository
+                        .prepareStandardDeviationResponse("resources/caseJson",1)
+                    call.respond(standardDeviationList)
                 }
             }
         }.start(wait = true)
