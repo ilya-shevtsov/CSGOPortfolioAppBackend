@@ -19,9 +19,7 @@ class MathRepository {
 
     fun getSharpRatio(priceList: MutableList<Double>): Double {
         val growthPeriod = getGrowthPeriodList(priceList)
-        println(growthPeriod)
         val logReturnList = getLogReturnList(growthPeriod)
-        println(logReturnList)
         val mean = logReturnList.average()
         val squaredDeviationSum = logReturnList
             .fold(0.0, { accumulator, logReturn -> accumulator + (logReturn - mean).pow(2.0) })

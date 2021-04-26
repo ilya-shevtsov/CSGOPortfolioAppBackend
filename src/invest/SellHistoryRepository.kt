@@ -22,7 +22,10 @@ class SellHistoryRepository {
             if (sharpRatio.isNaN()) {
                 outputList.add("$fileName price is currently in decline")
             } else {
-                outputList.add("$fileName Sharp Ratio is: $sharpRatio")
+                when (period){
+                    30 -> outputList.add("$fileName monthly sharp Ratio is: $sharpRatio")
+                    1 -> outputList.add("$fileName daily sharp Ratio is: $sharpRatio")
+                }
             }
         }
         return outputList
@@ -39,7 +42,10 @@ class SellHistoryRepository {
             if (standardDeviation.isNaN()) {
                 outputList.add("$fileName price is currently in decline")
             } else {
-                outputList.add("$fileName Sharp Ratio is: $standardDeviation")
+                when (period){
+                    30 -> outputList.add("$fileName monthly standard deviation is: $standardDeviation")
+                    1 -> outputList.add("$fileName daily standard deviation is: $standardDeviation")
+                }
             }
         }
         return outputList
