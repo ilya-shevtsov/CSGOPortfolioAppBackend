@@ -20,9 +20,9 @@ class SellHistoryRepository {
             val sharpRatio = getSharpRatioFromJson(filePath, period)
 
             if (sharpRatio.isNaN()) {
-                outputList.add("$fileName price is currently in decline")
+                outputList.add("$fileName could not calculate, for more details check /Errors")
             } else {
-                when (period){
+                when (period) {
                     30 -> outputList.add("$fileName monthly sharp Ratio is: $sharpRatio")
                     1 -> outputList.add("$fileName daily sharp Ratio is: $sharpRatio")
                 }
@@ -40,7 +40,7 @@ class SellHistoryRepository {
             val standardDeviation = getStandardDeviationFromJson(filePath, period)
 
             if (standardDeviation.isNaN()) {
-                outputList.add("$fileName price is currently in decline")
+                outputList.add("$fileName could not calculate, for more details check /Errors")
             } else {
                 when (period){
                     30 -> outputList.add("$fileName monthly standard deviation is: $standardDeviation")

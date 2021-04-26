@@ -38,6 +38,11 @@ class Server {
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {
+                get("/Errors") {
+                    val response = "Reasons for errors:" +
+                            "\n1. The price of the case is in decline"
+                    call.respond(response)
+                }
                 get("/getCase") {
                     val response = caseRepository.getCaseResponse()
                     call.respond(response)
