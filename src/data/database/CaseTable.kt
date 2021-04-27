@@ -2,7 +2,7 @@ package data.database
 
 import org.jetbrains.exposed.sql.*
 
-object CaseDatabase : Table() {
+object CaseTable : Table() {
 
     val id: Column<Int> = integer("id").autoIncrement()
     val caseAccess: Column<String> = varchar("caseAccess", 255)

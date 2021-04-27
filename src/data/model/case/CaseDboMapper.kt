@@ -1,21 +1,21 @@
 package data.model.case
 
-import data.database.CaseDatabase
+import data.database.CaseTable
 import org.jetbrains.exposed.sql.ResultRow
 
 object CaseDboMapper {
     fun map(row: ResultRow): CaseDbo {
         return CaseDbo(
-            id = row[CaseDatabase.id],
-            caseAccess = row[CaseDatabase.caseAccess],
-            name = row[CaseDatabase.name],
-            releaseDate = row[CaseDatabase.releaseDate],
-            dropStatus = row[CaseDatabase.dropStatus],
-            lowestPrice = row[CaseDatabase.lowestPrice],
-            volume = row[CaseDatabase.volume],
-            medianPrice = row[CaseDatabase.medianPrice],
-            imageUrl = row[CaseDatabase.imageUrl],
-            description = row[CaseDatabase.description]
+            id = row[CaseTable.id],
+            caseAccess = row[CaseTable.caseAccess],
+            name = row[CaseTable.name],
+            releaseDate = row[CaseTable.releaseDate],
+            dropStatus = row[CaseTable.dropStatus],
+            lowestPrice = row[CaseTable.lowestPrice],
+            volume = row[CaseTable.volume],
+            medianPrice = row[CaseTable.medianPrice],
+            imageUrl = row[CaseTable.imageUrl],
+            description = row[CaseTable.description]
         )
     }
 }

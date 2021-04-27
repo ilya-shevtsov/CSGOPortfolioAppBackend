@@ -1,6 +1,6 @@
 package data.repository
 
-import data.database.CaseDatabase
+import data.database.CaseTable
 import data.database.CaseStorage
 import data.model.case.CaseDbo
 import domain.model.marketoverview.MarketOverview
@@ -424,7 +424,7 @@ class DatabaseRepository {
 
     fun getCaseList(): List<CaseDbo> {
         return transaction {
-            CaseDatabase.selectAll().map { CaseDboMapper.map(it) }
+            CaseTable.selectAll().map { CaseDboMapper.map(it) }
         }
     }
 

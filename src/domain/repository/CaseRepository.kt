@@ -3,7 +3,7 @@ package domain.repository
 import data.model.marketoverview.MarketOverviewDtoMapper
 import domain.model.marketoverview.MarketOverview
 import data.api.ApiTools
-import data.database.CaseDatabase
+import data.database.CaseTable
 import data.model.case.CaseDboMapper
 import domain.model.case.CaseDto
 import domain.model.case.CaseDtoMapper
@@ -33,7 +33,7 @@ class CaseRepository {
 
     fun getCaseResponse(): List<CaseDto> {
         return transaction {
-            CaseDatabase.selectAll().map { CaseDboMapper.map(it) }
+            CaseTable.selectAll().map { CaseDboMapper.map(it) }
         }.map { case -> CaseDtoMapper.map(case) }
     }
 

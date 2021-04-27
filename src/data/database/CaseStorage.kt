@@ -15,13 +15,13 @@ object CaseStorage {
     fun createCaseDatabase() {
         Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
         transaction {
-            SchemaUtils.create(CaseDatabase)
+            SchemaUtils.create(CaseTable)
             databaseRepository.insertInitialData()
         }
     }
 
     fun insertToDatabase(caseDbo: CaseDbo) {
-        CaseDatabase.insert {
+        CaseTable.insert {
             it[name] = caseDbo.name
             it[caseAccess] = caseDbo.caseAccess
             it[releaseDate] = caseDbo.releaseDate
@@ -36,7 +36,7 @@ object CaseStorage {
 
     fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverview) {
         transaction {
-            CaseDatabase.update({ CaseDatabase.id eq caseId }) { caseDatabase ->
+            CaseTable.update({ CaseTable.id eq caseId }) { caseDatabase ->
                 caseDatabase[lowestPrice] = marketOverviewDto.lowestPrice
                 caseDatabase[volume] = marketOverviewDto.volume
                 caseDatabase[medianPrice] = marketOverviewDto.medianPrice
