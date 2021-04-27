@@ -1,4 +1,4 @@
-package invest
+package invest.repository
 
 import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.DailySellHistory

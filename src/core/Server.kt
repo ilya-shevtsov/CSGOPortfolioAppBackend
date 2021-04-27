@@ -4,7 +4,7 @@ import data.database.CaseStorage
 import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
 import domain.usecase.UpdateInfoUseCase
-import invest.SellHistoryRepository
+import invest.repository.SellHistoryRepository
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
