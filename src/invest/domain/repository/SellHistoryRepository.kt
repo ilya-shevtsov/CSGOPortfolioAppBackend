@@ -1,7 +1,7 @@
-package invest.repository
+package invest.domain.repository
 
 import invest.data.model.sellhistory.SellHistoryMapper
-import invest.domain.DailySellHistory
+import invest.domain.model.DailySellHistory
 import invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -51,6 +51,17 @@ class SellHistoryRepository {
         return outputList
     }
 
+    private fun getAverageReturnFromJson(
+        jsonPath: String,
+        period: Int,
+        averageReturnType: Int
+    ): Double {
+        val jsonFileText = getResourceDirectory(jsonPath)
+        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+        val priceList = getPriceList(parsedJson, period)
+        return mathRepository.getAverageReturn(priceList, averageReturnType)
+    }
+
     private fun getSharpRatioFromJson(jsonPath: String, period: Int): Double {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
@@ -63,17 +74,6 @@ class SellHistoryRepository {
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val priceList = getPriceList(parsedJson, period)
         return mathRepository.getStandardDeviation(priceList)
-    }
-
-    private fun getAverageReturnFromJson(
-        jsonPath: String,
-        period: Int,
-        averageReturnType: Int
-    ): Double {
-        val jsonFileText = getResourceDirectory(jsonPath)
-        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
-        val priceList = getPriceList(parsedJson, period)
-        return mathRepository.getAverageReturn(priceList, averageReturnType)
     }
 
     private fun handleFileName(filePath: String): String {

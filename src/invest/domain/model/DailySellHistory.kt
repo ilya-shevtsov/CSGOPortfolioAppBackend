@@ -1,4 +1,4 @@
-package invest.domain
+package invest.domain.model
 
 data class DailySellHistory(
     val date: String,

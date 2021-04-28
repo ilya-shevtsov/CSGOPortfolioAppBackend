@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.update
 object CaseStorage {
     private val databaseRepository = DatabaseRepository()
 
-    fun createCaseDatabase() {
+    fun createDatabase() {
         Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
         transaction {
             SchemaUtils.create(CaseTable)
@@ -36,10 +36,10 @@ object CaseStorage {
 
     fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverview) {
         transaction {
-            CaseTable.update({ CaseTable.id eq caseId }) { caseDatabase ->
-                caseDatabase[lowestPrice] = marketOverviewDto.lowestPrice
-                caseDatabase[volume] = marketOverviewDto.volume
-                caseDatabase[medianPrice] = marketOverviewDto.medianPrice
+            CaseTable.update({ CaseTable.id eq caseId }) { caseTable ->
+                caseTable[lowestPrice] = marketOverviewDto.lowestPrice
+                caseTable[volume] = marketOverviewDto.volume
+                caseTable[medianPrice] = marketOverviewDto.medianPrice
             }
         }
     }

@@ -1,4 +1,4 @@
-package invest.repository
+package invest.domain.repository
 
 import kotlin.math.ln
 import kotlin.math.pow
@@ -35,7 +35,6 @@ class MathRepository {
     private fun getLogReturnList(priceList: List<Double>): List<Double> {
         return getPairedPriceArray(priceList).map { (first, second) -> ln(second / first) }
     }
-
 
     fun getAverageReturn(priceList: List<Double>, averageReturnType: Int): Double {
         val pairedArray = getPairedPriceArray(priceList)
