@@ -1,8 +1,11 @@
 package data.api
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.json.Json
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,20 +17,6 @@ class ApiTools {
 
     companion object {
 
-        fun createNonPersistentCookie(
-            name: String,
-            value: String
-        ): Cookie {
-            return Cookie.Builder()
-                .domain("steamcommunity.com")
-                .path("/")
-                .name(name)
-                .value(value)
-                .httpOnly()
-                .secure()
-                .build()
-        }
-
         private var serverApi: ServerApi? = null
 
         private fun getClient(): OkHttpClient = OkHttpClient.Builder()
@@ -38,7 +27,7 @@ class ApiTools {
             return Retrofit.Builder()
                 .baseUrl("https://steamcommunity.com/market/")
                 .client(getClient())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
                 .build()
         }
 
