@@ -1,7 +1,6 @@
 package invest.data.model.sellhistory
 
 import invest.domain.DailySellHistory
-import invest.serializer.invest.data.model.sellhistory.SellHistoryDto
 
 object SellHistoryMapper {
 

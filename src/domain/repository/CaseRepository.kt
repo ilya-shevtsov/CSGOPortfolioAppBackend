@@ -11,12 +11,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
 class CaseRepository {
 
+    @ExperimentalSerializationApi
     suspend fun getMarketOverview(caseName: String): Flow<MarketOverview> = flow {
         val response = ApiTools.getCaseApiService()
             .getCase(

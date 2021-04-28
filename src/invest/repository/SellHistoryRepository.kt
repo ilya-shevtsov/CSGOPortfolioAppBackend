@@ -2,7 +2,7 @@ package invest.repository
 
 import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.DailySellHistory
-import invest.serializer.invest.data.model.sellhistory.SellHistoryDto
+import invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File

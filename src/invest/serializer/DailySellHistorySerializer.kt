@@ -1,6 +1,6 @@
 package invest.serializer
 
-import invest.serializer.invest.data.model.dailysellhistory.DailySellHistoryDto
+import invest.data.model.dailysellhistory.DailySellHistoryDto
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
@@ -30,6 +30,5 @@ object DailySellHistorySerializer : KSerializer<DailySellHistoryDto> {
             price = list[1].jsonPrimitive.content.toDouble(),
             volume = list[2].jsonPrimitive.content.toInt()
         )
-
     }
 }

@@ -15,6 +15,5 @@ object CaseTable : Table() {
     val imageUrl: Column<String> = varchar("imageUrl", 255)
     val description: Column<String> = varchar("description", 1000)
 
-
     override val primaryKey = PrimaryKey(id, name = "PK_Case_ID")
 }

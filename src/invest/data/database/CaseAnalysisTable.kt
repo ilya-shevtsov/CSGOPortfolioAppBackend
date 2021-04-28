@@ -1,6 +1,5 @@
 package invest.data.database
 
-import data.database.CaseTable.autoIncrement
 import org.jetbrains.exposed.sql.*
 
 object CaseAnalysisTable : Table() {
