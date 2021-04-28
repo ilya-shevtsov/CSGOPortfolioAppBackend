@@ -1,5 +1,6 @@
 package invest.data.model.sellhistory
 
+import invest.data.model.dailysellhistory.DailySellHistoryMapper
 import invest.domain.model.DailySellHistory
 
 object SellHistoryMapper {
@@ -8,11 +9,7 @@ object SellHistoryMapper {
 
         val pricesList = sellHistoryDto.prices
         return pricesList.map { dailyData ->
-            DailySellHistory(
-                date = dailyData.date,
-                price = dailyData.price,
-                volume = dailyData.volume
-            )
+            DailySellHistoryMapper.map(dailyData)
         }
     }
 }

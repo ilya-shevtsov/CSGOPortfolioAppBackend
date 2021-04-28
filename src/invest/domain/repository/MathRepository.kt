@@ -23,12 +23,11 @@ class MathRepository {
         val squaredDeviationSum = logReturnList
             .fold(0.0, { accumulator, logReturn -> accumulator + (logReturn - mean).pow(2.0) })
         val standardDeviation = sqrt(squaredDeviationSum / (logReturnList.size - 1))
-        println(standardDeviation)
         return mean / standardDeviation
     }
 
     private fun getGrowthPeriodList(priceList: List<Double>): List<Double> {
-        val minPrice = priceList.minOrNull()!!
+        val minPrice = priceList.minOrNull()
         return priceList.takeLastWhile { price -> price != minPrice }
     }
 

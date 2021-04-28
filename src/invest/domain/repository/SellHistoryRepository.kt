@@ -6,6 +6,7 @@ import invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.util.*
 
 class SellHistoryRepository {
 
@@ -42,7 +43,7 @@ class SellHistoryRepository {
             if (standardDeviation.isNaN()) {
                 outputList.add("$fileName could not calculate, for more details check /Errors")
             } else {
-                when (period){
+                when (period) {
                     30 -> outputList.add("$fileName monthly standard deviation is: $standardDeviation")
                     1 -> outputList.add("$fileName daily standard deviation is: $standardDeviation")
                 }
@@ -73,6 +74,7 @@ class SellHistoryRepository {
         val jsonFileText = getResourceDirectory(jsonPath)
         val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
         val priceList = getPriceList(parsedJson, period)
+
         return mathRepository.getStandardDeviation(priceList)
     }
 
@@ -96,7 +98,6 @@ class SellHistoryRepository {
     ): MutableList<Double> {
 
         val dailyPriceList = getPriceListFromDaily(getDailySellHistoryList(parsedJson), period)
-
         val dailyPriceListFromHourly = toPriceListFromHourly(
             getDailyFromHourlySellHistoryList(parsedJson), period
         )
@@ -112,8 +113,7 @@ class SellHistoryRepository {
             }
             30 -> {
                 dailySellHistoryList.map { day ->
-                    val dateSplit = day.date.split(" ")
-                    if (dateSplit[1] == "13") {
+                    if (day.date.date == 13) {
                         priceList.add(day.price)
                     }
                 }
@@ -122,18 +122,18 @@ class SellHistoryRepository {
         return priceList
     }
 
+
     private fun toPriceListFromHourly(hourlyDayList: List<List<DailySellHistory>>, period: Int): MutableList<Double> {
         val hourlyPriceList = mutableListOf<Double>()
         hourlyDayList.map { day ->
             day.map { hour ->
-                val dateSplit = hour.date.split(" ")
                 when (period) {
                     1 -> {
-                        if (dateSplit[3] == "01:") {
+                        if (hour.date.hours == 1) {
                             hourlyPriceList.add(hour.price)
                         }
                     }
-                    30 -> if (dateSplit[3] == "01:" && dateSplit[1] == "13") {
+                    30 -> if (hour.date.hours == 1 && hour.date.date == 13) {
                         hourlyPriceList.add(hour.price)
                     }
                 }
