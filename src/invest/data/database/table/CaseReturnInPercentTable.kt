@@ -1,4 +1,4 @@
-package invest.data.database
+package invest.data.database.table
 
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
