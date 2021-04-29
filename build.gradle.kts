@@ -72,8 +72,8 @@ dependencies {
     implementation("io.kotest:kotest-property:4.3.1")
 
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-
-
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
+    implementation ("org.jetbrains.exposed:exposed-java-time:0.30.1")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
