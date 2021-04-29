@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Table
 
 object CaseReturnInPercentTable: Table() {
 
-    val id: Column<Int> = integer("Id").autoIncrement()
-    val name: Column<String> = varchar("Name", 255)
+    val id: Column<Int> = integer("id").autoIncrement()
+    val name: Column<String> = varchar("name", 255)
 
 }

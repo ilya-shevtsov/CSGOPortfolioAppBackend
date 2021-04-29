@@ -31,7 +31,7 @@ class Server {
     fun start() {
         CaseStorage.createDatabase()
         CoroutineScope(Dispatchers.Default).launch {
-            caseRepository.tickFlow(300000L).collect {
+            caseRepository.tickFlow(1800000L).collect {
                 updateInfoUseCase.updateInfo()
             }
         }

@@ -28,6 +28,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-html-builder:$ktor_version")
@@ -39,13 +40,12 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-
+    
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.retrofit2:adapter-rxjava2:2.6.1")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
     // Okhttp
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
@@ -56,24 +56,22 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 
     // Database
+    implementation ("org.jetbrains.exposed:exposed-java-time:0.30.1")
     implementation("org.jetbrains.exposed:exposed-core:0.30.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.30.1")
     implementation("com.h2database:h2:1.4.199")
 
-
+    // Testing
     implementation("org.junit.jupiter:junit-jupiter-engine:5.4.2")
-
     implementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
     implementation("org.junit.jupiter:junit-jupiter-params:5.4.2")
+
     implementation("io.mockk:mockk:1.9.3")
 
     implementation("io.kotest:kotest-runner-junit5:4.3.1")
     implementation("io.kotest:kotest-assertions-core-jvm:4.3.1")
     implementation("io.kotest:kotest-property:4.3.1")
 
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
-    implementation ("org.jetbrains.exposed:exposed-java-time:0.30.1")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
