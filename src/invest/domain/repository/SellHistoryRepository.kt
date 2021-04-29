@@ -6,6 +6,7 @@ import invest.data.model.sellhistory.SellHistoryDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.time.ZoneOffset
 
 class SellHistoryRepository {
 
@@ -112,7 +113,7 @@ class SellHistoryRepository {
             }
             30 -> {
                 dailySellHistoryList.map { day ->
-                    if (day.date.date == 13) {
+                    if (day.date.atZone(ZoneOffset.UTC).dayOfMonth == 13) {
                         priceList.add(day.price)
                     }
                 }
@@ -128,11 +129,11 @@ class SellHistoryRepository {
             day.map { hour ->
                 when (period) {
                     1 -> {
-                        if (hour.date.hours == 1) {
+                        if (hour.date.atZone(ZoneOffset.UTC).hour == 1) {
                             hourlyPriceList.add(hour.price)
                         }
                     }
-                    30 -> if (hour.date.hours == 1 && hour.date.date == 13) {
+                    30 -> if (hour.date.atZone(ZoneOffset.UTC).hour == 1 && hour.date.atZone(ZoneOffset.UTC).dayOfMonth == 13) {
                         hourlyPriceList.add(hour.price)
                     }
                 }
