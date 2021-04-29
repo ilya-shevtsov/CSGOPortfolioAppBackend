@@ -16,11 +16,9 @@ internal class SellHistoryRepositoryTest {
 
     @Test
     fun testGetParsedJson() {
-        val output = prepareSellHistoryList("resources/caseJson")
-        assertEquals("f", output.drop(output.size-1))
+        val output = prepareSellHistoryList("resources/test")
+        assertEquals("f", output)
     }
-
-    private val mathRepository = MathRepository()
 
     fun prepareSellHistoryList(resourcePath: String): MutableList<List<DailySellHistory>> {
         val output = mutableListOf<List<DailySellHistory>>()
@@ -40,29 +38,24 @@ internal class SellHistoryRepositoryTest {
     }
 
 
-
     private fun getDailySellHistoryClassList(
         parsedJson: SellHistoryDto,
     ): List<DailySellHistory> {
 
-        val dailyPriceList = getDailySellHistoryList(parsedJson)
-        val dailyPriceListFromHourly = toDailyListFromHourly(getDailyFromHourlySellHistoryList(parsedJson))
+        val dailyPriceList = getDailySellHistoryList(SellHistoryMapper.map(parsedJson))
 
-        return (dailyPriceList + dailyPriceListFromHourly)
+        return dailyPriceList
     }
 
-    private fun toDailyListFromHourly(hourlyDayList: List<List<DailySellHistory>>): MutableList<DailySellHistory> {
-        val hourlyPriceList = mutableListOf<DailySellHistory>()
-        hourlyDayList.map { day ->
-            day.map { hour ->
-                if (hour.date.atZone(ZoneOffset.UTC).hour == 1) {
-                    hourlyPriceList.add(hour)
-                }
+    private fun getDailySellHistoryList(dailySellHistoryData: List<DailySellHistory>): MutableList<DailySellHistory> {
+        val dailySellHistoryList = mutableListOf<DailySellHistory>()
+        dailySellHistoryData.map { day ->
+            if (day.date.atZone(ZoneOffset.UTC).hour == 1) {
+                dailySellHistoryList.add(day)
             }
         }
-        return hourlyPriceList
+        return dailySellHistoryList
     }
-
 
     private fun handleFilePath(file: File): String {
         val filePath = file.toString()
@@ -70,12 +63,6 @@ internal class SellHistoryRepositoryTest {
             .replace("""\""", "/")
         return "/$filePath"
     }
-
-    private fun getDailyFromHourlySellHistoryList(parsedJson: SellHistoryDto) =
-        SellHistoryMapper.map(parsedJson).takeLast(720).chunked(24)
-
-    private fun getDailySellHistoryList(parsedJson: SellHistoryDto) =
-        SellHistoryMapper.map(parsedJson).dropLast(725)
 
     private fun getResourceDirectory(path: String): String {
         return object {}.javaClass.getResource(path).readText()

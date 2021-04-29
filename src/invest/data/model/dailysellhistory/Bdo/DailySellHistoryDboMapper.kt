@@ -2,7 +2,6 @@ package invest.data.model.dailysellhistory.Bdo
 
 import invest.data.common.CommonRepository
 import invest.domain.model.DailySellHistory
-import java.time.Instant
 
 object DailySellHistoryDboMapper {
 
