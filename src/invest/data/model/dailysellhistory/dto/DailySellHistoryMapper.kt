@@ -1,21 +1,18 @@
 package invest.data.model.dailysellhistory.dto
 
 import invest.domain.model.DailySellHistory
-import java.time.Instant
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.TemporalAccessor
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 object DailySellHistoryMapper {
 
-    val datePattern = DateTimeFormatterBuilder()
-        .appendPattern("MMM dd yyyy HH: +0")
-        .toFormatter()
+    private val datePattern = SimpleDateFormat("MMM dd yyyy HH: +0", Locale.ENGLISH)
 
 
     fun map(dailySellHistoryDto: DailySellHistoryDto): DailySellHistory {
         return DailySellHistory(
-            date = datePattern.parse(dailySellHistoryDto.date) { temporal: TemporalAccessor? -> Instant.from(temporal) },
+            date = datePattern.parse(dailySellHistoryDto.date).toInstant(),
             price = dailySellHistoryDto.price,
             volume = dailySellHistoryDto.volume,
         )
