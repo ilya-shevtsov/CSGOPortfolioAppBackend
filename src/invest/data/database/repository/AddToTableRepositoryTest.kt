@@ -1,6 +1,5 @@
 package invest.data.database.repository
 
-import invest.data.database.CaseSellHistoryStorage.insertToCaseSellHistoryTable
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDboMapper
 import invest.data.model.sellhistory.SellHistoryDto
@@ -8,22 +7,22 @@ import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.model.DailySellHistory
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.ZoneOffset
 
-class AddToTableRepository {
+internal class AddToTableRepositoryTest{
 
-
-
-
-    fun insertInitialData() {
-        val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
-        dailySellHistoryDboList.map { dailySellHistoryDbo ->
-            insertToCaseSellHistoryTable(dailySellHistoryDbo)
-        }
+    @Test
+    fun test(){
+        val input = "resources/caseJson"
+        val output = getDailySellHistoryFromResource(input)
+        assertEquals("f",output)
     }
 
-    fun getDailySellHistoryDboList(resourcePath: String): MutableList<DailySellHistoryDbo> {
+
+    fun getDailySellHistoryFromResource(resourcePath: String): MutableList<DailySellHistoryDbo> {
         val dailySellHistoryDboList = mutableListOf<DailySellHistoryDbo>()
         val resourceList = File(resourcePath).walk().toMutableList().drop(1)
         resourceList.forEach { file ->
@@ -31,9 +30,10 @@ class AddToTableRepository {
             val caseName = handleFileName(filePath)
             getDailySellHistoryFromJson(filePath).map { dailySellHistory ->
                 val dailySellHistoryDbo = DailySellHistoryDboMapper
-                    .map(caseName, dailySellHistory)
+                    .map(caseName,dailySellHistory)
                 dailySellHistoryDboList.add(dailySellHistoryDbo)
             }
+
         }
         return dailySellHistoryDboList
     }

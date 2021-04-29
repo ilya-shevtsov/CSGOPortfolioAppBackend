@@ -5,7 +5,7 @@ import invest.domain.model.DailySellHistory
 
 object DailySellHistoryDboMapper {
 
-    val commonRepository = CommonRepository()
+    private val commonRepository = CommonRepository()
 
     fun map(caseName: String, dailySellHistory: DailySellHistory): DailySellHistoryDbo {
         return DailySellHistoryDbo(

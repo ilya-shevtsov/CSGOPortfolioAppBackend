@@ -4,6 +4,7 @@ import data.database.CaseStorage
 import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
 import domain.usecase.UpdateInfoUseCase
+import invest.data.database.repository.AddToTableRepository
 import invest.domain.repository.SellHistoryRepository
 import io.ktor.application.*
 import io.ktor.features.*
@@ -22,6 +23,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 class Server {
 
     private val caseRepository = CaseRepository()
+
     private val sellHistoryRepository = SellHistoryRepository()
     private val databaseRepository = DatabaseRepository()
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
@@ -29,18 +31,22 @@ class Server {
     @ExperimentalCoroutinesApi
     @ExperimentalSerializationApi
     fun start() {
+
+
         CaseStorage.createDatabase()
         CoroutineScope(Dispatchers.Default).launch {
             caseRepository.tickFlow(1800000L).collect {
                 updateInfoUseCase.updateInfo()
             }
         }
+
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {
                 get("/Errors") {
                     val response = "Reasons for errors:" +
-                            "\n1. The price of the case is in decline"
+                            "\n1. The price of the case is in decline"+
+                            "\n2. One or more Case names was not supported"
                     call.respond(response)
                 }
                 get("/getCase") {
@@ -52,6 +58,7 @@ class Server {
                         .prepareSharpRatioResponse("resources/caseJson",30)
                     call.respond(sharpRatioList)
                 }
+
                 get("/getSharpRatio/daily") {
                     val sharpRatioList = sellHistoryRepository
                         .prepareSharpRatioResponse("resources/caseJson",1)

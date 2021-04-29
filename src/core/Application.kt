@@ -7,5 +7,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
 fun main() {
     val server = Server()
+
     server.start()
 }

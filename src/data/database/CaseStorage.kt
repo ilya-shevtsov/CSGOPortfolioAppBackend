@@ -3,6 +3,8 @@ package data.database
 import domain.model.marketoverview.MarketOverview
 import data.model.case.CaseDbo
 import data.repository.DatabaseRepository
+import invest.data.database.repository.AddToTableRepository
+import invest.data.database.table.CaseSellHistoryTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
@@ -11,12 +13,16 @@ import org.jetbrains.exposed.sql.update
 
 object CaseStorage {
     private val databaseRepository = DatabaseRepository()
+    private val addToTableRepository = AddToTableRepository()
+
 
     fun createDatabase() {
         Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
         transaction {
             SchemaUtils.create(CaseTable)
+            SchemaUtils.create(CaseSellHistoryTable)
             databaseRepository.insertInitialData()
+            addToTableRepository.insertInitialData()
         }
     }
 
