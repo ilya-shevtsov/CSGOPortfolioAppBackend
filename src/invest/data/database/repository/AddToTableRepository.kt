@@ -1,6 +1,6 @@
 package invest.data.database.repository
 
-import invest.data.database.CaseSellHistoryStorage.insertToCaseSellHistoryTable
+import invest.data.database.table.sellhistory.CaseSellHistoryStorage.insertToCaseSellHistoryTable
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDboMapper
 import invest.data.model.sellhistory.SellHistoryDto

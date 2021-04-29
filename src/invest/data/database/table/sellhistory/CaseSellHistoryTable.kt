@@ -1,4 +1,4 @@
-package invest.data.database.table
+package invest.data.database.table.sellhistory
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.`java-time`.timestamp

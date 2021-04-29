@@ -1,6 +1,5 @@
-package invest.data.database
+package invest.data.database.table.sellhistory
 
-import invest.data.database.table.CaseSellHistoryTable
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
 import org.jetbrains.exposed.sql.insert
 
