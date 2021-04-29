@@ -1,4 +1,4 @@
-package invest.data.model.dailysellhistory
+package invest.data.model.dailysellhistory.dto
 
 import invest.domain.model.DailySellHistory
 import java.text.SimpleDateFormat

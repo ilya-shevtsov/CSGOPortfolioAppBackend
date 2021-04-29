@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 import java.time.Instant
 
-object CaseMarketOverviewTable : Table() {
+object CaseSellHistoryTable : Table() {
 
     val id: Column<Int> = integer("id")
     val name: Column<String> = varchar("name", 255)

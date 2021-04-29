@@ -1,4 +1,4 @@
-package invest.data.model.dailysellhistory
+package invest.data.model.dailysellhistory.dto
 
 import invest.serializer.DailySellHistorySerializer
 import kotlinx.serialization.Serializable

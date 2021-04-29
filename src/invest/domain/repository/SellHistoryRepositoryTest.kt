@@ -1,51 +1,83 @@
 package invest.domain.repository
 
+import invest.data.model.sellhistory.SellHistoryDto
+import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.model.DailySellHistory
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance
-import java.text.SimpleDateFormat
-import java.util.*
-
+import java.io.File
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class SellHistoryRepositoryTest {
 
-    val datePattern = SimpleDateFormat("MMM dd yyyy HH: +0", Locale.ENGLISH)
-
-    val input = listOf(
-        DailySellHistory(
-            date = datePattern.parse("Sep 13 2015 01: +0"),
-            price = 20.293,
-            volume = 41463
-        ),
-        DailySellHistory(
-            date = datePattern.parse("Sep 14 2015 01: +0"),
-            price = 22.592,
-            volume = 43049
-        )
-    )
-
     @Test
-    fun testGetPriceListFromDaily() {
-        val getPriceListFromDaily = getPriceListFromDaily(input,30)
-        Assertions.assertEquals(listOf(20.293), getPriceListFromDaily)
+    fun testGetParsedJson() {
+        val output = prepareSellHistoryList("resources/caseJson")
+        assertEquals("f", output.takeLast(1))
     }
 
-    fun getPriceListFromDaily(dailySellHistoryList: List<DailySellHistory>, period: Int): MutableList<Double> {
-        val priceList = mutableListOf<Double>()
-        when (period) {
-            1 -> {
-                dailySellHistoryList.map { day -> priceList.add(day.price) }
-            }
-            30 -> {
-                dailySellHistoryList.map { day ->
-                    if ( day.date.date== 13) {
-                        priceList.add(day.price)
-                    }
+    private val mathRepository = MathRepository()
+
+    fun prepareSellHistoryList(resourcePath: String): MutableList<List<DailySellHistory>> {
+        val output = mutableListOf<List<DailySellHistory>>()
+        val resourceList = File(resourcePath).walk().toMutableList().drop(1)
+        resourceList.forEach { file ->
+            val filePath = handleFilePath(file)
+            output.add(getDailySellHistoryClassListOutPut(filePath))
+        }
+        return output
+    }
+
+    private fun getDailySellHistoryClassListOutPut(jsonPath: String): List<DailySellHistory> {
+        val jsonFileText = getResourceDirectory(jsonPath)
+        val parsedJson: SellHistoryDto = Json.decodeFromString(jsonFileText)
+        val dailySellHistoryClassList = getDailySellHistoryClassList(parsedJson)
+        return dailySellHistoryClassList
+    }
+
+
+
+    private fun getDailySellHistoryClassList(
+        parsedJson: SellHistoryDto,
+    ): List<DailySellHistory> {
+
+        val dailyPriceList = getDailySellHistoryList(parsedJson)
+        val dailyPriceListFromHourly = toDailyListFromHourly(getDailyFromHourlySellHistoryList(parsedJson))
+
+        return (dailyPriceList + dailyPriceListFromHourly)
+    }
+
+    private fun toDailyListFromHourly(hourlyDayList: List<List<DailySellHistory>>): MutableList<DailySellHistory> {
+        val hourlyPriceList = mutableListOf<DailySellHistory>()
+        hourlyDayList.map { day ->
+            day.map { hour ->
+                if (hour.date.hours == 1) {
+                    hourlyPriceList.add(hour)
                 }
             }
         }
-        return priceList
+        return hourlyPriceList
     }
+
+
+    private fun handleFilePath(file: File): String {
+        val filePath = file.toString()
+            .replace("resources\\", "")
+            .replace("""\""", "/")
+        return "/$filePath"
+    }
+
+    private fun getDailyFromHourlySellHistoryList(parsedJson: SellHistoryDto) =
+        SellHistoryMapper.map(parsedJson).takeLast(720).chunked(24)
+
+    private fun getDailySellHistoryList(parsedJson: SellHistoryDto) =
+        SellHistoryMapper.map(parsedJson).dropLast(725)
+
+    private fun getResourceDirectory(path: String): String {
+        return object {}.javaClass.getResource(path).readText()
+    }
+
 }
