@@ -122,7 +122,6 @@ class SellHistoryRepository {
         return priceList
     }
 
-
     private fun toPriceListFromHourly(hourlyDayList: List<List<DailySellHistory>>, period: Int): MutableList<Double> {
         val hourlyPriceList = mutableListOf<Double>()
         hourlyDayList.map { day ->

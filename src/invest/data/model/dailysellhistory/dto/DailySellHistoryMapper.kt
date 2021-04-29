@@ -6,7 +6,6 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-
 object DailySellHistoryMapper {
 
     fun map(dailySellHistoryDto: DailySellHistoryDto): DailySellHistory {
