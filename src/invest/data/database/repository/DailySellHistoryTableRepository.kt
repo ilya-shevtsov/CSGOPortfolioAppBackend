@@ -18,12 +18,11 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
 
     fun getCasePriceDataList(numberOfCaseId: List<Int>): List<CasePriceData> {
-        val list = mutableListOf<CasePriceData>()
+        val casePriceDataList = mutableListOf<CasePriceData>()
         numberOfCaseId.map { id ->
-            val casePrice = getPriceData(id)
-            list.add(casePrice)
+            casePriceDataList.add(getPriceData(id))
         }
-        return list
+        return casePriceDataList
     }
 
     private fun getPriceData(id: Int): CasePriceData {
