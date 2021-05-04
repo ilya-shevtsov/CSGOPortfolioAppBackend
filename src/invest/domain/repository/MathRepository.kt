@@ -42,8 +42,6 @@ class MathRepository {
                 myRound((getPercentReturnList(pairedArray).sum() / pairedArray.size))
             }
             2 -> {
-                val ret = getCurrencyReturnList(pairedArray)
-                println(ret)
                 myRound(getCurrencyReturnList(pairedArray).sum() / pairedArray.size)
             }
             else -> throw Exception("The type of average return that your provided is not supported")

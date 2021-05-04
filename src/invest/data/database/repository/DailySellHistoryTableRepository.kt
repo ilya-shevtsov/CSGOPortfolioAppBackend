@@ -20,8 +20,8 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
     private val mathRepository = MathRepository()
 
-//    val numberOfCaseId = (1..34).toList()
-    val numberOfCaseId = listOf(21)
+    val numberOfCaseId = (1..34).toList()
+//    val numberOfCaseId = listOf(21)
 
     fun prepareAvgReturn(period: Int, averageReturnType: Int): List<String> {
         val outputList = mutableListOf<String>()
