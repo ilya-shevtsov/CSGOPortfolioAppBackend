@@ -41,7 +41,7 @@ class Server {
                 updateInfoUseCase.updateInfo()
             }
         }
-
+//
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {
