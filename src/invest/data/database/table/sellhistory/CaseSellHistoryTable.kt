@@ -13,8 +13,8 @@ object CaseSellHistoryTable : Table() {
     val price: Column<Double> = double("price")
     val volume: Column<Int> = integer("volume")
 
-//    init {
-//        uniqueIndex("caseIdDateTime", caseId, date)
-//    }
+    init {
+        uniqueIndex("caseIdDateTime", caseId, date)
+    }
 
 }

@@ -9,18 +9,22 @@ import invest.domain.model.DailySellHistory
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.sql.SQLException
 import java.time.ZoneOffset
 
 class AddToTableRepository {
 
 
-
-
     fun insertPriceTableData() {
         val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
-        dailySellHistoryDboList.forEach { dailySellHistoryDbo ->
-            insertToCaseSellHistoryTable(dailySellHistoryDbo)
+        for (dailySellHistoryDbo in dailySellHistoryDboList) {
+            try {
+                insertToCaseSellHistoryTable(dailySellHistoryDbo)
+            } catch (e: SQLException) {
+                continue
+            }
         }
+
     }
 
     fun getDailySellHistoryDboList(resourcePath: String): MutableList<DailySellHistoryDbo> {
