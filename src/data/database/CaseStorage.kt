@@ -22,7 +22,7 @@ object CaseStorage {
             SchemaUtils.create(CaseTable)
             SchemaUtils.create(CaseSellHistoryTable)
             databaseRepository.insertInitialData()
-            addToTableRepository.insertPriceTableData()
+            addToTableRepository.insertData()
         }
     }
 

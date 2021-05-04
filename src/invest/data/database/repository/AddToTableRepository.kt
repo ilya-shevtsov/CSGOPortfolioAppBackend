@@ -15,7 +15,7 @@ import java.time.ZoneOffset
 class AddToTableRepository {
 
 
-    fun insertPriceTableData() {
+    fun insertData() {
         val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
         for (dailySellHistoryDbo in dailySellHistoryDboList) {
             try {
@@ -27,7 +27,7 @@ class AddToTableRepository {
 
     }
 
-    fun getDailySellHistoryDboList(resourcePath: String): MutableList<DailySellHistoryDbo> {
+    private fun getDailySellHistoryDboList(resourcePath: String): MutableList<DailySellHistoryDbo> {
         val dailySellHistoryDboList = mutableListOf<DailySellHistoryDbo>()
         val resourceList = File(resourcePath).walk().toMutableList().drop(1)
         resourceList.forEach { file ->
