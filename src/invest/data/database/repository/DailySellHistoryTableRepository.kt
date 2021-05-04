@@ -20,12 +20,12 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
     private val mathRepository = MathRepository()
 
-//    val numberOfCaseId = (1..34).toList()
-    val numberOfCaseId = listOf(1)
+        val numberOfCaseId = (1..34).toList()
+//    val numberOfCaseId = listOf(1)
 
-    fun prepareDailyStandardDeviationResponse(): List<String> {
+    fun prepareStandardDeviationResponse(period: Int): List<String> {
         val outputList = mutableListOf<String>()
-        val casePriceDataList = getCasePriceDataList(numberOfCaseId)
+        val casePriceDataList = getCasePriceDataList(period,numberOfCaseId)
         casePriceDataList.forEach { case ->
             val priceList = case.priceList
             val caseName = case.name
@@ -40,9 +40,9 @@ class DailySellHistoryTableRepository {
         return outputList
     }
 
-    fun prepareDailySharpRatioResponse(): List<String> {
+    fun prepareSharpRatioResponse(period: Int): List<String> {
         val outputList = mutableListOf<String>()
-        val casePriceDataList = getCasePriceDataList(numberOfCaseId)
+        val casePriceDataList = getCasePriceDataList(period,numberOfCaseId)
         casePriceDataList.forEach { case ->
             val priceList = case.priceList
             val caseName = case.name
@@ -57,10 +57,15 @@ class DailySellHistoryTableRepository {
         return outputList
     }
 
-    private fun getCasePriceDataList(numberOfCaseId: List<Int>): List<CasePriceData> {
+    private fun getCasePriceDataList(period: Int, numberOfCaseId: List<Int>): List<CasePriceData> {
         val casePriceDataList = mutableListOf<CasePriceData>()
         numberOfCaseId.map { id ->
-            casePriceDataList.add(getMonthlyCasePriceData(id))
+            if (period == 1) {
+                casePriceDataList.add(getDailyCasePriceData(id))
+            }
+            if (period == 30) {
+                casePriceDataList.add(getMonthlyCasePriceData(id))
+            }
         }
         return casePriceDataList
     }
@@ -92,9 +97,7 @@ class DailySellHistoryTableRepository {
                 val caseId = it[CaseSellHistoryTable.caseId]
                 val date = it[CaseSellHistoryTable.date]
                 if (caseId == id && date.atZone(ZoneOffset.UTC).dayOfMonth == 13) {
-                    println(it[CaseSellHistoryTable.price])
                     list.add(it[CaseSellHistoryTable.price])
-
                     case = CasePriceData(
                         name = it[CaseSellHistoryTable.name],
                         priceList = list
