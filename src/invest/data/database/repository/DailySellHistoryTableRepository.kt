@@ -13,6 +13,7 @@ import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.model.DailySellHistory
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.selectAll
@@ -23,18 +24,10 @@ import java.time.ZoneOffset
 
 class DailySellHistoryTableRepository {
 
-    //    SELECT "caseId", DATE, PRICE FROM CASESELLHISTORY ORDER BY "caseId", "DATE"
-
-    fun gg(): List<CaseDto> {
-        return transaction {
-            CaseTable.selectAll().map { CaseDboMapper.map(it) }
-        }.map { case -> CaseDtoMapper.map(case) }
-    }
-
-    fun getPriceList(): List<Double> {
-        val list = mutableListOf<Double>()
-        val query = CaseSellHistoryTable
+    fun buildMyQuery():Query{
+        return CaseSellHistoryTable
             .slice(
+                CaseSellHistoryTable.name,
                 CaseSellHistoryTable.caseId,
                 CaseSellHistoryTable.date,
                 CaseSellHistoryTable.price,
@@ -43,14 +36,30 @@ class DailySellHistoryTableRepository {
                 CaseSellHistoryTable.caseId,
                 CaseSellHistoryTable.date
             )
-        query.forEach {
-            val price = it[CaseSellHistoryTable.price]
-            if (it[CaseSellHistoryTable.caseId] == 1) {
-                list.add(price)
-            }
-        }
-        return list
+//            .orderBy(CaseSellHistoryTable.date to SortOrder.ASC)
     }
+
+    fun getPriceList(): CasePrices {
+        val query = buildMyQuery()
+        val list = mutableListOf<Double>()
+        var case = CasePrices("", emptyList())
+
+        query.forEach {
+            if (it[CaseSellHistoryTable.caseId] == 4) {
+                list.add(it[CaseSellHistoryTable.price])
+                case = CasePrices(
+                    name = it[CaseSellHistoryTable.name],
+                    priceList = list)
+            }
+
+        }
+        return case
+    }
+
+    data class CasePrices(
+        val name:String,
+        val priceList:List<Double>
+    )
 
     fun insertData() {
         val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
