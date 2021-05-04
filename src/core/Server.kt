@@ -47,7 +47,7 @@ class Server {
             routing {
                 get("/Errors") {
                     val response = "Reasons for errors:" +
-                            "\n1. The price of the case is in decline"+
+                            "\n1. The price of the case is in decline" +
                             "\n2. One or more Case names was not supported"
                     call.respond(response)
                 }
@@ -74,6 +74,26 @@ class Server {
                     val standardDeviationList = dailySellHistoryTableRepository
                         .prepareStandardDeviationResponse(1)
                     call.respond(standardDeviationList)
+                }
+                get("/getPercentReturn/monthly") {
+                    val avgReturn = dailySellHistoryTableRepository
+                        .prepareAvgReturn(30, 1)
+                    call.respond(avgReturn)
+                }
+                get("/getPercentReturn/daily") {
+                    val avgReturn = dailySellHistoryTableRepository
+                        .prepareAvgReturn(1, 1)
+                    call.respond(avgReturn)
+                }
+                get("/getRUBReturn/monthly") {
+                    val avgReturn = dailySellHistoryTableRepository
+                        .prepareAvgReturn(30, 2)
+                    call.respond(avgReturn)
+                }
+                get("/getRUBReturn/daily") {
+                    val avgReturn = dailySellHistoryTableRepository
+                        .prepareAvgReturn(1, 2)
+                    call.respond(avgReturn)
                 }
             }
         }.start(wait = true)

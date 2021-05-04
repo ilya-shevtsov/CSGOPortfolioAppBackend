@@ -20,12 +20,29 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
     private val mathRepository = MathRepository()
 
-        val numberOfCaseId = (1..34).toList()
-//    val numberOfCaseId = listOf(1)
+//    val numberOfCaseId = (1..34).toList()
+    val numberOfCaseId = listOf(21)
+
+    fun prepareAvgReturn(period: Int, averageReturnType: Int): List<String> {
+        val outputList = mutableListOf<String>()
+        val casePriceDataList = getCasePriceDataList(period, numberOfCaseId)
+        casePriceDataList.forEach { case ->
+            val priceList = case.priceList
+            val caseName = case.name
+            val averageReturn = mathRepository.getAverageReturn(priceList, averageReturnType)
+
+            if (averageReturn.isNaN()) {
+                outputList.add("$caseName could not calculate, for more details check /Errors")
+            } else {
+                outputList.add("$caseName return is: $averageReturn")
+            }
+        }
+        return outputList
+    }
 
     fun prepareStandardDeviationResponse(period: Int): List<String> {
         val outputList = mutableListOf<String>()
-        val casePriceDataList = getCasePriceDataList(period,numberOfCaseId)
+        val casePriceDataList = getCasePriceDataList(period, numberOfCaseId)
         casePriceDataList.forEach { case ->
             val priceList = case.priceList
             val caseName = case.name
@@ -42,7 +59,7 @@ class DailySellHistoryTableRepository {
 
     fun prepareSharpRatioResponse(period: Int): List<String> {
         val outputList = mutableListOf<String>()
-        val casePriceDataList = getCasePriceDataList(period,numberOfCaseId)
+        val casePriceDataList = getCasePriceDataList(period, numberOfCaseId)
         casePriceDataList.forEach { case ->
             val priceList = case.priceList
             val caseName = case.name
