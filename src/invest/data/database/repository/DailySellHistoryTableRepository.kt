@@ -22,8 +22,8 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
     private val mathRepository = MathRepository()
 
-    val numberOfCaseId = (1..34).toList()
-//    val numberOfCaseId = listOf(21)
+//    val numberOfCaseId = (1..34).toList()
+    val numberOfCaseId = listOf(21)
 
     fun prepareAvgReturn(period: Int, averageReturnType: Int): List<String> {
         val outputList = mutableListOf<String>()
@@ -36,7 +36,12 @@ class DailySellHistoryTableRepository {
             if (averageReturn.isNaN()) {
                 outputList.add("$caseName could not calculate, for more details check /Errors")
             } else {
-                outputList.add("$caseName return is: $averageReturn")
+                when (period to averageReturnType) {
+                    Pair(30, 1) -> outputList.add("$caseName monthly standard deviation in % is: $averageReturn")
+                    Pair(30, 2) -> outputList.add("$caseName monthly standard deviation in RUB is: $averageReturn")
+                    Pair(1, 1) -> outputList.add("$caseName daily standard deviation in % is: $averageReturn")
+                    Pair(1, 2) -> outputList.add("$caseName daily standard deviation in RUB is: $averageReturn")
+                }
             }
         }
         return outputList
@@ -53,7 +58,10 @@ class DailySellHistoryTableRepository {
             if (standardDeviation.isNaN()) {
                 outputList.add("$caseName could not calculate, for more details check /Errors")
             } else {
-                outputList.add("$caseName daily standard deviation is: $standardDeviation")
+                when (period) {
+                    30 -> outputList.add("$caseName monthly standard deviation is: $standardDeviation")
+                    1 -> outputList.add("$caseName daily standard deviation is: $standardDeviation")
+                }
             }
         }
         return outputList
@@ -70,7 +78,10 @@ class DailySellHistoryTableRepository {
             if (sharpRatio.isNaN()) {
                 outputList.add("$caseName could not calculate, for more details check /Errors")
             } else {
-                outputList.add("$caseName daily sharp Ratio is: $sharpRatio")
+                when (period) {
+                    30 -> outputList.add("$caseName monthly sharp Ratio is: $sharpRatio")
+                    1 -> outputList.add("$caseName daily sharp Ratio is: $sharpRatio")
+                }
             }
         }
         return outputList
