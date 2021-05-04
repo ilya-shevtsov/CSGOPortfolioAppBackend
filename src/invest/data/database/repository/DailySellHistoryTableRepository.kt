@@ -1,5 +1,11 @@
 package invest.data.database.repository
 
+import data.database.CaseTable
+import data.model.case.CaseDboMapper
+import domain.model.case.CaseDto
+import domain.model.case.CaseDtoMapper
+import invest.data.database.table.sellhistory.CaseSellHistoryStorage.insertToCaseSellHistoryTable
+import invest.data.database.table.sellhistory.CaseSellHistoryTable
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDboMapper
 import invest.data.model.sellhistory.SellHistoryDto
@@ -7,22 +13,58 @@ import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.model.DailySellHistory
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
+import java.sql.SQLException
 import java.time.ZoneOffset
 
-internal class AddToTableRepositoryTest{
+class DailySellHistoryTableRepository {
 
-    @Test
-    fun test(){
-        val input = "resources/caseJson"
-        val output = getDailySellHistoryFromResource(input)
-        assertEquals("f",output)
+    //    SELECT "caseId", DATE, PRICE FROM CASESELLHISTORY ORDER BY "caseId", "DATE"
+
+    fun gg(): List<CaseDto> {
+        return transaction {
+            CaseTable.selectAll().map { CaseDboMapper.map(it) }
+        }.map { case -> CaseDtoMapper.map(case) }
     }
 
+    fun getPriceList(): List<Double> {
+        val list = mutableListOf<Double>()
+        val query = CaseSellHistoryTable
+            .slice(
+                CaseSellHistoryTable.caseId,
+                CaseSellHistoryTable.date,
+                CaseSellHistoryTable.price,
+            ).selectAll()
+            .groupBy(
+                CaseSellHistoryTable.caseId,
+                CaseSellHistoryTable.date
+            )
+        query.forEach {
+            val price = it[CaseSellHistoryTable.price]
+            if (it[CaseSellHistoryTable.caseId] == 1) {
+                list.add(price)
+            }
+        }
+        return list
+    }
 
-    fun getDailySellHistoryFromResource(resourcePath: String): MutableList<DailySellHistoryDbo> {
+    fun insertData() {
+        val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
+        for (dailySellHistoryDbo in dailySellHistoryDboList) {
+            try {
+                insertToCaseSellHistoryTable(dailySellHistoryDbo)
+            } catch (e: SQLException) {
+                continue
+            }
+        }
+
+    }
+
+    private fun getDailySellHistoryDboList(resourcePath: String): MutableList<DailySellHistoryDbo> {
         val dailySellHistoryDboList = mutableListOf<DailySellHistoryDbo>()
         val resourceList = File(resourcePath).walk().toMutableList().drop(1)
         resourceList.forEach { file ->
@@ -30,10 +72,9 @@ internal class AddToTableRepositoryTest{
             val caseName = handleFileName(filePath)
             getDailySellHistoryFromJson(filePath).map { dailySellHistory ->
                 val dailySellHistoryDbo = DailySellHistoryDboMapper
-                    .map(caseName,dailySellHistory)
+                    .map(caseName, dailySellHistory)
                 dailySellHistoryDboList.add(dailySellHistoryDbo)
             }
-
         }
         return dailySellHistoryDboList
     }

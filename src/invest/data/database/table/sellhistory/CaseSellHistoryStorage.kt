@@ -1,8 +1,12 @@
 package invest.data.database.table.sellhistory
 
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertIgnore
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object CaseSellHistoryStorage {
 
@@ -15,4 +19,6 @@ object CaseSellHistoryStorage {
             it[volume] = dailySellHistoryDbo.volume
         }
     }
+
+
 }
