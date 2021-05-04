@@ -8,9 +8,9 @@ class CommonRepository {
             "Chroma 2 Case" -> 2
             "Chroma 3 Case" -> 3
             "Clutch Case" -> 4
-            "CS:GO Weapon Case" -> 5
-            "CS:GO Weapon Case 2" -> 6
-            "CS:GO Weapon Case 3" -> 7
+            "CSGO Weapon Case" -> 5
+            "CSGO Weapon Case 2" -> 6
+            "CSGO Weapon Case 3" -> 7
             "CS20 Case" -> 8
             "Danger Zone Case" -> 9
             "eSports 2013 Case" -> 10

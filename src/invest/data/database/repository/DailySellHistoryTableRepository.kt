@@ -1,77 +1,47 @@
 package invest.data.database.repository
 
-import data.database.CaseTable
-import data.model.case.CaseDboMapper
-import domain.model.case.CaseDto
-import domain.model.case.CaseDtoMapper
+import invest.data.database.table.sellhistory.CaseSellHistoryStorage.getPriceListQuery
 import invest.data.database.table.sellhistory.CaseSellHistoryStorage.insertToCaseSellHistoryTable
 import invest.data.database.table.sellhistory.CaseSellHistoryTable
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDboMapper
 import invest.data.model.sellhistory.SellHistoryDto
 import invest.data.model.sellhistory.SellHistoryMapper
+import invest.domain.model.CasePriceData
 import invest.domain.model.DailySellHistory
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.Query
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.sql.SQLException
 import java.time.ZoneOffset
 
 class DailySellHistoryTableRepository {
 
-
-    fun haha(idList: List<Int>): List<CasePrices> {
-        val list = mutableListOf<CasePrices>()
-        idList.map { id ->
-            val casePrice = getPriceList(id)
+    fun getCasePriceDataList(numberOfCaseId: List<Int>): List<CasePriceData> {
+        val list = mutableListOf<CasePriceData>()
+        numberOfCaseId.map { id ->
+            val casePrice = getPriceData(id)
             list.add(casePrice)
         }
         return list
     }
 
-
-    data class CasePrices(
-        val name: String,
-        val priceList: List<Double>
-    )
-
-    fun getPriceList(id: Int): CasePrices {
-        val query = buildMyQuery()
+    private fun getPriceData(id: Int): CasePriceData {
         val list = mutableListOf<Double>()
-        var case = CasePrices("", emptyList())
-
+        var case = CasePriceData("", emptyList())
+        val query = getPriceListQuery()
         query.forEach {
             if (it[CaseSellHistoryTable.caseId] == id) {
                 list.add(it[CaseSellHistoryTable.price])
-                case = CasePrices(
+                case = CasePriceData(
                     name = it[CaseSellHistoryTable.name],
                     priceList = list
                 )
             }
-
         }
         return case
     }
 
-    private fun buildMyQuery(): Query {
-        return CaseSellHistoryTable
-            .slice(
-                CaseSellHistoryTable.name,
-                CaseSellHistoryTable.caseId,
-                CaseSellHistoryTable.date,
-                CaseSellHistoryTable.price,
-            ).selectAll()
-            .groupBy(
-                CaseSellHistoryTable.caseId,
-                CaseSellHistoryTable.date
-            )
-            .orderBy(CaseSellHistoryTable.date to SortOrder.ASC)
-    }
 
     fun insertData() {
         val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
