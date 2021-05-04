@@ -24,7 +24,41 @@ import java.time.ZoneOffset
 
 class DailySellHistoryTableRepository {
 
-    fun buildMyQuery():Query{
+
+    fun haha(idList: List<Int>): List<CasePrices> {
+        val list = mutableListOf<CasePrices>()
+        idList.map { id ->
+            val casePrice = getPriceList(id)
+            list.add(casePrice)
+        }
+        return list
+    }
+
+
+    data class CasePrices(
+        val name: String,
+        val priceList: List<Double>
+    )
+
+    fun getPriceList(id: Int): CasePrices {
+        val query = buildMyQuery()
+        val list = mutableListOf<Double>()
+        var case = CasePrices("", emptyList())
+
+        query.forEach {
+            if (it[CaseSellHistoryTable.caseId] == id) {
+                list.add(it[CaseSellHistoryTable.price])
+                case = CasePrices(
+                    name = it[CaseSellHistoryTable.name],
+                    priceList = list
+                )
+            }
+
+        }
+        return case
+    }
+
+    private fun buildMyQuery(): Query {
         return CaseSellHistoryTable
             .slice(
                 CaseSellHistoryTable.name,
@@ -36,30 +70,8 @@ class DailySellHistoryTableRepository {
                 CaseSellHistoryTable.caseId,
                 CaseSellHistoryTable.date
             )
-//            .orderBy(CaseSellHistoryTable.date to SortOrder.ASC)
+            .orderBy(CaseSellHistoryTable.date to SortOrder.ASC)
     }
-
-    fun getPriceList(): CasePrices {
-        val query = buildMyQuery()
-        val list = mutableListOf<Double>()
-        var case = CasePrices("", emptyList())
-
-        query.forEach {
-            if (it[CaseSellHistoryTable.caseId] == 4) {
-                list.add(it[CaseSellHistoryTable.price])
-                case = CasePrices(
-                    name = it[CaseSellHistoryTable.name],
-                    priceList = list)
-            }
-
-        }
-        return case
-    }
-
-    data class CasePrices(
-        val name:String,
-        val priceList:List<Double>
-    )
 
     fun insertData() {
         val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")

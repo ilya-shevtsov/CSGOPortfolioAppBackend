@@ -23,7 +23,7 @@ object CaseStorage {
             SchemaUtils.create(CaseSellHistoryTable)
             databaseRepository.insertInitialData()
             dailySellHistoryTableRepository.insertData()
-            val haha = dailySellHistoryTableRepository.getPriceList()
+            val haha = dailySellHistoryTableRepository.haha((1..34).toList())
             println(haha)
         }
     }
