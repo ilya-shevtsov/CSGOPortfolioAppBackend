@@ -22,7 +22,7 @@ class DailySellHistoryTableRepository {
 
     val numberOfCaseId = (1..34).toList()
 
-    fun prepareStandardDeviationResponse(): List<String> {
+    fun prepareDailyStandardDeviationResponse(): List<String> {
         val outputList = mutableListOf<String>()
         val casePriceDataList = getCasePriceDataList(numberOfCaseId)
         casePriceDataList.forEach { case ->
@@ -39,13 +39,24 @@ class DailySellHistoryTableRepository {
         return outputList
     }
 
-//    fun getPriceListFromPriceData(){
-//
-//
-//    }
+    fun prepareDailySharpRatioResponse(): List<String> {
+        val outputList = mutableListOf<String>()
+        val casePriceDataList = getCasePriceDataList(numberOfCaseId)
+        casePriceDataList.forEach { case ->
+            val priceList = case.priceList
+            val caseName = case.name
+            val sharpRatio = mathRepository.getSharpRatio(priceList)
 
+            if (sharpRatio.isNaN()) {
+                outputList.add("$caseName could not calculate, for more details check /Errors")
+            } else {
+                outputList.add("$caseName daily sharp Ratio is: $sharpRatio")
+            }
+        }
+        return outputList
+    }
 
-    fun getCasePriceDataList(numberOfCaseId: List<Int>): List<CasePriceData> {
+    private fun getCasePriceDataList(numberOfCaseId: List<Int>): List<CasePriceData> {
         val casePriceDataList = mutableListOf<CasePriceData>()
         numberOfCaseId.map { id ->
             casePriceDataList.add(getCasePriceData(id))

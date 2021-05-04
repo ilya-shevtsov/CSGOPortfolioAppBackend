@@ -16,7 +16,7 @@ class MathRepository {
         return sqrt(squaredDeviationSum / (logReturnList.size - 1))
     }
 
-    fun getSharpRatio(priceList: MutableList<Double>): Double {
+    fun getSharpRatio(priceList: List<Double>): Double {
         val growthPeriod = getGrowthPeriodList(priceList)
         val logReturnList = getLogReturnList(growthPeriod)
         val mean = logReturnList.average()
