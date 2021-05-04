@@ -1,5 +1,7 @@
 package invest.data.database.repository
 
+import invest.data.database.table.sellhistory.CaseSellHistoryStorage.getDailyCasePriceData
+import invest.data.database.table.sellhistory.CaseSellHistoryStorage.getMonthlyCasePriceData
 import invest.data.database.table.sellhistory.CaseSellHistoryStorage.getPriceListQuery
 import invest.data.database.table.sellhistory.CaseSellHistoryStorage.insertToCaseSellHistoryTable
 import invest.data.database.table.sellhistory.CaseSellHistoryTable
@@ -85,44 +87,6 @@ class DailySellHistoryTableRepository {
             }
         }
         return casePriceDataList
-    }
-
-    private fun getDailyCasePriceData(id: Int): CasePriceData {
-        val list = mutableListOf<Double>()
-        var case = CasePriceData("", emptyList())
-        val query = getPriceListQuery()
-        transaction {
-            query.forEach {
-                if (it[CaseSellHistoryTable.caseId] == id) {
-                    list.add(it[CaseSellHistoryTable.price])
-                    case = CasePriceData(
-                        name = it[CaseSellHistoryTable.name],
-                        priceList = list
-                    )
-                }
-            }
-        }
-        return case
-    }
-
-    private fun getMonthlyCasePriceData(id: Int): CasePriceData {
-        val list = mutableListOf<Double>()
-        var case = CasePriceData("", emptyList())
-        val query = getPriceListQuery()
-        transaction {
-            query.forEach {
-                val caseId = it[CaseSellHistoryTable.caseId]
-                val date = it[CaseSellHistoryTable.date]
-                if (caseId == id && date.atZone(ZoneOffset.UTC).dayOfMonth == 13) {
-                    list.add(it[CaseSellHistoryTable.price])
-                    case = CasePriceData(
-                        name = it[CaseSellHistoryTable.name],
-                        priceList = list
-                    )
-                }
-            }
-        }
-        return case
     }
 
     fun insertData() {
