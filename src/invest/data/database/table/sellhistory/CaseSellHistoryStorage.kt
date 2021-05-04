@@ -30,7 +30,7 @@ object CaseSellHistoryStorage {
             ).selectAll()
             .groupBy(
                 CaseSellHistoryTable.caseId,
-                CaseSellHistoryTable.date
+                CaseSellHistoryTable.date,
             )
             .orderBy(CaseSellHistoryTable.date to SortOrder.ASC)
     }

@@ -12,7 +12,6 @@ import invest.domain.model.DailySellHistory
 import invest.domain.repository.MathRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.`java-time`.day
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.sql.SQLException
@@ -21,7 +20,8 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
     private val mathRepository = MathRepository()
 
-    val numberOfCaseId = (1..34).toList()
+//    val numberOfCaseId = (1..34).toList()
+    val numberOfCaseId = listOf(1)
 
     fun prepareDailyStandardDeviationResponse(): List<String> {
         val outputList = mutableListOf<String>()
@@ -60,7 +60,7 @@ class DailySellHistoryTableRepository {
     private fun getCasePriceDataList(numberOfCaseId: List<Int>): List<CasePriceData> {
         val casePriceDataList = mutableListOf<CasePriceData>()
         numberOfCaseId.map { id ->
-            casePriceDataList.add(getDailyCasePriceData(id))
+            casePriceDataList.add(getMonthlyCasePriceData(id))
         }
         return casePriceDataList
     }
@@ -90,10 +90,11 @@ class DailySellHistoryTableRepository {
         transaction {
             query.forEach {
                 val caseId = it[CaseSellHistoryTable.caseId]
-                val day = it[CaseSellHistoryTable.date.day()]
-
-                if (caseId == id && day == 13) {
+                val date = it[CaseSellHistoryTable.date]
+                if (caseId == id && date.atZone(ZoneOffset.UTC).dayOfMonth == 13) {
+                    println(it[CaseSellHistoryTable.price])
                     list.add(it[CaseSellHistoryTable.price])
+
                     case = CasePriceData(
                         name = it[CaseSellHistoryTable.name],
                         priceList = list
