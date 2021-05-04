@@ -4,6 +4,7 @@ import data.database.CaseStorage
 import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
 import domain.usecase.UpdateInfoUseCase
+import invest.data.database.repository.DailySellHistoryTableRepository
 import invest.domain.repository.SellHistoryRepository
 import io.ktor.application.*
 import io.ktor.features.*
@@ -26,6 +27,8 @@ class Server {
     private val sellHistoryRepository = SellHistoryRepository()
     private val databaseRepository = DatabaseRepository()
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
+
+    private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
 
     @ExperimentalCoroutinesApi
     @ExperimentalSerializationApi
@@ -69,8 +72,8 @@ class Server {
                     call.respond(standardDeviationList)
                 }
                 get("/getStandardDeviation/daily") {
-                    val standardDeviationList = sellHistoryRepository
-                        .prepareStandardDeviationResponse("resources/caseJson",1)
+                    val standardDeviationList = dailySellHistoryTableRepository
+                        .prepareStandardDeviationResponse()
                     call.respond(standardDeviationList)
                 }
             }

@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object CaseSellHistoryStorage {
 
-    val numberOfCaseId = (1..34).toList()
+
 
     fun insertToCaseSellHistoryTable(dailySellHistoryDbo: DailySellHistoryDbo) {
         CaseSellHistoryTable.insert {

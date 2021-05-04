@@ -4,7 +4,6 @@ import domain.model.marketoverview.MarketOverview
 import data.model.case.CaseDbo
 import data.repository.DatabaseRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
-import invest.data.database.table.sellhistory.CaseSellHistoryStorage.numberOfCaseId
 import invest.data.database.table.sellhistory.CaseSellHistoryTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
