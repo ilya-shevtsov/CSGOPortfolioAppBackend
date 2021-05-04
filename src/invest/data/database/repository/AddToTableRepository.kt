@@ -16,9 +16,9 @@ class AddToTableRepository {
 
 
 
-    fun insertInitialData() {
+    fun insertPriceTableData() {
         val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
-        dailySellHistoryDboList.map { dailySellHistoryDbo ->
+        dailySellHistoryDboList.forEach { dailySellHistoryDbo ->
             insertToCaseSellHistoryTable(dailySellHistoryDbo)
         }
     }

@@ -2,6 +2,7 @@ package invest.data.database.table.sellhistory
 
 import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertIgnore
 
 object CaseSellHistoryStorage {
 

@@ -22,11 +22,11 @@ object CaseStorage {
             SchemaUtils.create(CaseTable)
             SchemaUtils.create(CaseSellHistoryTable)
             databaseRepository.insertInitialData()
-            addToTableRepository.insertInitialData()
+            addToTableRepository.insertPriceTableData()
         }
     }
 
-    fun insertToDatabase(caseDbo: CaseDbo) {
+    fun insertToCaseTable(caseDbo: CaseDbo) {
         CaseTable.insert {
             it[name] = caseDbo.name
             it[caseAccess] = caseDbo.caseAccess

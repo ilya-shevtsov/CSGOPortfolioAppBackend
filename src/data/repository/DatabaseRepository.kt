@@ -371,7 +371,6 @@ class DatabaseRepository {
             description =
             "The Shadow Case is a weapon case consisting of 16 community-made weapon skins released as part of the September 18, 2015 update. It requires a Shadow Case Key to be opened. There is a tiny chance to unbox a pair of Shadow Daggers."
         ),
-
         CaseDbo(
             caseAccess = "Shattered%20Web%20Case",
             name = "Shattered Web Case",
@@ -384,6 +383,17 @@ class DatabaseRepository {
             description =
             "The Shattered Web Cas`e is a case that contains 17 community-made weapon skins released as part of Operation Shattered Web. There is a very small chance to unbox the Nomad Knife, Skeleton Knife, Paracord Knife, and the Survival Knife each in 13 different finishes."
         ),
+        CaseDbo(
+            caseAccess = "Snakebite%20Case",
+            name = "Snakebite Case",
+            releaseDate = "03.05.2021",
+            dropStatus = "Active (???)",
+            lowestPrice = 00.00,
+            volume = 0,
+            medianPrice = 00.00,
+            imageUrl = "https://www.csgodatabase.com/images/containers/webp/Snakebite_Case.webp",
+            description =
+            "The Snakebite Case is a weapon case introduced on 03 May 2021 as part of the End of Broken Fang update. The weapon case contains CS:GO skins from The Snakebite Collection."        ),
         CaseDbo(
             caseAccess = "Spectrum%20Case",
             name = "Spectrum Case",
@@ -436,7 +446,7 @@ class DatabaseRepository {
         val storedCaseList = getCaseList()
         caseDboList.forEach { caseDbo ->
             if (storedCaseList.all { storedCase -> caseDbo.name != storedCase.name }) {
-                CaseStorage.insertToDatabase(caseDbo)
+                CaseStorage.insertToCaseTable(caseDbo)
             }
         }
     }
