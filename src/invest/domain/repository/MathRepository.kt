@@ -36,6 +36,7 @@ class MathRepository {
     }
 
     fun getAverageReturn(priceList: List<Double>, averageReturnType: Int): Double {
+        println(priceList)
         val pairedArray = getPairedPriceArray(priceList)
         return when (averageReturnType) {
             1 -> {

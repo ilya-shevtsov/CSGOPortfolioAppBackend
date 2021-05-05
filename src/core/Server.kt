@@ -26,8 +26,6 @@ class Server {
     private val caseRepository = CaseRepository()
     private val databaseRepository = DatabaseRepository()
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
-
-    private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
     private val analyticalDetailsRepository = AnalyticalDetailsRepository()
 
     @ExperimentalCoroutinesApi
