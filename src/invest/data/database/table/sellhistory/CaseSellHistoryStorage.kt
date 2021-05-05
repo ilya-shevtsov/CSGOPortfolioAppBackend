@@ -1,7 +1,7 @@
 package invest.data.database.table.sellhistory
 
 import invest.data.model.dailysellhistory.dbo.DailySellHistoryDbo
-import invest.domain.model.CasePriceData
+import invest.domain.model.casepricedata.CasePriceData
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.ZoneOffset

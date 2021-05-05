@@ -1,7 +1,7 @@
 package invest.data.model.dailysellhistory.dbo
 
 import invest.data.common.CommonRepository
-import invest.domain.model.DailySellHistory
+import invest.domain.model.dailysellhistory.DailySellHistory
 
 object DailySellHistoryDboMapper {
 

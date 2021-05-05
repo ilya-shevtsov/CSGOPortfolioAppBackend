@@ -2,30 +2,15 @@ package invest.data.model.analyticaldetails.dbo
 
 import invest.data.common.CommonRepository
 import invest.data.database.table.analysis.CaseAnalysisTable
-import invest.data.model.analyticaldetails.DailyAnalyticalDetails
-import invest.data.model.analyticaldetails.MonthlyAnalyticalDetails
-import invest.data.model.analyticaldetails.dto.AnalyticalDetailsDto
+import invest.domain.model.analyticaldetails.DailyAnalyticalDetails
+import invest.domain.model.analyticaldetails.MonthlyAnalyticalDetails
 import org.jetbrains.exposed.sql.ResultRow
 
-object AnalyticalDetailsMapper {
+object AnalyticalDetailsDboMapper {
 
     private val commonRepository = CommonRepository()
 
-    fun mapToDto(analyticalDetailsDbo: AnalyticalDetailsDbo): AnalyticalDetailsDto {
-        return AnalyticalDetailsDto(
-            name = analyticalDetailsDbo.name,
-            dailyAvgReturnInPercent = analyticalDetailsDbo.dailyAvgReturnInPercent,
-            dailyAvgReturnInRUB = analyticalDetailsDbo.dailyAvgReturnInRUB,
-            dailyStandardDeviation = analyticalDetailsDbo.dailyStandardDeviation,
-            dailySharpRatio = analyticalDetailsDbo.dailySharpRatio,
-            monthlyAvgReturnInPercent = analyticalDetailsDbo.monthlyAvgReturnInPercent,
-            monthlyAvgReturnInRUB = analyticalDetailsDbo.monthlyAvgReturnInRUB,
-            monthlyStandardDeviation = analyticalDetailsDbo.monthlyStandardDeviation,
-            monthlySharpRatio = analyticalDetailsDbo.monthlySharpRatio
-        )
-    }
-
-    fun mapToDboFromRow(row: ResultRow): AnalyticalDetailsDbo {
+    fun mapFromRow(row: ResultRow): AnalyticalDetailsDbo {
         return AnalyticalDetailsDbo(
             id = row[CaseAnalysisTable.id],
             name = row[CaseAnalysisTable.name],
@@ -41,7 +26,7 @@ object AnalyticalDetailsMapper {
     }
 
 
-    fun mapToDbo(pair: Pair<MonthlyAnalyticalDetails, DailyAnalyticalDetails>): AnalyticalDetailsDbo {
+    fun map(pair: Pair<MonthlyAnalyticalDetails, DailyAnalyticalDetails>): AnalyticalDetailsDbo {
         return AnalyticalDetailsDbo(
             id = commonRepository.assignId(pair.first.name),
             name = pair.first.name,

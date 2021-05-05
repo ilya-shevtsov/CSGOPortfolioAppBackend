@@ -7,8 +7,8 @@ import invest.data.model.dailysellhistory.dbo.DailySellHistoryDbo
 import invest.data.model.dailysellhistory.dbo.DailySellHistoryDboMapper
 import invest.data.model.sellhistory.SellHistoryDto
 import invest.data.model.sellhistory.SellHistoryMapper
-import invest.domain.model.CasePriceData
-import invest.domain.model.DailySellHistory
+import invest.domain.model.casepricedata.CasePriceData
+import invest.domain.model.dailysellhistory.DailySellHistory
 import invest.domain.repository.MathRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json

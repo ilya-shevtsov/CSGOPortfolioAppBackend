@@ -1,4 +1,4 @@
-package invest.domain.model
+package invest.domain.model.dailysellhistory
 
 import java.time.Instant
 

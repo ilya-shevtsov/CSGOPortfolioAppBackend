@@ -1,13 +1,13 @@
 package invest.data.database.repository
 
-import data.model.case.CaseDboMapper
 import invest.data.database.table.analysis.CaseAnalysisStorage.insertToCaseAnalysisTable
 import invest.data.database.table.analysis.CaseAnalysisTable
 import invest.data.model.analyticaldetails.dbo.AnalyticalDetailsDbo
-import invest.data.model.analyticaldetails.dbo.AnalyticalDetailsMapper
-import invest.data.model.analyticaldetails.DailyAnalyticalDetails
-import invest.data.model.analyticaldetails.MonthlyAnalyticalDetails
+import invest.data.model.analyticaldetails.dbo.AnalyticalDetailsDboMapper
+import invest.domain.model.analyticaldetails.DailyAnalyticalDetails
+import invest.domain.model.analyticaldetails.MonthlyAnalyticalDetails
 import invest.data.model.analyticaldetails.dto.AnalyticalDetailsDto
+import invest.data.model.analyticaldetails.dto.AnalyticalDetailsDtoMapper
 import invest.domain.repository.MathRepository
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -22,8 +22,8 @@ class AnalyticalDetailsRepository {
 
     fun getAnalyticalDetailsResponse(): List<AnalyticalDetailsDto> {
         return transaction {
-            CaseAnalysisTable.selectAll().map { AnalyticalDetailsMapper.mapToDboFromRow(it) }
-        }.map { AnalyticalDetailsDbo -> AnalyticalDetailsMapper.mapToDto(AnalyticalDetailsDbo) }
+            CaseAnalysisTable.selectAll().map { AnalyticalDetailsDboMapper.mapFromRow(it) }
+        }.map { AnalyticalDetailsDbo -> AnalyticalDetailsDtoMapper.map(AnalyticalDetailsDbo) }
     }
 
 
@@ -48,7 +48,7 @@ class AnalyticalDetailsRepository {
             monthlyAnalyticalDetailList zip dailyAnalyticalDetailList
         newList.map { pair ->
             analyticalDetailsDboList.add(
-                AnalyticalDetailsMapper.mapToDbo(pair)
+                AnalyticalDetailsDboMapper.map(pair)
             )
         }
         return analyticalDetailsDboList

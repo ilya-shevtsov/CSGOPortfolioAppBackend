@@ -1,4 +1,4 @@
-package invest.domain.model
+package invest.domain.model.casepricedata
 
 data class CasePriceData(
     val name: String,

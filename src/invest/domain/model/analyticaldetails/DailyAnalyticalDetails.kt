@@ -1,4 +1,4 @@
-package invest.data.model.analyticaldetails
+package invest.domain.model.analyticaldetails
 
 data class DailyAnalyticalDetails(
     val name: String,

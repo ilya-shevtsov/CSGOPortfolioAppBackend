@@ -1,6 +1,6 @@
 package invest.data.model.dailysellhistory.dto
 
-import invest.domain.model.DailySellHistory
+import invest.domain.model.dailysellhistory.DailySellHistory
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
