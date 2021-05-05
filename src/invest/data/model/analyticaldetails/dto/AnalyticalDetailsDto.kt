@@ -1,9 +1,10 @@
-package invest.data.model.analyticaldetails.dbo
+package invest.data.model.analyticaldetails.dto
 
-data class AnalyticalDetailsDbo(
-    val id: Int,
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class AnalyticalDetailsDto(
     val name: String,
-//    val date: Instant,
     val dailyAvgReturnInPercent: Double,
     val dailyAvgReturnInRUB: Double,
     val dailyStandardDeviation: Double,

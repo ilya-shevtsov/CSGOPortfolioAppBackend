@@ -1,7 +1,7 @@
 package invest.data.database.repository
 
 import invest.data.model.analyticaldetails.dbo.AnalyticalDetailsDbo
-import invest.data.model.analyticaldetails.dbo.AnalyticalDetailsDboMapper
+import invest.data.model.analyticaldetails.dbo.AnalyticalDetailsMapper
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Assertions.*
@@ -22,7 +22,7 @@ internal class AnalyticalDetailsRepositoryTest{
                 outputOne zip outputTwo
             newList.map { pair ->
                 analyticalDetailsDboList.add(
-                    AnalyticalDetailsDboMapper.map(pair)
+                    AnalyticalDetailsMapper.mapToDbo(pair)
                 )
             }
             assertEquals("f", analyticalDetailsDboList)

@@ -4,6 +4,7 @@ import data.database.CaseStorage
 import data.repository.DatabaseRepository
 import domain.repository.CaseRepository
 import domain.usecase.UpdateInfoUseCase
+import invest.data.database.repository.AnalyticalDetailsRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
 import io.ktor.application.*
 import io.ktor.features.*
@@ -32,6 +33,7 @@ class Server {
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
 
     private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
+    private val analyticalDetailsRepository = AnalyticalDetailsRepository()
 
     @ExperimentalCoroutinesApi
     @ExperimentalSerializationApi
@@ -54,6 +56,10 @@ class Server {
                 }
                 get("/getCase") {
                     val response = caseRepository.getCaseResponse()
+                    call.respond(response)
+                }
+                get("/getAnalyticalDetails") {
+                    val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
                     call.respond(response)
                 }
                 get("/getSharpRatio/monthly") {
