@@ -1,4 +1,4 @@
-package domain.model.marketoverview
+package overview.domain.model.marketoverview
 
 data class MarketOverview(
     val name: String,

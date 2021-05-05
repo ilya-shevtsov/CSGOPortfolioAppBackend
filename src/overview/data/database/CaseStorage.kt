@@ -1,8 +1,8 @@
-package data.database
+package overview.data.database
 
-import domain.model.marketoverview.MarketOverview
-import data.model.case.CaseDbo
-import data.repository.DatabaseRepository
+import overview.domain.model.marketoverview.MarketOverview
+import overview.data.model.case.CaseDbo
+import overview.data.repository.DatabaseRepository
 import invest.data.database.repository.AnalyticalDetailsRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
 import invest.data.database.table.analysis.CaseAnalysisTable

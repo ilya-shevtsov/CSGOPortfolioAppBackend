@@ -1,6 +1,6 @@
-package data.api
+package overview.data.api
 
-import data.model.marketoverview.MarketOverviewDto
+import overview.data.model.marketoverview.MarketOverviewDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

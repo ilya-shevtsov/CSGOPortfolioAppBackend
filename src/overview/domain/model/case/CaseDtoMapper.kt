@@ -1,6 +1,6 @@
-package domain.model.case
+package overview.domain.model.case
 
-import data.model.case.CaseDbo
+import overview.data.model.case.CaseDbo
 
 object CaseDtoMapper {
 

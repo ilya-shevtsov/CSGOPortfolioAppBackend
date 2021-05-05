@@ -1,7 +1,7 @@
-package domain.usecase
+package overview.domain.usecase
 
-import domain.model.marketoverview.MarketOverview
-import data.repository.DatabaseRepository
+import overview.domain.model.marketoverview.MarketOverview
+import overview.data.repository.DatabaseRepository
 
 class SaveMarketOverviewUseCase(
     private val databaseRepository: DatabaseRepository

@@ -1,4 +1,4 @@
-package domain.model.case
+package overview.domain.model.case
 
 import kotlinx.serialization.Serializable
 

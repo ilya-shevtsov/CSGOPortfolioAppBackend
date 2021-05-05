@@ -1,8 +1,8 @@
-package domain.usecase
+package overview.domain.usecase
 
-import domain.repository.CaseRepository
+import overview.domain.repository.CaseRepository
 import kotlinx.coroutines.flow.Flow
-import domain.model.marketoverview.MarketOverview
+import overview.domain.model.marketoverview.MarketOverview
 import kotlinx.serialization.ExperimentalSerializationApi
 
 class GetMarketOverviewUseCase(

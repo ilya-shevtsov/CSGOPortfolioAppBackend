@@ -1,6 +1,6 @@
-package data.model.case
+package overview.data.model.case
 
-import data.database.CaseTable
+import overview.data.database.CaseTable
 import org.jetbrains.exposed.sql.ResultRow
 
 object CaseDboMapper {

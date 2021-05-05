@@ -1,7 +1,7 @@
-package domain.usecase
+package overview.domain.usecase
 
-import data.model.case.CaseDbo
-import data.repository.DatabaseRepository
+import overview.data.model.case.CaseDbo
+import overview.data.repository.DatabaseRepository
 
 class GetCaseListUseCase(
     private val databaseRepository: DatabaseRepository

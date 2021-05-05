@@ -1,4 +1,4 @@
-package data.model.marketoverview
+package overview.data.model.marketoverview
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

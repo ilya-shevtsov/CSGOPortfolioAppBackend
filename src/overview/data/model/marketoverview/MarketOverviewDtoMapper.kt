@@ -1,6 +1,6 @@
-package data.model.marketoverview
+package overview.data.model.marketoverview
 
-import domain.model.marketoverview.MarketOverview
+import overview.domain.model.marketoverview.MarketOverview
 
 object MarketOverviewDtoMapper {
 
