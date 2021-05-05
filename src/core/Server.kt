@@ -1,10 +1,11 @@
 package core
 
-import data.database.CaseStorage
-import domain.repository.CaseRepository
-import data.repository.DatabaseRepository
-import domain.usecase.UpdateInfoUseCase
-import invest.SellHistoryRepository
+import overview.data.database.CaseStorage
+import overview.data.repository.DatabaseRepository
+import overview.domain.repository.CaseRepository
+import overview.domain.usecase.UpdateInfoUseCase
+import invest.data.database.repository.AnalyticalDetailsRepository
+import invest.data.database.repository.DailySellHistoryTableRepository
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -15,37 +16,46 @@ import io.ktor.server.netty.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+
 
 class Server {
 
     private val caseRepository = CaseRepository()
-    private val sellHistoryRepository = SellHistoryRepository()
     private val databaseRepository = DatabaseRepository()
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
+
+    private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
+    private val analyticalDetailsRepository = AnalyticalDetailsRepository()
 
     @ExperimentalCoroutinesApi
     @ExperimentalSerializationApi
     fun start() {
-        CaseStorage.createCaseDatabase()
+
+        CaseStorage.createDatabase()
         CoroutineScope(Dispatchers.Default).launch {
-            caseRepository.tickFlow(300000L).collect {
+            caseRepository.tickFlow(1800000L).collect {
                 updateInfoUseCase.updateInfo()
             }
         }
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {
+                get("/Errors") {
+                    val response = "Reasons for errors:" +
+                            "\n1. The price of the case is in decline" +
+                            "\n2. One or more Case names was not supported"
+                    call.respond(response)
+                }
                 get("/getCase") {
                     val response = caseRepository.getCaseResponse()
                     call.respond(response)
                 }
-                get("/getSharpRatio") {
-                    val sharpRatioList = sellHistoryRepository
-                        .prepareSharpRatioResponse("resources/caseJson",30)
-                    call.respond(sharpRatioList)
+                get("/getAnalyticalDetails") {
+                    val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
+                    call.respond(response)
                 }
             }
         }.start(wait = true)
