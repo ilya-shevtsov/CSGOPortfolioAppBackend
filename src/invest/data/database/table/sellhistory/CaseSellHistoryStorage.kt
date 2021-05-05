@@ -1,10 +1,8 @@
 package invest.data.database.table.sellhistory
 
-import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
+import invest.data.model.dailysellhistory.dbo.DailySellHistoryDbo
 import invest.domain.model.CasePriceData
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.`java-time`.day
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.ZoneOffset
 

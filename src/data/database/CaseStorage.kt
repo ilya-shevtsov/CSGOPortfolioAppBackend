@@ -3,7 +3,9 @@ package data.database
 import domain.model.marketoverview.MarketOverview
 import data.model.case.CaseDbo
 import data.repository.DatabaseRepository
+import invest.data.database.repository.AnalyticalDetailsRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
+import invest.data.database.table.analysis.CaseAnalysisTable
 import invest.data.database.table.sellhistory.CaseSellHistoryTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -14,6 +16,7 @@ import org.jetbrains.exposed.sql.update
 object CaseStorage {
     private val databaseRepository = DatabaseRepository()
     private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
+    private val analyticalDetailsRepository = AnalyticalDetailsRepository()
 
 
     fun createDatabase() {
@@ -21,10 +24,10 @@ object CaseStorage {
         transaction {
             SchemaUtils.create(CaseTable)
             SchemaUtils.create(CaseSellHistoryTable)
+            SchemaUtils.create(CaseAnalysisTable)
             databaseRepository.insertInitialData()
             dailySellHistoryTableRepository.insertData()
-//            val haha = dailySellHistoryTableRepository.getCasePriceDataList(numberOfCaseId)
-//            println(haha)
+            analyticalDetailsRepository.insertData()
         }
     }
 

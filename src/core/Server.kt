@@ -1,11 +1,10 @@
 package core
 
 import data.database.CaseStorage
-import domain.repository.CaseRepository
 import data.repository.DatabaseRepository
+import domain.repository.CaseRepository
 import domain.usecase.UpdateInfoUseCase
 import invest.data.database.repository.DailySellHistoryTableRepository
-import invest.domain.repository.SellHistoryRepository
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -16,15 +15,19 @@ import io.ktor.server.netty.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ofPattern
+import java.util.*
+
 
 class Server {
 
     private val caseRepository = CaseRepository()
-
-    private val sellHistoryRepository = SellHistoryRepository()
     private val databaseRepository = DatabaseRepository()
     private val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
 
@@ -34,14 +37,12 @@ class Server {
     @ExperimentalSerializationApi
     fun start() {
 
-
         CaseStorage.createDatabase()
         CoroutineScope(Dispatchers.Default).launch {
             caseRepository.tickFlow(1800000L).collect {
                 updateInfoUseCase.updateInfo()
             }
         }
-//
         embeddedServer(Netty, 8080) {
             install(ContentNegotiation) { json() }
             routing {

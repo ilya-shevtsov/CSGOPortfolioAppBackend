@@ -2,11 +2,9 @@ package invest.data.database.repository
 
 import invest.data.database.table.sellhistory.CaseSellHistoryStorage.getDailyCasePriceData
 import invest.data.database.table.sellhistory.CaseSellHistoryStorage.getMonthlyCasePriceData
-import invest.data.database.table.sellhistory.CaseSellHistoryStorage.getPriceListQuery
 import invest.data.database.table.sellhistory.CaseSellHistoryStorage.insertToCaseSellHistoryTable
-import invest.data.database.table.sellhistory.CaseSellHistoryTable
-import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDbo
-import invest.data.model.dailysellhistory.Bdo.DailySellHistoryDboMapper
+import invest.data.model.dailysellhistory.dbo.DailySellHistoryDbo
+import invest.data.model.dailysellhistory.dbo.DailySellHistoryDboMapper
 import invest.data.model.sellhistory.SellHistoryDto
 import invest.data.model.sellhistory.SellHistoryMapper
 import invest.domain.model.CasePriceData
@@ -14,7 +12,6 @@ import invest.domain.model.DailySellHistory
 import invest.domain.repository.MathRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.sql.SQLException
 import java.time.ZoneOffset
@@ -22,8 +19,10 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
     private val mathRepository = MathRepository()
 
-//    val numberOfCaseId = (1..34).toList()
-    val numberOfCaseId = listOf(21)
+
+
+    val numberOfCaseId = (1..34).toList()
+//    val numberOfCaseId = listOf(21)
 
     fun prepareAvgReturn(period: Int, averageReturnType: Int): List<String> {
         val outputList = mutableListOf<String>()
@@ -87,7 +86,7 @@ class DailySellHistoryTableRepository {
         return outputList
     }
 
-    private fun getCasePriceDataList(period: Int, numberOfCaseId: List<Int>): List<CasePriceData> {
+    fun getCasePriceDataList(period: Int, numberOfCaseId: List<Int>): List<CasePriceData> {
         val casePriceDataList = mutableListOf<CasePriceData>()
         numberOfCaseId.map { id ->
             if (period == 1) {

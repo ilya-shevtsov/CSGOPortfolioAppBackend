@@ -1,4 +1,4 @@
-package invest.data.model.dailysellhistory.Bdo
+package invest.data.model.dailysellhistory.dbo
 
 import invest.data.common.CommonRepository
 import invest.domain.model.DailySellHistory
