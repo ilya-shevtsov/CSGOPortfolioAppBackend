@@ -62,46 +62,6 @@ class Server {
                     val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
                     call.respond(response)
                 }
-                get("/getSharpRatio/monthly") {
-                    val sharpRatioList = dailySellHistoryTableRepository
-                        .prepareSharpRatioResponse(30)
-                    call.respond(sharpRatioList)
-                }
-                get("/getSharpRatio/daily") {
-                    val sharpRatioList = dailySellHistoryTableRepository
-                        .prepareSharpRatioResponse(1)
-                    call.respond(sharpRatioList)
-                }
-                get("/getStandardDeviation/monthly") {
-                    val standardDeviationList = dailySellHistoryTableRepository
-                        .prepareStandardDeviationResponse(30)
-                    call.respond(standardDeviationList)
-                }
-                get("/getStandardDeviation/daily") {
-                    val standardDeviationList = dailySellHistoryTableRepository
-                        .prepareStandardDeviationResponse(1)
-                    call.respond(standardDeviationList)
-                }
-                get("/getPercentReturn/monthly") {
-                    val avgReturn = dailySellHistoryTableRepository
-                        .prepareAvgReturn(30, 1)
-                    call.respond(avgReturn)
-                }
-                get("/getPercentReturn/daily") {
-                    val avgReturn = dailySellHistoryTableRepository
-                        .prepareAvgReturn(1, 1)
-                    call.respond(avgReturn)
-                }
-                get("/getRUBReturn/monthly") {
-                    val avgReturn = dailySellHistoryTableRepository
-                        .prepareAvgReturn(30, 2)
-                    call.respond(avgReturn)
-                }
-                get("/getRUBReturn/daily") {
-                    val avgReturn = dailySellHistoryTableRepository
-                        .prepareAvgReturn(1, 2)
-                    call.respond(avgReturn)
-                }
             }
         }.start(wait = true)
     }

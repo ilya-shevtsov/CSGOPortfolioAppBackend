@@ -26,10 +26,8 @@ class AnalyticalDetailsRepository {
         }.map { AnalyticalDetailsDbo -> AnalyticalDetailsDtoMapper.map(AnalyticalDetailsDbo) }
     }
 
-
     fun insertData() {
         val analyticalDetailsList = getAnalyticalDetailList()
-
         for (analyticalDetailsDbo in analyticalDetailsList) {
             try {
                 insertToCaseAnalysisTable(analyticalDetailsDbo)
@@ -38,7 +36,6 @@ class AnalyticalDetailsRepository {
             }
         }
     }
-
 
     fun getAnalyticalDetailList(): List<AnalyticalDetailsDbo> {
         val analyticalDetailsDboList = mutableListOf<AnalyticalDetailsDbo>()
