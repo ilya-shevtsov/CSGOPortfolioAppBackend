@@ -19,8 +19,8 @@ import java.time.ZoneOffset
 class DailySellHistoryTableRepository {
     private val mathRepository = MathRepository()
 
-//    val numberOfCaseId = (1..34).toList()
-    val numberOfCaseId = listOf(21)
+    val numberOfCaseId = (1..34).toList()
+//    val numberOfCaseId = listOf(22)
 
 
     fun getCasePriceDataList(period: Int, numberOfCaseId: List<Int>): List<CasePriceData> {

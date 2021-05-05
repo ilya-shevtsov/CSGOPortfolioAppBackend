@@ -36,8 +36,8 @@ class MathRepository {
     }
 
     fun getAverageReturn(priceList: List<Double>, averageReturnType: Int): Double {
-        println(priceList)
-        val pairedArray = getPairedPriceArray(priceList)
+        val growthPeriod = getGrowthPeriodList(priceList)
+        val pairedArray = getPairedPriceArray(growthPeriod)
         return when (averageReturnType) {
             1 -> {
                 myRound((getPercentReturnList(pairedArray).sum() / pairedArray.size))
