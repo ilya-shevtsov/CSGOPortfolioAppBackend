@@ -55,6 +55,7 @@ class Server {
                 }
                 get("/getAnalyticalDetails") {
                     val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
+                        .filter { !it.monthlySharpRatio.isNaN() }
                     call.respond(response)
                 }
             }
