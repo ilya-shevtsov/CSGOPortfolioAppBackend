@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 
@@ -51,6 +52,10 @@ class Server {
                 }
                 get("/getCase") {
                     val response = caseRepository.getCaseResponse()
+                    call.respond(response)
+                }
+                get("/getCaseForGS") {
+                    val response = caseRepository.getMarketOverview("Chroma%20Case").first()
                     call.respond(response)
                 }
                 get("/getAnalyticalDetails") {
