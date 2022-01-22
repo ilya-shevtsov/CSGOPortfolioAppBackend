@@ -39,10 +39,18 @@ class MathRepository {
         val pairedArray = getPairedPriceArray(priceList)
         return when (averageReturnType) {
             1 -> {
-                myRound((getPercentReturnList(pairedArray).sum() / pairedArray.size))
+                val percentList = getPercentReturnList(pairedArray)
+                val percentListSum = percentList.sum()
+                val averageReturnP = (percentListSum / pairedArray.size)
+                val roundedAverageReturnP = myRound(averageReturnP)
+                roundedAverageReturnP
             }
             2 -> {
-                myRound(getCurrencyReturnList(pairedArray).sum() / pairedArray.size)
+                val currencyList = getCurrencyReturnList(pairedArray)
+                val currencyListSum = currencyList.sum()
+                val averageReturnC = (currencyListSum / pairedArray.size)
+                val roundedAverageReturnC = myRound(averageReturnC)
+                roundedAverageReturnC
             }
             else -> throw Exception("The type of average return that your provided is not supported")
         }
