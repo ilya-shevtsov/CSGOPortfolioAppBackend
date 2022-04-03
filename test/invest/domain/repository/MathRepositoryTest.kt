@@ -3,7 +3,7 @@ package invest.domain.repository
 import org.junit.Test
 import kotlin.test.assertEquals
 
-
+//New Start
 class MathRepositoryTest {
     private val mathRepository = MathRepository()
 
