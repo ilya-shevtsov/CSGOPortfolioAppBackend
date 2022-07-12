@@ -10,7 +10,7 @@ plugins {
     kotlin("jvm") version "1.5.0"
     kotlin("plugin.serialization") version "1.5.0"
     kotlin("kapt") version "1.3.70"
-//    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.ilya.shevtsov.casewatcher"

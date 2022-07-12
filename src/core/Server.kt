@@ -36,11 +36,11 @@ class Server {
 
         CaseStorage.createDatabase()
         CoroutineScope(Dispatchers.Default).launch {
-            caseRepository.tickFlow(1800000L).collect {
-                updateInfoUseCase.updateInfo()
-            }
+//            caseRepository.tickFlow(1800000L).collect {
+//                updateInfoUseCase.updateInfo()
+//            }
         }
-        embeddedServer(Netty, 8080) {
+        embeddedServer(Netty, port = (System.getenv("PORT")?:"5000").toInt()) {
             install(ContentNegotiation) { json() }
             routing {
                 get("/Errors") {
