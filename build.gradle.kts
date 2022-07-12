@@ -10,7 +10,10 @@ plugins {
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.serialization") version "1.4.30"
     kotlin("kapt") version "1.3.70"
+//    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
+
+val implementation by configurations
 
 group = "com.ilya.shevtsov.casewatcher"
 version = "0.0.1-SNAPSHOT"
@@ -39,7 +42,7 @@ dependencies {
     implementation("io.ktor:ktor-client-gson:$ktor_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
+    implementation("io.ktor:ktor-server-tests:$ktor_version")
     
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
