@@ -7,13 +7,11 @@ val kotlin_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.4.30"
-    kotlin("plugin.serialization") version "1.4.30"
+    kotlin("jvm") version "1.5.0"
+    kotlin("plugin.serialization") version "1.5.0"
     kotlin("kapt") version "1.3.70"
 //    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
-
-val implementation by configurations
 
 group = "com.ilya.shevtsov.casewatcher"
 version = "0.0.1-SNAPSHOT"
