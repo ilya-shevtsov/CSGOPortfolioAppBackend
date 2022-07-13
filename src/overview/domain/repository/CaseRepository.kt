@@ -62,8 +62,8 @@ class CaseRepository {
             object : TimerTask() {
                 override fun run() {
                     try {
-                        offer(time)
-                    } catch (e: Exception) {
+                        trySend(time).isSuccess
+                    } catch (_: Exception) {
                     }
                     time += 1
                 }
