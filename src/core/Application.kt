@@ -11,17 +11,17 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
 
-@ExperimentalSerializationApi
-@ExperimentalCoroutinesApi
-fun main(){
-    embeddedServer(Netty, port = (System.getenv("PORT")?:"5000").toInt()) {
-        install(ContentNegotiation) {
-            json()
-        }
-        module()
-    }.start(wait = true)
-}
-
+//@ExperimentalSerializationApi
+//@ExperimentalCoroutinesApi
+//fun main(){
+//    embeddedServer(Netty, port = (System.getenv("PORT")?:"5000").toInt()) {
+////        install(ContentNegotiation) {
+////            json()
+////        }
+//        module()
+//    }.start(wait = true)
+//}
+fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 fun Application.module() {
     routing {
         get("/getCase") {
