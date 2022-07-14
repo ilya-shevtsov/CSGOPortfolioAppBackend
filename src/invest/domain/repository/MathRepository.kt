@@ -56,7 +56,13 @@ class MathRepository {
         }
     }
 
-    private fun myRound(number: Double) = (number * 100).roundToInt() / 100.0
+    private fun myRound(number: Double): Double {
+        return if (number.isNaN()) {
+            0.0
+        } else {
+            (number * 100).roundToInt() / 100.0
+        }
+    }
 
     private fun getCurrencyReturnList(pairedArray: List<Pair<Double, Double>>) =
         pairedArray.map { (first, second) -> (second - first) }
