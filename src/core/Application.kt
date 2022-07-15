@@ -51,18 +51,14 @@ fun Application.module() {
                     "\n2. One or more Case names was not supported"
             call.respond(response)
         }
-        get("/ForGoogleSheets"){
-            val response = caseRepository.getCaseForGoogleSheets("Chroma%20Case")
-            call.respond(response)
-        }
         get("/getCase") {
             val response = caseRepository.getCaseResponse()
             call.respond(response)
         }
-        get("/getAnalyticalDetails") {
-            val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
-                .filter { !it.monthlySharpRatio.isNaN() }
-            call.respond(response)
-        }
+//        get("/getAnalyticalDetails") {
+//            val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
+//                .filter { !it.monthlySharpRatio.isNaN() }
+//            call.respond(response)
+//        }
     }
 }
