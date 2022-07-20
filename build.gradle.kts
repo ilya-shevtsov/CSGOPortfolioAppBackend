@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val logback_version: String by project
 val ktor_version: String by project
@@ -7,31 +5,42 @@ val kotlin_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.4.30"
-    kotlin("plugin.serialization") version "1.4.30"
-    kotlin("kapt") version "1.3.70"
+    kotlin("jvm") version "1.5.0"
+    kotlin("plugin.serialization") version "1.5.0"
+    kotlin("kapt") version "1.7.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.ilya.shevtsov.casewatcher"
 version = "0.0.1-SNAPSHOT"
 
 application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
+    mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
     jcenter()
 }
 
 dependencies {
+    // from sample
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("io.ktor:ktor-server-core:$ktor_version")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("ch.qos.logback:logback-classic:$logback_version")
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    //main
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
 
     implementation("io.ktor:ktor-server-netty:$ktor_version")
-    implementation("io.ktor:ktor-html-builder:$ktor_version")
+//    implementation("io.ktor:ktor-html-builder:$ktor_version")
     implementation("io.ktor:ktor-serialization:$ktor_version")
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
@@ -39,7 +48,7 @@ dependencies {
     implementation("io.ktor:ktor-client-gson:$ktor_version")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
+    implementation("io.ktor:ktor-server-tests:$ktor_version")
     
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

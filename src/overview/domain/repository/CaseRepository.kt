@@ -19,6 +19,21 @@ import java.util.*
 class CaseRepository {
 
     @ExperimentalSerializationApi
+    fun getCaseForGoogleSheets(caseName: String): Flow<MarketOverview> = flow {
+        val response = ApiTools.getCaseApiService()
+            .getCase(
+                appId = 730,
+                currency = 5,
+                caseName = caseName
+            )
+        val marketOverviewDto = MarketOverviewDtoMapper.map(response, caseName)
+        emit(marketOverviewDto)
+    }.retryWhen { _, _ ->
+        delay(60000)
+        true
+    }
+
+    @ExperimentalSerializationApi
     suspend fun getMarketOverview(caseName: String): Flow<MarketOverview> = flow {
         val response = ApiTools.getCaseApiService()
             .getCase(
@@ -47,8 +62,8 @@ class CaseRepository {
             object : TimerTask() {
                 override fun run() {
                     try {
-                        offer(time)
-                    } catch (e: Exception) {
+                        trySend(time).isSuccess
+                    } catch (_: Exception) {
                     }
                     time += 1
                 }
