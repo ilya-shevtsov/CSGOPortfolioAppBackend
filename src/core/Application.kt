@@ -59,7 +59,7 @@ fun Application.module() {
 //            val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
 //                .filter { !it.monthlySharpRatio.isNaN() }
 //            call.respond(response)
-//        }????
+//        }???????
     }
 }
 //
