@@ -1,7 +1,4 @@
 package overview.data.repository
-
-import core.preferredCurrency
-import kotlinx.serialization.ExperimentalSerializationApi
 import overview.data.database.CaseTable
 import overview.data.database.CaseStorage
 import overview.data.model.case.CaseDbo
@@ -11,10 +8,6 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseRepository {
-
-    @OptIn(ExperimentalSerializationApi::class)
-    val currency: Int = preferredCurrency.preferredCurrency
-
     private val caseDboList = listOf(
         CaseDbo(
             caseAccess = "Chroma%20Case",

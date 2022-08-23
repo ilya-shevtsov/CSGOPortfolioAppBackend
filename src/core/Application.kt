@@ -64,10 +64,11 @@ fun Application.module() {
         post("/getPreferredCurrency"){
             val postBody = call.receive<PreferredCurrencyDto>()
             preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
-            updateInfoUseCase.updateInfo()
+            println("This is prefCur: $preferredCurrency")
             println("This is the postBody $postBody")
             call.respond(postBody)
         }
+
 //        get("/getAnalyticalDetails") {
 //            val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
 //                .filter { !it.monthlySharpRatio.isNaN() }
