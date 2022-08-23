@@ -10,6 +10,7 @@ class UpdateInfoUseCase(
     caseRepository: CaseRepository,
     databaseRepository: DatabaseRepository
 ) {
+    private val currency = databaseRepository.currency
     private val getCaseListUseCase = GetCaseListUseCase(databaseRepository)
     private val saveMarketOverviewUseCase = SaveMarketOverviewUseCase(databaseRepository)
     private val getMarketOverviewUseCase = GetMarketOverviewUseCase(caseRepository)
@@ -18,7 +19,7 @@ class UpdateInfoUseCase(
     suspend fun updateInfo() {
         val caseList = getCaseListUseCase.getCaseList()
         caseList.forEach { case ->
-            getMarketOverviewUseCase.getMarketOverviewUseCase(case.caseAccess)
+            getMarketOverviewUseCase.getMarketOverviewUseCase(case.caseAccess,currency)
                 .catch { println("Error") }
                 .collect { marketOverviewDto ->
                     saveMarketOverviewUseCase.saveMarketOverviewUseCase(case.id, marketOverviewDto)

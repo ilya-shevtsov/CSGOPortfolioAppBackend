@@ -15,6 +15,7 @@ object MarketOverviewDtoMapper {
 
         val newLowestPrice = marketOverviewDto.lowestPrice
             .replace(" pуб.", "")
+            .replace("$", "")
             .replace(",", ".")
             .toDouble()
 
@@ -24,6 +25,7 @@ object MarketOverviewDtoMapper {
 
         val newMedianPrice = marketOverviewDto.medianPrice
             .replace(" pуб.", "")
+            .replace("$", "")
             .replace(",", ".")
             .toDouble()
 

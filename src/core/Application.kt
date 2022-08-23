@@ -7,6 +7,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,12 +20,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
-
+import overview.data.model.preferredcurrency.PreferredCurrencyDto
 
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
+
+
+var preferredCurrency = PreferredCurrencyDto(0)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
 
     val caseRepository = CaseRepository()
@@ -54,6 +59,14 @@ fun Application.module() {
         get("/getCase") {
             val response = caseRepository.getCaseResponse()
             call.respond(response)
+        }
+
+        post("/getPreferredCurrency"){
+            val postBody = call.receive<PreferredCurrencyDto>()
+            preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
+            updateInfoUseCase.updateInfo()
+            println("This is the postBody $postBody")
+            call.respond(postBody)
         }
 //        get("/getAnalyticalDetails") {
 //            val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
