@@ -24,11 +24,14 @@ import overview.data.model.preferredcurrency.PreferredCurrencyDto
 
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
+
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
 
 
 var preferredCurrency = PreferredCurrencyDto(0)
+
+
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
 
@@ -41,7 +44,7 @@ fun Application.module() {
 
     CaseStorage.createDatabase()
     CoroutineScope(Dispatchers.Default).launch {
-        caseRepository.tickFlow(18000000L).collect {
+        caseRepository.tickFlow(1800000000L).collect {
             updateInfoUseCase.updateInfo()
         }
     }
@@ -61,12 +64,18 @@ fun Application.module() {
             call.respond(response)
         }
 
-        post("/getPreferredCurrency"){
+        post("/postPreferredCurrency") {
             val postBody = call.receive<PreferredCurrencyDto>()
             preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
-            println("This is prefCur: $preferredCurrency")
-            println("This is the postBody $postBody")
+            updateInfoUseCase.updateInfo()
             call.respond(postBody)
+            println("From FrontEnd: $preferredCurrency")
+        }
+
+        get("/getPreferredCurrency") {
+            val response = preferredCurrency
+            println("Sending to FrontEnd $preferredCurrency")
+            call.respond(response)
         }
 
 //        get("/getAnalyticalDetails") {
@@ -76,4 +85,4 @@ fun Application.module() {
 //        }
     }
 }
-//
+
