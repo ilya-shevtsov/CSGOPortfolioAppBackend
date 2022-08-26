@@ -67,7 +67,7 @@ fun Application.module() {
         post("/postPreferredCurrency") {
             val postBody = call.receive<PreferredCurrencyDto>()
             preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
-            updateInfoUseCase.updateInfo()
+//            updateInfoUseCase.updateInfo()
             call.respond(postBody)
             println("From FrontEnd: $preferredCurrency")
         }
