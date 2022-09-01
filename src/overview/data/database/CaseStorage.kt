@@ -5,7 +5,9 @@ import overview.data.model.case.CaseDbo
 import overview.data.repository.DatabaseRepository
 import invest.data.database.repository.AnalyticalDetailsRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
+import invest.data.database.repository.PortfolioRepository
 import invest.data.database.table.analysis.CaseAnalysisTable
+import invest.data.database.table.portfolio.PortfolioTable
 import invest.data.database.table.sellhistory.CaseSellHistoryTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -17,6 +19,7 @@ object CaseStorage {
     private val databaseRepository = DatabaseRepository()
     private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
     private val analyticalDetailsRepository = AnalyticalDetailsRepository()
+    private val portfolioRepository = PortfolioRepository()
 
 
     fun createDatabase() {
@@ -25,9 +28,11 @@ object CaseStorage {
             SchemaUtils.create(CaseTable)
             SchemaUtils.create(CaseSellHistoryTable)
             SchemaUtils.create(CaseAnalysisTable)
+            SchemaUtils.create(PortfolioTable)
             databaseRepository.insertInitialData()
             dailySellHistoryTableRepository.insertData()
             analyticalDetailsRepository.insertData()
+            portfolioRepository.insertInitialData()
         }
     }
 

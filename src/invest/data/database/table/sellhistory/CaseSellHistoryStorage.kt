@@ -8,8 +8,6 @@ import java.time.ZoneOffset
 
 object CaseSellHistoryStorage {
 
-
-
     fun insertToCaseSellHistoryTable(dailySellHistoryDbo: DailySellHistoryDbo) {
         CaseSellHistoryTable.insert {
             it[caseId] = dailySellHistoryDbo.id

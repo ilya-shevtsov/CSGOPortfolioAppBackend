@@ -60,6 +60,7 @@ fun Application.module() {
             call.respond(response)
         }
         get("/getCase") {
+//            updateInfoUseCase.updateInfo()
             val response = caseRepository.getCaseResponse()
             call.respond(response)
         }
@@ -67,7 +68,6 @@ fun Application.module() {
         post("/postPreferredCurrency") {
             val postBody = call.receive<PreferredCurrencyDto>()
             preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
-//            updateInfoUseCase.updateInfo()
             call.respond(postBody)
             println("From FrontEnd: $preferredCurrency")
         }
@@ -78,11 +78,11 @@ fun Application.module() {
             call.respond(response)
         }
 
-//        get("/getAnalyticalDetails") {
-//            val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
-//                .filter { !it.monthlySharpRatio.isNaN() }
-//            call.respond(response)
-//        }
+        get("/getAnalyticalDetails") {
+            val response = analyticalDetailsRepository.getAnalyticalDetailsResponse()
+                .filter { !it.monthlySharpRatio.isNaN() }
+            call.respond(response)
+        }
     }
 }
 
