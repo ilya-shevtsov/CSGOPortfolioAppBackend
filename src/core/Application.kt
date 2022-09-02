@@ -4,6 +4,8 @@ package core
 import invest.data.database.repository.AnalyticalDetailsRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
 import invest.data.database.repository.PortfolioRepository
+import invest.data.model.portfolio.AddedCaseDto
+import invest.data.model.portfolio.dto.PortfolioItemDto
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
@@ -91,12 +93,13 @@ fun Application.module() {
             call.respond(postBody)
             println("From FrontEnd: $preferredCurrency")
         }
-//        post("/postAddedCase") {
-//            val postBody = call.receive<PreferredCurrencyDto>()
-//            preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
-//            call.respond(postBody)
-//            println("From FrontEnd: $preferredCurrency")
-//        }
+        post("/postAddedCase") {
+            val postBody = call.receive<AddedCaseDto>()
+            val addedCase = AddedCaseDto(
+                postBody.name, postBody.amount, postBody.purchasePrice
+            )
+            call.respond(postBody)
+        }
 
     }
 }

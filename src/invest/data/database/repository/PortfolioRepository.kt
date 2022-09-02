@@ -207,17 +207,10 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Spectrum%20Case",
             ),
         )
-        storedCaseList.map { item ->
-            PortfolioStorage.insertPortfolioTable(item)
+        storedCaseList.forEach { item ->
+            if (storedCaseList.all { storedCase -> item.name != storedCase.name }) {
+                PortfolioStorage.insertPortfolioTable(item)
+            }
         }
-
-//        val storedCaseList = getPortfolioList()
-//        println(storedCaseList)
-//        storedCaseList.forEach { portfolioItemDbo ->
-//            if (storedCaseList.all { storedCase -> portfolioItemDbo.name != storedCase.name }) {
-//                println(portfolioItemDbo)
-//                PortfolioStorage.insertPortfolioTable(portfolioItemDbo)
-//            }
-//        }
     }
 }
