@@ -1,5 +1,5 @@
 package invest.data.database.table.portfolio
-import invest.data.model.portfolio.PortfolioItemDbo
+import invest.data.model.portfolio.dbo.PortfolioItemDbo
 import org.jetbrains.exposed.sql.insert
 
 object PortfolioStorage {

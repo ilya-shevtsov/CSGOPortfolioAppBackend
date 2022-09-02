@@ -33,6 +33,7 @@ object CaseStorage {
             dailySellHistoryTableRepository.insertData()
             analyticalDetailsRepository.insertData()
             portfolioRepository.insertInitialData()
+
         }
     }
 

@@ -3,6 +3,7 @@ package core
 
 import invest.data.database.repository.AnalyticalDetailsRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
+import invest.data.database.repository.PortfolioRepository
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
@@ -35,6 +36,7 @@ var preferredCurrency = PreferredCurrencyDto(0)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
 
+    val portfolioRepository = PortfolioRepository()
     val caseRepository = CaseRepository()
     val databaseRepository = DatabaseRepository()
     val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
@@ -65,16 +67,15 @@ fun Application.module() {
             call.respond(response)
         }
 
-        post("/postPreferredCurrency") {
-            val postBody = call.receive<PreferredCurrencyDto>()
-            preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
-            call.respond(postBody)
-            println("From FrontEnd: $preferredCurrency")
-        }
-
         get("/getPreferredCurrency") {
             val response = preferredCurrency
             println("Sending to FrontEnd $preferredCurrency")
+            call.respond(response)
+        }
+
+        get("/getPortfolioData") {
+            val response = portfolioRepository.getCaseResponse()
+            println("Sending to FrontEnd")
             call.respond(response)
         }
 
@@ -83,6 +84,20 @@ fun Application.module() {
                 .filter { !it.monthlySharpRatio.isNaN() }
             call.respond(response)
         }
+
+        post("/postPreferredCurrency") {
+            val postBody = call.receive<PreferredCurrencyDto>()
+            preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
+            call.respond(postBody)
+            println("From FrontEnd: $preferredCurrency")
+        }
+//        post("/postAddedCase") {
+//            val postBody = call.receive<PreferredCurrencyDto>()
+//            preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
+//            call.respond(postBody)
+//            println("From FrontEnd: $preferredCurrency")
+//        }
+
     }
 }
 

@@ -23,7 +23,4 @@ object PortfolioTable: Table() {
 //    val todayProfitInRUB: Column<Double> = double("todayProfitInRUB")
 //    val todayProfitInPercent: Column<Double> = double("todayProfitInPercent")
 
-    init {
-        uniqueIndex("caseId", caseId)
-    }
 }

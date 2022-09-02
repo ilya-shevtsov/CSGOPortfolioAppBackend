@@ -1,4 +1,4 @@
-package invest.data.model.portfolio
+package invest.data.model.portfolio.dbo
 
 data class PortfolioItemDbo(
     val name: String,
