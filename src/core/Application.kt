@@ -4,8 +4,9 @@ package core
 import invest.data.database.repository.AnalyticalDetailsRepository
 import invest.data.database.repository.DailySellHistoryTableRepository
 import invest.data.database.repository.PortfolioRepository
-import invest.data.model.portfolio.AddedCaseDto
-import invest.data.model.portfolio.dto.PortfolioItemDto
+import invest.data.database.table.portfolio.PortfolioStorage
+import invest.data.model.portfolio.addedcasedto.AddedCaseDto
+import invest.data.model.portfolio.addedcasedto.AddedCaseDtoMapper
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
@@ -23,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
+import org.jetbrains.exposed.sql.transactions.transaction
 import overview.data.model.preferredcurrency.PreferredCurrencyDto
 
 
@@ -98,6 +100,10 @@ fun Application.module() {
             val addedCase = AddedCaseDto(
                 postBody.name, postBody.amount, postBody.purchasePrice
             )
+            transaction {
+                val portfolioItemDbo = AddedCaseDtoMapper.map(addedCase)
+                PortfolioStorage.insertPortfolioTable(portfolioItemDbo)
+            }
             call.respond(postBody)
         }
 

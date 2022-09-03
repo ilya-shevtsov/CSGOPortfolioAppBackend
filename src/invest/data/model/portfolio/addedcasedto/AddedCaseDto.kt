@@ -1,4 +1,4 @@
-package invest.data.model.portfolio
+package invest.data.model.portfolio.addedcasedto
 
 import kotlinx.serialization.Serializable
 
