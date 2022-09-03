@@ -73,13 +73,11 @@ fun Application.module() {
 
         get("/getPreferredCurrency") {
             val response = preferredCurrency
-            println("Sending to FrontEnd $preferredCurrency")
             call.respond(response)
         }
 
         get("/getPortfolioData") {
             val response = portfolioRepository.getCaseResponse()
-            println("Sending to FrontEnd")
             call.respond(response)
         }
 
@@ -93,7 +91,6 @@ fun Application.module() {
             val postBody = call.receive<PreferredCurrencyDto>()
             preferredCurrency = PreferredCurrencyDto(postBody.preferredCurrency)
             call.respond(postBody)
-            println("From FrontEnd: $preferredCurrency")
         }
         post("/postAddedCase") {
             val postBody = call.receive<AddedCaseDto>()
