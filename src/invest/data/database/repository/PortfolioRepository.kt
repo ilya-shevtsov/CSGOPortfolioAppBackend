@@ -2,6 +2,7 @@ package invest.data.database.repository
 
 import invest.data.database.table.portfolio.PortfolioStorage
 import invest.data.database.table.portfolio.PortfolioTable
+import invest.data.model.CaseWeaponsDto
 import invest.data.model.portfolio.dbo.PortfolioItemDbo
 import invest.data.model.portfolio.dbo.PortfolioItemDboMapper
 import invest.data.model.portfolio.dto.PortfolioDtoMapper
@@ -14,9 +15,6 @@ import overview.domain.model.case.CaseDto
 import overview.domain.model.case.CaseDtoMapper
 
 class PortfolioRepository {
-
-
-
 
     fun getPortfolioList(): List<PortfolioItemDbo> {
         return transaction {
