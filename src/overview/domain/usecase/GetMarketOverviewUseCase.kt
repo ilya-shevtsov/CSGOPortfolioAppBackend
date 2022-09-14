@@ -9,7 +9,7 @@ class GetMarketOverviewUseCase(
     private val caseRepository: CaseRepository
 ) {
     @ExperimentalSerializationApi
-    suspend fun getMarketOverviewUseCase(caseName: String): Flow<MarketOverview> {
-        return caseRepository.getMarketOverview(caseName)
+    suspend fun getMarketOverviewUseCase(caseName: String,currency: Int): Flow<MarketOverview> {
+        return caseRepository.getMarketOverview(caseName,currency)
     }
 }

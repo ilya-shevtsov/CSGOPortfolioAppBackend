@@ -1,5 +1,4 @@
 package overview.data.repository
-
 import overview.data.database.CaseTable
 import overview.data.database.CaseStorage
 import overview.data.model.case.CaseDbo
@@ -9,7 +8,6 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DatabaseRepository {
-
     private val caseDboList = listOf(
         CaseDbo(
             caseAccess = "Chroma%20Case",
@@ -39,7 +37,7 @@ class DatabaseRepository {
             caseAccess = "Chroma%203%20Case",
             name = "Chroma 3 Case",
             releaseDate = "20.04.2016",
-            dropStatus = "Active (Non-Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -51,7 +49,7 @@ class DatabaseRepository {
             caseAccess = "Clutch%20Case",
             name = "Clutch Case",
             releaseDate = "15.02.2018",
-            dropStatus = "Active (Prime)",
+            dropStatus = "Active",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -99,7 +97,7 @@ class DatabaseRepository {
             caseAccess = "CS20%20Case",
             name = "CS20 Case",
             releaseDate = "18.10.2019",
-            dropStatus = "Active (Non-Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -111,7 +109,7 @@ class DatabaseRepository {
             caseAccess = "Danger%20Zone%20Case",
             name = "Danger Zone Case",
             releaseDate = "06.12.2018",
-            dropStatus = "Active (Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -171,7 +169,7 @@ class DatabaseRepository {
             caseAccess = "Fracture%20Case",
             name = "Fracture Case",
             releaseDate = "07.08.2020",
-            dropStatus = "Active (Prime)",
+            dropStatus = "Active",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -195,7 +193,7 @@ class DatabaseRepository {
             caseAccess = "Gamma%202%20Case",
             name = "Gamma 2 Case",
             releaseDate = "18.08.2016",
-            dropStatus = "Active (Non-Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -219,7 +217,7 @@ class DatabaseRepository {
             caseAccess = "Horizon%20Case",
             name = "Horizon Case",
             releaseDate = "02.08.2018",
-            dropStatus = "Active (Non-Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -327,7 +325,7 @@ class DatabaseRepository {
             caseAccess = "Prisma%20Case",
             name = "Prisma Case",
             releaseDate = "13.03.2019",
-            dropStatus = "Active (Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -339,7 +337,7 @@ class DatabaseRepository {
             caseAccess = "Prisma%202%20Case",
             name = "Prisma 2 Case",
             releaseDate = "01.04.2020",
-            dropStatus = "Active (Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -351,7 +349,7 @@ class DatabaseRepository {
             caseAccess = "Revolver%20Case",
             name = "Revolver Case",
             releaseDate = "08.12.2015",
-            dropStatus = "Active (Non-Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -387,7 +385,7 @@ class DatabaseRepository {
             caseAccess = "Snakebite%20Case",
             name = "Snakebite Case",
             releaseDate = "03.05.2021",
-            dropStatus = "Active (???)",
+            dropStatus = "Active",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -410,7 +408,7 @@ class DatabaseRepository {
             caseAccess = "Spectrum%202%20Case",
             name = "Spectrum 2 Case",
             releaseDate = "14.09.2017",
-            dropStatus = "Active (Non-Prime)",
+            dropStatus = "Inactive (Rare)",
             lowestPrice = 00.00,
             volume = 0,
             medianPrice = 00.00,
@@ -429,6 +427,30 @@ class DatabaseRepository {
             imageUrl = "https://api.steamapis.com/image/item/730/Winter%20Offensive%20Weapon%20Case",
             description =
             "The Winter Offensive Weapon Case is a weapon case containing 12 community-created skins. It was released as part of the December 18, 2013 update and requires a Winter Offensive Case Key to open. Since the release of Operation Vanguard, this crate is very rarely dropped. It can also be bought in the Steam Community Market."
+        ),
+        CaseDbo(
+            caseAccess = "Dreams%20%26%20Nightmares%20Case",
+            name = "Dreams & Nightmares Case",
+            releaseDate = "20.01.2022",
+            dropStatus = "Active",
+            lowestPrice = 00.00,
+            volume = 0,
+            medianPrice = 00.00,
+            imageUrl = "https://api.steamapis.com/image/item/730/Dreams%20%26%20Nightmares%20Case",
+            description =
+            "The Dreams & Nightmares Case is a weapon case introduced on 20 January 2022 as part of the Dreams & Nightmares Case update. The weapon case contains CS:GO skins from The Dreams & Nightmares Collection. The case contains 17 skins, all of which were selected from the Dreams & Nightmares contest which ran from 22 July 2021 through to 21 October 2021. The rare special items in this case are the second generation Gamma Knives which first appeared in the Operation Riptide case."
+        ),
+        CaseDbo(
+            caseAccess = "Recoil%20Case",
+            name = "Recoil Case",
+            releaseDate = "01.07.2022",
+            dropStatus = "Active",
+            lowestPrice = 00.00,
+            volume = 0,
+            medianPrice = 00.00,
+            imageUrl = "https://api.steamapis.com/image/item/730/Recoil%20Case",
+            description =
+            "The Recoil Case is a weapon case introduced on 01 July 2022 as part of the A New Cassssssse update. The weapon case contains CS:GO skins from The Recoil Collection. The rare special items in this case are the Broken Fang gloves which first appeared in the Operation Broken Fang case and also appear in the Snakebite case."
         )
     )
 

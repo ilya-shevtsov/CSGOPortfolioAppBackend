@@ -34,11 +34,11 @@ class CaseRepository {
 //    }
 
     @ExperimentalSerializationApi
-    suspend fun getMarketOverview(caseName: String): Flow<MarketOverview> = flow {
+    suspend fun getMarketOverview(caseName: String,currency: Int): Flow<MarketOverview> = flow {
         val response = ApiTools.getCaseApiService()
             .getCase(
                 appId = 730,
-                currency = 5,
+                currency = currency,
                 caseName = caseName
             )
         val marketOverviewDto = MarketOverviewDtoMapper.map(response, caseName)

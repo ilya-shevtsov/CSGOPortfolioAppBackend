@@ -39,8 +39,10 @@ class CommonRepository {
             "Spectrum 2 Case" -> 33
             "Winter Offensive Weapon Case" -> 34
             "Snakebite Case" -> 35
+            "Dreams & Nightmares Case" -> 36
+            "Recoil Case" ->37
 //            else -> throw Throwable("Error! $caseName is not supported as a case name")
-            else -> 36
+            else -> 38
         }
     }
 }

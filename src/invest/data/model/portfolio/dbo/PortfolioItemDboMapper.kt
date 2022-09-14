@@ -1,0 +1,17 @@
+package invest.data.model.portfolio.dbo
+
+import invest.data.database.table.portfolio.PortfolioTable
+import org.jetbrains.exposed.sql.ResultRow
+
+object PortfolioItemDboMapper {
+    fun map(row: ResultRow): PortfolioItemDbo {
+        return PortfolioItemDbo(
+            name = row[PortfolioTable.name],
+            amount = row[PortfolioTable.amount],
+            purchasePrice = row[PortfolioTable.purchasePrice],
+            overallValue = row[PortfolioTable.overallValue],
+            profitLoss = row[PortfolioTable.profitLoss],
+            imageUrl = row[PortfolioTable.imageUrl]
+        )
+    }
+}
