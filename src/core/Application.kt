@@ -77,7 +77,9 @@ fun Application.module() {
         }
 
         get("/getPortfolioData") {
-            val response = portfolioRepository.getCaseResponse()
+            val response = portfolioRepository.getCaseResponse().sortedByDescending {
+                it.overallValue
+            }
             call.respond(response)
         }
 
