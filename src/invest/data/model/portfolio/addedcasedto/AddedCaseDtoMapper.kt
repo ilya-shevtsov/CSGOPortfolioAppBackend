@@ -6,7 +6,7 @@ object AddedCaseDtoMapper {
 
     //PlaceHolder for overallValue and profitLoss
 
-    fun makeImageUri(caseName: String): String {
+    private fun makeImageUri(caseName: String): String {
         val newName = caseName
             .replace(" ", "%20")
             .replace(":", "%3A")
@@ -15,11 +15,11 @@ object AddedCaseDtoMapper {
 
     fun map(addedCaseDto: AddedCaseDto): PortfolioItemDbo {
         return PortfolioItemDbo(
-            name =addedCaseDto.name,
-            amount =addedCaseDto.amount,
-            purchasePrice =addedCaseDto.purchasePrice,
-            overallValue =0.0,
-            profitLoss =0.0,
+            name = addedCaseDto.name,
+            amount = addedCaseDto.amount,
+            purchasePrice = addedCaseDto.purchasePrice,
+            overallValue = addedCaseDto.amount * addedCaseDto.purchasePrice,
+            profitLoss = 0.0,
             imageUrl = makeImageUri(addedCaseDto.name)
         )
     }

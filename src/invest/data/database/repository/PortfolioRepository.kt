@@ -2,17 +2,12 @@ package invest.data.database.repository
 
 import invest.data.database.table.portfolio.PortfolioStorage
 import invest.data.database.table.portfolio.PortfolioTable
-import invest.data.model.CaseWeaponsDto
 import invest.data.model.portfolio.dbo.PortfolioItemDbo
 import invest.data.model.portfolio.dbo.PortfolioItemDboMapper
 import invest.data.model.portfolio.dto.PortfolioDtoMapper
 import invest.data.model.portfolio.dto.PortfolioItemDto
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import overview.data.database.CaseTable
-import overview.data.model.case.CaseDboMapper
-import overview.domain.model.case.CaseDto
-import overview.domain.model.case.CaseDtoMapper
 
 class PortfolioRepository {
 

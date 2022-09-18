@@ -1,6 +1,5 @@
 package overview.data.database
 
-import invest.data.model.Weapon
 import org.jetbrains.exposed.sql.*
 
 object CaseTable : Table() {
@@ -15,7 +14,6 @@ object CaseTable : Table() {
     val medianPrice: Column<Double> = double("medianPrice")
     val imageUrl: Column<String> = varchar("imageUrl", 255)
     val description: Column<String> = varchar("description", 1000)
-//    val weapons: Column<List<Weapon>> = v
 
     override val primaryKey = PrimaryKey(id, name = "PK_Case_ID")
 }

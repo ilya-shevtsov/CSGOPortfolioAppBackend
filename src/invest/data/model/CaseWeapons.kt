@@ -1,6 +1,5 @@
 package invest.data.model
 
-data class CaseWeaponsDto(
-    val caseName: String,
+data class CaseWeapons(
     val caseWeaponsList:List<Weapon>
 )
