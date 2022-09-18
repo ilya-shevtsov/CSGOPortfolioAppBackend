@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PortfolioItemDto(
+    val caseId: Int,
     val name: String,
     val amount: Int,
     val purchasePrice: Double,

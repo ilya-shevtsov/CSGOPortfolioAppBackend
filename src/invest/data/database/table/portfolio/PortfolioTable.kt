@@ -4,8 +4,8 @@ import org.jetbrains.exposed.sql.*
 
 object PortfolioTable: Table() {
 
-    val id: Column<Int> = integer("id").autoIncrement()
-//    val caseId: Column<Int> = integer("caseId")
+//    val id: Column<Int> = integer("id").autoIncrement()
+    val caseId: Column<Int> = integer("caseId")
     val name: Column<String> = varchar("name", 255)
     val amount: Column<Int> = integer("amount")
     val purchasePrice: Column<Double> = double("purchasePrice")

@@ -99,7 +99,7 @@ fun Application.module() {
             )
             transaction {
                 val portfolioItemDbo = AddedCaseDtoMapper.map(addedCase)
-                PortfolioStorage.insertPortfolioTable(portfolioItemDbo)
+                PortfolioStorage.updateCaseData(portfolioItemDbo)
             }
             call.respond(postBody)
         }

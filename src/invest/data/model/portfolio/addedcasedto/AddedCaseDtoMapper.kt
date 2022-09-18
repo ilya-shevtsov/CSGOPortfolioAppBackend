@@ -1,8 +1,11 @@
 package invest.data.model.portfolio.addedcasedto
 
+import invest.data.common.CommonRepository
 import invest.data.model.portfolio.dbo.PortfolioItemDbo
 
 object AddedCaseDtoMapper {
+
+    val commonRepository = CommonRepository()
 
     //PlaceHolder for overallValue and profitLoss
 
@@ -15,6 +18,7 @@ object AddedCaseDtoMapper {
 
     fun map(addedCaseDto: AddedCaseDto): PortfolioItemDbo {
         return PortfolioItemDbo(
+            caseId = commonRepository.assignId(addedCaseDto.name),
             name = addedCaseDto.name,
             amount = addedCaseDto.amount,
             purchasePrice = addedCaseDto.purchasePrice,

@@ -1,5 +1,6 @@
 package invest.data.database.repository
 
+import invest.data.common.CommonRepository
 import invest.data.database.table.portfolio.PortfolioStorage
 import invest.data.database.table.portfolio.PortfolioTable
 import invest.data.model.portfolio.dbo.PortfolioItemDbo
@@ -8,14 +9,15 @@ import invest.data.model.portfolio.dto.PortfolioDtoMapper
 import invest.data.model.portfolio.dto.PortfolioItemDto
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import overview.data.repository.DatabaseRepository
 
 class PortfolioRepository {
 
-    fun getPortfolioList(): List<PortfolioItemDbo> {
-        return transaction {
-            PortfolioTable.selectAll().map { PortfolioItemDboMapper.map(it) }
-        }
-    }
+//    fun getPortfolioList(): List<PortfolioItemDbo> {
+//        return transaction {
+//            PortfolioTable.selectAll().map { PortfolioItemDboMapper.map(it) }
+//        }
+//    }
 
     fun getCaseResponse(): List<PortfolioItemDto> {
         return transaction {
@@ -26,6 +28,7 @@ class PortfolioRepository {
     fun insertInitialData() {
         val storedCaseList = listOf(
             PortfolioItemDbo(
+                caseId = 2,
                 name = "Chroma 2 Case",
                 amount = 42,
                 purchasePrice = 0.0,
@@ -34,6 +37,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Chroma%202%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 3,
                 name = "Chroma 3 Case",
                 amount = 51,
                 purchasePrice = 0.0,
@@ -42,6 +46,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Chroma%203%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 1,
                 name = "Chroma Case",
                 amount = 33,
                 purchasePrice = 0.0,
@@ -50,6 +55,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Chroma%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 4,
                 name = "Clutch Case",
                 amount = 82,
                 purchasePrice = 0.0,
@@ -58,6 +64,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Clutch%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 8,
                 name = "CS20 Case",
                 amount = 27,
                 purchasePrice = 0.0,
@@ -66,6 +73,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/CS20%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 9,
                 name = "Danger Zone Case",
                 amount = 29,
                 purchasePrice = 0.0,
@@ -74,6 +82,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Danger%20Zone%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 13,
                 name = "Falchion Case",
                 amount = 38,
                 purchasePrice = 0.0,
@@ -82,6 +91,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Falchion%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 14,
                 name = "Fracture Case",
                 amount = 28,
                 purchasePrice = 0.0,
@@ -90,6 +100,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Fracture%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 16,
                 name = "Gamma 2 Case",
                 amount = 21,
                 purchasePrice = 0.0,
@@ -98,6 +109,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Gamma%202%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 15,
                 name = "Gamma Case",
                 amount = 27,
                 purchasePrice = 0.0,
@@ -106,6 +118,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Gamma%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 17,
                 name = "Glove Case",
                 amount = 24,
                 purchasePrice = 0.0,
@@ -114,6 +127,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Glove%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 18,
                 name = "Horizon Case",
                 amount = 9,
                 purchasePrice = 0.0,
@@ -122,6 +136,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Horizon%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 21,
                 name = "Operation Breakout Weapon Case",
                 amount = 58,
                 purchasePrice = 0.0,
@@ -130,6 +145,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Operation%20Breakout%20Weapon%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 22,
                 name = "Operation Broken Fang Case",
                 amount = 33,
                 purchasePrice = 0.0,
@@ -138,6 +154,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Operation%20Broken%20Fang%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 24,
                 name = "Operation Phoenix Weapon Case",
                 amount = 52,
                 purchasePrice = 0.0,
@@ -146,6 +163,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Operation%20Phoenix%20Weapon%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 26,
                 name = "Operation Wildfire Case",
                 amount = 24,
                 purchasePrice = 0.0,
@@ -154,6 +172,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Operation%20Wildfire%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 28,
                 name = "Prisma 2 Case",
                 amount = 68,
                 purchasePrice = 0.0,
@@ -162,6 +181,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Prisma%202%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 27,
                 name = "Prisma Case",
                 amount = 202,
                 purchasePrice = 0.0,
@@ -170,6 +190,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Prisma%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 29,
                 name = "Revolver Case",
                 amount = 34,
                 purchasePrice = 0.0,
@@ -178,6 +199,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Revolver%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 30,
                 name = "Shadow Case",
                 amount = 31,
                 purchasePrice = 0.0,
@@ -186,6 +208,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Shadow%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 33,
                 name = "Spectrum 2 Case",
                 amount = 48,
                 purchasePrice = 0.0,
@@ -194,6 +217,7 @@ class PortfolioRepository {
                 imageUrl = "https://api.steamapis.com/image/item/730/Spectrum%202%20Case",
             ),
             PortfolioItemDbo(
+                caseId = 32,
                 name = "Spectrum Case",
                 amount = 40,
                 purchasePrice = 0.0,
