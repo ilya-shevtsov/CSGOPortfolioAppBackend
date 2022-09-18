@@ -13,11 +13,6 @@ import overview.data.repository.DatabaseRepository
 
 class PortfolioRepository {
 
-//    fun getPortfolioList(): List<PortfolioItemDbo> {
-//        return transaction {
-//            PortfolioTable.selectAll().map { PortfolioItemDboMapper.map(it) }
-//        }
-//    }
 
     fun getCaseResponse(): List<PortfolioItemDto> {
         return transaction {
