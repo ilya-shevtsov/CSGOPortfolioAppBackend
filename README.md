@@ -6,10 +6,15 @@ I used Kotlin Ktor for the creation of the server and Kotlin Exposed to create a
 
 ## The server has following calls (Or how its called):
 - /getCase - to sent the data for the "Case Overview" screen
+
 - /getAnalyticalDetails - to sent the data for the "Case Analytics Overview"
+
 - /getPreferredCurrency - to sent the preferredCurrency for the "Start Screen"
+
 - /getPortfolioData - to sent the PortfolioData that contais the cases that you have added to the portfolio
+
 - /postPreferredCurrency - get the preferred currency from the app
+
 - /postAddedCase - get the case you added to the portfolio
 
 ## In creating of this sever I've used:
