@@ -19,9 +19,15 @@ I used Kotlin Ktor for the creation of the server and Kotlin Exposed to create a
 
 ## In creating of this sever I've used:
 - Ktor
+
 - Kotlin Exposed
+
 - Koltin Couroutines
+
 - Kotlin Serialization
+
 - My own Serializer
+
 - Clean Architecture
+
 - REST API
