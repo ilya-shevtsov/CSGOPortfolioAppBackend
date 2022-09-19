@@ -29,5 +29,3 @@ I used Kotlin Ktor for the creation of the server and Kotlin Exposed to create a
 - My own Serializer
 
 - Clean Architecture
-
-- REST API
