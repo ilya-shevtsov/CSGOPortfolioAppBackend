@@ -1,6 +1,6 @@
 # CSGO Case Portfolio Tracker Backend
 
-This is the backend I've created for the app CSGO Case Portfolio Tracker. This is where I collect data, analyze it and out put it to the app. 
+This is the backend I've created for the app [CSGO Case Portfolio Tracker](https://github.com/ilya-shevtsov/CSGOCasesWatcherApp). This is where I collect data, analyze it and out put it to the app. 
 
 I used Kotlin Ktor for the creation of the server and Kotlin Exposed to create and with with databases. 
 
