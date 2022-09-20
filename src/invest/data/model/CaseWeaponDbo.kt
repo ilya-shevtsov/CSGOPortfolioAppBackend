@@ -1,9 +1,8 @@
 package invest.data.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class Weapon(
+data class CaseWeaponDbo(
+    val caseId: Int,
+    val caseName: String,
     val weaponName: String,
     val weaponImage: String
 )

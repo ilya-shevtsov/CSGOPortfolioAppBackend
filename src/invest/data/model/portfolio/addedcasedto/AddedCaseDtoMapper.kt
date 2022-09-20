@@ -1,12 +1,15 @@
 package invest.data.model.portfolio.addedcasedto
 
+import invest.data.common.CommonRepository
 import invest.data.model.portfolio.dbo.PortfolioItemDbo
 
 object AddedCaseDtoMapper {
 
+    val commonRepository = CommonRepository()
+
     //PlaceHolder for overallValue and profitLoss
 
-    fun makeImageUri(caseName: String): String {
+    private fun makeImageUri(caseName: String): String {
         val newName = caseName
             .replace(" ", "%20")
             .replace(":", "%3A")
@@ -15,11 +18,12 @@ object AddedCaseDtoMapper {
 
     fun map(addedCaseDto: AddedCaseDto): PortfolioItemDbo {
         return PortfolioItemDbo(
-            name =addedCaseDto.name,
-            amount =addedCaseDto.amount,
-            purchasePrice =addedCaseDto.purchasePrice,
-            overallValue =0.0,
-            profitLoss =0.0,
+            caseId = commonRepository.assignId(addedCaseDto.name),
+            name = addedCaseDto.name,
+            amount = addedCaseDto.amount,
+            purchasePrice = addedCaseDto.purchasePrice,
+            overallValue = addedCaseDto.amount * addedCaseDto.purchasePrice,
+            profitLoss = 0.0,
             imageUrl = makeImageUri(addedCaseDto.name)
         )
     }

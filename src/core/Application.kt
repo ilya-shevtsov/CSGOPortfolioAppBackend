@@ -77,7 +77,9 @@ fun Application.module() {
         }
 
         get("/getPortfolioData") {
-            val response = portfolioRepository.getCaseResponse()
+            val response = portfolioRepository.getCaseResponse().sortedByDescending {
+                it.overallValue
+            }
             call.respond(response)
         }
 
@@ -99,7 +101,7 @@ fun Application.module() {
             )
             transaction {
                 val portfolioItemDbo = AddedCaseDtoMapper.map(addedCase)
-                PortfolioStorage.insertPortfolioTable(portfolioItemDbo)
+                PortfolioStorage.updateCaseData(portfolioItemDbo)
             }
             call.respond(postBody)
         }

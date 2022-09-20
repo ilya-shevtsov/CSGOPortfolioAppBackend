@@ -1,5 +1,6 @@
 package overview.data.model.case
 
+import invest.data.model.Weapon
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,5 +14,6 @@ data class CaseDbo(
     val volume: Int,
     val medianPrice: Double,
     val imageUrl: String,
-    val description: String
+    val description: String,
+//    val weapons: List<Weapon>
 )

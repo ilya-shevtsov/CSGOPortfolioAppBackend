@@ -6,6 +6,7 @@ object PortfolioDtoMapper {
 
     fun map(portfolioItemDbo: PortfolioItemDbo): PortfolioItemDto {
         return PortfolioItemDto(
+            caseId = portfolioItemDbo.caseId,
             name = portfolioItemDbo.name,
             amount = portfolioItemDbo.amount,
             purchasePrice = portfolioItemDbo.purchasePrice,
