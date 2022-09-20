@@ -4,7 +4,7 @@ This is the backend I've created for the app [CSGO Case Portfolio Tracker](https
 
 I used Kotlin Ktor for the creation of the server and Kotlin Exposed to create and with with databases. 
 
-## The server has following calls:
+## The server has following endpoints:
 - /getCase - to sent the data for the "Case Overview" screen
 
 - /getAnalyticalDetails - to sent the data for the "Case Analytics Overview"
