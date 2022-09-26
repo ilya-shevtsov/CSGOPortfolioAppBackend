@@ -1,17 +1,9 @@
 package invest.data.database.table.portfolio
 
-import invest.data.common.CommonRepository
 import invest.data.model.portfolio.dbo.PortfolioItemDbo
 import invest.data.model.portfolio.dbo.PortfolioItemDboMapper
-import org.jetbrains.exposed.sql.SqlExpressionBuilder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
-import overview.data.database.CaseTable
-import overview.data.model.case.CaseDbo
-import overview.data.model.case.CaseDboMapper
 
 object PortfolioStorage {
 
@@ -35,7 +27,9 @@ object PortfolioStorage {
 
     fun updateCaseData(portfolioItemDbo: PortfolioItemDbo) {
         val storedCaseList = getPortfolioList()
-        if (portfolioItemDbo !in storedCaseList) {
+
+        val hdhd = any
+        if (portfolioItemDbo.caseId  !in storedCaseList) {
             insertPortfolioTable(portfolioItemDbo)
         } else {
             transaction {

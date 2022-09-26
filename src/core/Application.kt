@@ -34,7 +34,7 @@ fun main(args: Array<String>): Unit = EngineMain.main(args)
 @ExperimentalCoroutinesApi
 
 
-var preferredCurrency = PreferredCurrencyDto(0)
+var preferredCurrency = PreferredCurrencyDto(1)
 
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
@@ -101,6 +101,7 @@ fun Application.module() {
             )
             transaction {
                 val portfolioItemDbo = AddedCaseDtoMapper.map(addedCase)
+                println(portfolioItemDbo.caseId)
                 PortfolioStorage.updateCaseData(portfolioItemDbo)
             }
             call.respond(postBody)
