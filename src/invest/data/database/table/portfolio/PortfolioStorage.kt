@@ -25,19 +25,20 @@ object PortfolioStorage {
         }
     }
 
-    fun updateCaseData(portfolioItemDbo: PortfolioItemDbo) {
+    fun updateCaseData(addedCase: PortfolioItemDbo) {
         val storedCaseList = getPortfolioList()
 
-        val hdhd = any
-        if (portfolioItemDbo.caseId  !in storedCaseList) {
-            insertPortfolioTable(portfolioItemDbo)
+        // none, any all
+
+        if (storedCaseList.none { portfolioItem -> portfolioItem.caseId == addedCase.caseId }) {
+            insertPortfolioTable(addedCase)
         } else {
             transaction {
-                PortfolioTable.update({ PortfolioTable.caseId eq portfolioItemDbo.caseId })
+                PortfolioTable.update({ PortfolioTable.caseId eq addedCase.caseId })
                 { portfolioTable ->
                     with(SqlExpressionBuilder) {
-                        portfolioTable[amount] = amount + portfolioItemDbo.amount
-                        portfolioTable[overallValue] = overallValue + portfolioItemDbo.overallValue
+                        portfolioTable[amount] = amount + addedCase.amount
+                        portfolioTable[overallValue] = overallValue + addedCase.overallValue
                     }
                 }
             }
