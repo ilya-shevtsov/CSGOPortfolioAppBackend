@@ -101,12 +101,10 @@ fun Application.module() {
             )
             transaction {
                 val portfolioItemDbo = AddedCaseDtoMapper.map(addedCase)
-                println(portfolioItemDbo.caseId)
                 PortfolioStorage.updateCaseData(portfolioItemDbo)
             }
             call.respond(postBody)
         }
-
     }
 }
 
