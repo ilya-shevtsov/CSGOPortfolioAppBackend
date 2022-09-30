@@ -1,17 +1,9 @@
 package invest.data.database.table.portfolio
 
-import invest.data.common.CommonRepository
 import invest.data.model.portfolio.dbo.PortfolioItemDbo
 import invest.data.model.portfolio.dbo.PortfolioItemDboMapper
-import org.jetbrains.exposed.sql.SqlExpressionBuilder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
-import overview.data.database.CaseTable
-import overview.data.model.case.CaseDbo
-import overview.data.model.case.CaseDboMapper
 
 object PortfolioStorage {
 
@@ -33,17 +25,20 @@ object PortfolioStorage {
         }
     }
 
-    fun updateCaseData(portfolioItemDbo: PortfolioItemDbo) {
+    fun updateCaseData(addedCase: PortfolioItemDbo) {
         val storedCaseList = getPortfolioList()
-        if (portfolioItemDbo !in storedCaseList) {
-            insertPortfolioTable(portfolioItemDbo)
+
+        // none, any all
+
+        if (storedCaseList.none { portfolioItem -> portfolioItem.caseId == addedCase.caseId }) {
+            insertPortfolioTable(addedCase)
         } else {
             transaction {
-                PortfolioTable.update({ PortfolioTable.caseId eq portfolioItemDbo.caseId })
+                PortfolioTable.update({ PortfolioTable.caseId eq addedCase.caseId })
                 { portfolioTable ->
                     with(SqlExpressionBuilder) {
-                        portfolioTable[amount] = amount + portfolioItemDbo.amount
-                        portfolioTable[overallValue] = overallValue + portfolioItemDbo.overallValue
+                        portfolioTable[amount] = amount + addedCase.amount
+                        portfolioTable[overallValue] = overallValue + addedCase.overallValue
                     }
                 }
             }
