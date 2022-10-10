@@ -64,10 +64,14 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
 
     // Database
-    implementation ("org.jetbrains.exposed:exposed-java-time:0.30.1")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.30.1")
     implementation("org.jetbrains.exposed:exposed-core:0.30.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.30.1")
     implementation("com.h2database:h2:1.4.199")
+
+    // Dagger
+    implementation("com.google.dagger:dagger:2.44")
+    kapt ("com.google.dagger:dagger-compiler:2.44")
 
     // Testing
     implementation("org.junit.jupiter:junit-jupiter-engine:5.4.2")

@@ -9,8 +9,11 @@ import features.caseportfolio.data.tables.PortfolioTable
 import features.caseportfolio.domain.PortfolioRepository
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.inject.Inject
 
-class PortfolioRepositoryImpl : PortfolioRepository {
+class PortfolioRepositoryImpl @Inject constructor(
+
+): PortfolioRepository {
 
     override fun getPortfolioData(): List<PortfolioItemDto> {
         return transaction {

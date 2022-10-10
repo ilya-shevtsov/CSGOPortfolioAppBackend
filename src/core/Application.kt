@@ -1,6 +1,7 @@
 package core
 
 
+import core.dependencyInjection.DependencyInjection
 import features.caseanalytics.data.AnalyticalDetailsRepository
 import features.caseanalytics.data.DailySellHistoryTableRepository
 import features.caseportfolio.data.PortfolioRepositoryImpl
@@ -42,7 +43,8 @@ var preferredCurrency = PreferredCurrencyDto(1)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
 
-    val portfolioRepositoryImpl = PortfolioRepositoryImpl()
+//    val portfolioRepositoryImpl = PortfolioRepositoryImpl()
+    val dependencyInjection = DependencyInjection()
     val caseRepository = CaseRepository()
     val databaseRepository = DatabaseRepository()
     val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
@@ -80,7 +82,7 @@ fun Application.module() {
 
 
         get("/getPortfolioData") {
-            val response = portfolioRepositoryImpl.getPortfolioData().sortedByDescending {
+            val response = dependencyInjection.getPortfolioDataUseCase.invoke().sortedByDescending {
                 it.overallValue
             }
             call.respond(response)
