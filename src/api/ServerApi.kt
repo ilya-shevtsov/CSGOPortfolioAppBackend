@@ -1,4 +1,4 @@
-package overview.data.api
+package api
 
 import overview.data.model.marketoverview.MarketOverviewDto
 import retrofit2.http.GET
