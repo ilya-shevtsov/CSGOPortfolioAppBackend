@@ -1,6 +1,6 @@
 package invest.serializer
 
-import invest.data.model.dailysellhistory.dto.DailySellHistoryDto
+import invest.data.entities.DailySellHistoryDto
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor

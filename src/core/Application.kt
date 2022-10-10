@@ -1,12 +1,12 @@
 package core
 
 
-import invest.data.database.repository.AnalyticalDetailsRepository
-import invest.data.database.repository.DailySellHistoryTableRepository
-import invest.data.database.repository.PortfolioRepository
-import invest.data.database.table.portfolio.PortfolioStorage
-import invest.data.model.portfolio.addedcasedto.AddedCaseDto
-import invest.data.model.portfolio.addedcasedto.AddedCaseDtoMapper
+import invest.data.AnalyticalDetailsRepository
+import invest.data.DailySellHistoryTableRepository
+import invest.data.PortfolioRepository
+import invest.data.tables.PortfolioStorage
+import invest.data.entities.AddedCaseDto
+import invest.data.entities.AddedCaseDtoMapper
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
@@ -16,16 +16,16 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
-import overview.data.repository.DatabaseRepository
-import overview.domain.repository.CaseRepository
-import overview.domain.usecase.UpdateInfoUseCase
-import overview.data.database.CaseStorage
+import overview.data.DatabaseRepository
+import overview.domain.CaseRepository
+import overview.domain.usecases.UpdateInfoUseCase
+import overview.data.CaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.transactions.transaction
-import overview.data.model.preferredcurrency.PreferredCurrencyDto
+import overview.preferredcurrency.PreferredCurrencyDto
 
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
