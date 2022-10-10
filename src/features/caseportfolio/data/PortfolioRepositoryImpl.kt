@@ -9,10 +9,10 @@ import features.caseportfolio.data.tables.PortfolioTable
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class PortfolioRepository {
+class PortfolioRepositoryImpl {
 
 
-    fun getCaseResponse(): List<PortfolioItemDto> {
+    fun getPortfolioData(): List<PortfolioItemDto> {
         return transaction {
             PortfolioTable.selectAll().map { PortfolioItemDboMapper.map(it) }
         }.map { portfolioItemDbo -> PortfolioDtoMapper.map(portfolioItemDbo) }

@@ -3,7 +3,7 @@ package core
 
 import features.caseanalytics.data.AnalyticalDetailsRepository
 import features.caseanalytics.data.DailySellHistoryTableRepository
-import features.caseportfolio.data.PortfolioRepository
+import features.caseportfolio.data.PortfolioRepositoryImpl
 import features.caseportfolio.data.tables.PortfolioStorage
 import features.caseportfolio.data.entities.AddedCaseDto
 import features.caseportfolio.data.entities.AddedCaseDtoMapper
@@ -40,7 +40,7 @@ var preferredCurrency = PreferredCurrencyDto(1)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
 
-    val portfolioRepository = PortfolioRepository()
+    val portfolioRepositoryImpl = PortfolioRepositoryImpl()
     val caseRepository = CaseRepository()
     val databaseRepository = DatabaseRepository()
     val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
@@ -77,7 +77,7 @@ fun Application.module() {
         }
 
         get("/getPortfolioData") {
-            val response = portfolioRepository.getCaseResponse().sortedByDescending {
+            val response = portfolioRepositoryImpl.getPortfolioData().sortedByDescending {
                 it.overallValue
             }
             call.respond(response)

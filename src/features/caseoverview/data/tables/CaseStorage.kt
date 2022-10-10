@@ -3,7 +3,7 @@ package features.caseoverview.data.tables
 import features.caseoverview.domain.entities.MarketOverview
 import features.caseanalytics.data.AnalyticalDetailsRepository
 import features.caseanalytics.data.DailySellHistoryTableRepository
-import features.caseportfolio.data.PortfolioRepository
+import features.caseportfolio.data.PortfolioRepositoryImpl
 import features.caseanalytics.data.tables.CaseAnalysisTable
 import features.caseportfolio.data.tables.PortfolioTable
 import features.caseanalytics.data.tables.CaseSellHistoryTable
@@ -19,7 +19,7 @@ object CaseStorage {
     private val databaseRepository = DatabaseRepository()
     private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
     private val analyticalDetailsRepository = AnalyticalDetailsRepository()
-    private val portfolioRepository = PortfolioRepository()
+    private val portfolioRepositoryImpl = PortfolioRepositoryImpl()
 
 
     fun createDatabase() {
@@ -32,7 +32,7 @@ object CaseStorage {
             databaseRepository.insertInitialData()
             dailySellHistoryTableRepository.insertData()
             analyticalDetailsRepository.insertData()
-            portfolioRepository.insertInitialData()
+            portfolioRepositoryImpl.insertInitialData()
 
         }
     }
