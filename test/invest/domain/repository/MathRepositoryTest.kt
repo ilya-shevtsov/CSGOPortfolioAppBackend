@@ -1,6 +1,6 @@
 package invest.domain.repository
 
-import invest.domain.MathRepository
+import features.caseanalytics.domain.MathRepository
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 
