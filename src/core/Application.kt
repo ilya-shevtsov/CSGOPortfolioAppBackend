@@ -20,6 +20,8 @@ import features.caseoverview.data.DatabaseRepository
 import features.caseoverview.domain.CaseRepository
 import features.caseoverview.domain.usecases.UpdateInfoUseCase
 import features.caseoverview.data.tables.CaseStorage
+import features.caseportfolio.domain.PortfolioRepository
+import features.caseportfolio.domain.usecases.GetPortfolioDataUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -75,6 +77,7 @@ fun Application.module() {
             val response = preferredCurrency
             call.respond(response)
         }
+
 
         get("/getPortfolioData") {
             val response = portfolioRepositoryImpl.getPortfolioData().sortedByDescending {
