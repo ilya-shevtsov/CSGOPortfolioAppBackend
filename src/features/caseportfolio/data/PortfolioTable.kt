@@ -1,4 +1,4 @@
-package features.caseportfolio.data.tables
+package features.caseportfolio.data
 
 import org.jetbrains.exposed.sql.*
 

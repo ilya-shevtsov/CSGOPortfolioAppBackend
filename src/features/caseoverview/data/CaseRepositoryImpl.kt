@@ -1,14 +1,46 @@
 package features.caseoverview.data
 
+import api.ApiTools
+import features.caseanalytics.data.tables.CaseAnalysisTable
+import features.caseanalytics.data.tables.CaseSellHistoryTable
+import features.caseoverview.data.entities.*
 import features.caseoverview.domain.entities.MarketOverview
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import features.caseoverview.data.entities.CaseDbo
-import features.caseoverview.data.entities.CaseDboMapper
-import features.caseoverview.data.tables.CaseStorage
 import features.caseoverview.data.tables.CaseTable
+import features.caseoverview.domain.CaseRepository
+import features.caseportfolio.data.PortfolioTable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.serialization.ExperimentalSerializationApi
+import javax.inject.Inject
 
-class DatabaseRepository {
+class CaseRepositoryImpl @Inject constructor(
+
+) : CaseRepository {
+
+    override fun getCaseData(): List<CaseDto> {
+        return transaction {
+            CaseTable.selectAll().map { CaseDboMapper.map(it) }
+        }.map { case -> CaseDtoMapper.map(case) }
+    }
+
+    @ExperimentalSerializationApi
+    override suspend fun getMarketOverview(caseName: String, currency: Int): Flow<MarketOverview> = flow {
+        val response = ApiTools.getCaseApiService()
+            .getCase(
+                appId = 730,
+                currency = currency,
+                caseName = caseName
+            )
+        val marketOverviewDto = MarketOverviewDtoMapper.map(response, caseName)
+        emit(marketOverviewDto)
+    }.retryWhen { _, _ ->
+        delay(60000)
+        true
+    }
 
     private val caseDboList = listOf(
         CaseDbo(
@@ -393,7 +425,8 @@ class DatabaseRepository {
             medianPrice = 00.00,
             imageUrl = "https://www.csgodatabase.com/images/containers/webp/Snakebite_Case.webp",
             description =
-            "The Snakebite Case is a weapon case introduced on 03 May 2021 as part of the End of Broken Fang update. The weapon case contains CS:GO skins from The Snakebite Collection."        ),
+            "The Snakebite Case is a weapon case introduced on 03 May 2021 as part of the End of Broken Fang update. The weapon case contains CS:GO skins from The Snakebite Collection."
+        ),
         CaseDbo(
             caseAccess = "Spectrum%20Case",
             name = "Spectrum Case",
@@ -456,25 +489,57 @@ class DatabaseRepository {
         )
     )
 
-    fun getCaseList(): List<CaseDbo> {
+    override fun getCaseList(): List<CaseDbo> {
         return transaction {
             CaseTable.selectAll().map { CaseDboMapper.map(it) }
         }
     }
 
-    fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverview) {
-        CaseStorage.saveMarketOverview(caseId, marketOverviewDto)
-    }
-
-    fun insertInitialData() {
-        val storedCaseList = getCaseList()
-        caseDboList.forEach { caseDbo ->
-            if (storedCaseList.all { storedCase -> caseDbo.name != storedCase.name }) {
-                CaseStorage.insertToCaseTable(caseDbo)
+    override fun saveMarketOverview(caseId: Int, marketOverviewDto: MarketOverview) {
+        transaction {
+            CaseTable.update({ CaseTable.id eq caseId }) { caseTable ->
+                caseTable[lowestPrice] = marketOverviewDto.lowestPrice
+                caseTable[volume] = marketOverviewDto.volume
+                caseTable[medianPrice] = marketOverviewDto.medianPrice
             }
         }
     }
-    
+
+    override fun insertInitialDataCaseOverview() {
+        transaction {
+            val storedCaseList = getCaseList()
+            caseDboList.forEach { caseDbo ->
+                if (storedCaseList.all { storedCase -> caseDbo.name != storedCase.name }) {
+                    insertToCaseTable(caseDbo)
+                }
+            }
+        }
+    }
+
+    override fun createDatabase() {
+        Database.connect("jdbc:h2:./caseDatabase", "org.h2.Driver")
+        transaction {
+            SchemaUtils.create(CaseTable)
+            SchemaUtils.create(CaseSellHistoryTable)
+            SchemaUtils.create(CaseAnalysisTable)
+            SchemaUtils.create(PortfolioTable)
+        }
+    }
+
+    private fun insertToCaseTable(caseDbo: CaseDbo) {
+        CaseTable.insert {
+            it[name] = caseDbo.name
+            it[caseAccess] = caseDbo.caseAccess
+            it[releaseDate] = caseDbo.releaseDate
+            it[dropStatus] = caseDbo.dropStatus
+            it[lowestPrice] = caseDbo.lowestPrice
+            it[volume] = caseDbo.volume
+            it[medianPrice] = caseDbo.medianPrice
+            it[imageUrl] = caseDbo.imageUrl
+            it[description] = caseDbo.description
+        }
+    }
+
 //    private val newCaseDboList = listOf(
 //        CaseDbo(
 //            caseAccess = "Chroma%20Case",

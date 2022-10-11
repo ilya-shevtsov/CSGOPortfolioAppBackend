@@ -1,6 +1,6 @@
 package features.caseportfolio.data.entities
 
-import features.caseportfolio.data.tables.PortfolioTable
+import features.caseportfolio.data.PortfolioTable
 import org.jetbrains.exposed.sql.ResultRow
 
 object PortfolioItemDboMapper {

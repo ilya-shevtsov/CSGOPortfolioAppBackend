@@ -1,6 +1,7 @@
 package core.dependencyInjection
 
-import features.caseportfolio.domain.usecases.GetPortfolioDataUseCase
+import features.caseoverview.domain.usecases.*
+import features.caseportfolio.domain.usecases.*
 import javax.inject.Inject
 
 class DependencyInjection {
@@ -9,6 +10,20 @@ class DependencyInjection {
     @Inject
     lateinit var getPortfolioDataUseCase: GetPortfolioDataUseCase
 
+    @Inject
+    lateinit var updatePortfolioUseCase: UpdatePortfolioUseCase
+
+    @Inject
+    lateinit var updateInfoUseCase: UpdateInfoUseCase
+
+    @Inject
+    lateinit var getCaseDataUseCase: GetCaseDataUseCase
+
+    @Inject
+    lateinit var createDataBaseUseCase: CreateDataBaseUseCase
+
+    @Inject
+    lateinit var insertInitialDataUseCase: InsertInitialDataUseCase
 
     init {
         appComponent.inject(this)

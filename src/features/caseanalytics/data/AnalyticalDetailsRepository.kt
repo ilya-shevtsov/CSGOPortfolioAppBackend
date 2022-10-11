@@ -12,12 +12,13 @@ import features.caseanalytics.domain.MathRepository
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.SQLException
+import javax.inject.Inject
 
-class AnalyticalDetailsRepository {
+class AnalyticalDetailsRepository@Inject constructor() {
 
     private val mathRepository = MathRepository()
     private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
-    val numberOfCaseId = dailySellHistoryTableRepository.numberOfCaseId
+    private val numberOfCaseId = dailySellHistoryTableRepository.numberOfCaseId
 
 
     fun getAnalyticalDetailsResponse(): List<AnalyticalDetailsDto> {
@@ -26,13 +27,15 @@ class AnalyticalDetailsRepository {
         }.map { AnalyticalDetailsDbo -> AnalyticalDetailsDtoMapper.map(AnalyticalDetailsDbo) }
     }
 
-    fun insertData() {
-        val analyticalDetailsList = getAnalyticalDetailList()
-        for (analyticalDetailsDbo in analyticalDetailsList) {
-            try {
-                insertToCaseAnalysisTable(analyticalDetailsDbo)
-            } catch (e: SQLException) {
-                continue
+    fun insertAnalyticsData() {
+        transaction {
+            val analyticalDetailsList = getAnalyticalDetailList()
+            for (analyticalDetailsDbo in analyticalDetailsList) {
+                try {
+                    insertToCaseAnalysisTable(analyticalDetailsDbo)
+                } catch (e: SQLException) {
+                    continue
+                }
             }
         }
     }

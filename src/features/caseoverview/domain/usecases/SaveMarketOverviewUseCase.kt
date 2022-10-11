@@ -1,12 +1,13 @@
 package features.caseoverview.domain.usecases
 
-import features.caseoverview.data.DatabaseRepository
+import features.caseoverview.domain.CaseRepository
 import features.caseoverview.domain.entities.MarketOverview
+import javax.inject.Inject
 
-class SaveMarketOverviewUseCase(
-    private val databaseRepository: DatabaseRepository
+class SaveMarketOverviewUseCase @Inject constructor(
+    private val caseRepository: CaseRepository
 ) {
-    fun saveMarketOverviewUseCase(caseId: Int, marketOverviewDto: MarketOverview) {
-        return databaseRepository.saveMarketOverview(caseId, marketOverviewDto)
+    operator fun invoke(caseId: Int, marketOverviewDto: MarketOverview) {
+        return caseRepository.saveMarketOverview(caseId, marketOverviewDto)
     }
 }

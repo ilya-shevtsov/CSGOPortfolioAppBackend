@@ -3,9 +3,6 @@ package core
 
 import core.dependencyInjection.DependencyInjection
 import features.caseanalytics.data.AnalyticalDetailsRepository
-import features.caseanalytics.data.DailySellHistoryTableRepository
-import features.caseportfolio.data.PortfolioRepositoryImpl
-import features.caseportfolio.data.tables.PortfolioStorage
 import features.caseportfolio.data.entities.AddedCaseDto
 import features.caseportfolio.data.entities.AddedCaseDtoMapper
 import io.ktor.serialization.kotlinx.json.*
@@ -17,18 +14,15 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
-import features.caseoverview.data.DatabaseRepository
-import features.caseoverview.domain.CaseRepository
-import features.caseoverview.domain.usecases.UpdateInfoUseCase
-import features.caseoverview.data.tables.CaseStorage
-import features.caseportfolio.domain.PortfolioRepository
-import features.caseportfolio.domain.usecases.GetPortfolioDataUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.transactions.transaction
 import features.currency.PreferredCurrencyDto
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import java.util.*
 
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
@@ -43,19 +37,36 @@ var preferredCurrency = PreferredCurrencyDto(1)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
 
-//    val portfolioRepositoryImpl = PortfolioRepositoryImpl()
-    val dependencyInjection = DependencyInjection()
-    val caseRepository = CaseRepository()
-    val databaseRepository = DatabaseRepository()
-    val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
+    @ExperimentalCoroutinesApi
+    fun tickFlow(millis: Long) = callbackFlow<Int> {
+        val timer = Timer()
+        var time = 0
+        timer.scheduleAtFixedRate(
+            object : TimerTask() {
+                override fun run() {
+                    try {
+                        trySend(time).isSuccess
+                    } catch (_: Exception) {
+                    }
+                    time += 1
+                }
+            },
+            0,
+            millis
+        )
+        awaitClose {
+            timer.cancel()
+        }
+    }
 
-    val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
+    val dependencyInjection = DependencyInjection()
     val analyticalDetailsRepository = AnalyticalDetailsRepository()
 
-    CaseStorage.createDatabase()
+    dependencyInjection.createDataBaseUseCase()
+    dependencyInjection.insertInitialDataUseCase()
     CoroutineScope(Dispatchers.Default).launch {
-        caseRepository.tickFlow(1800000000L).collect {
-            updateInfoUseCase.updateInfo()
+        tickFlow(1800000000L).collect {
+            dependencyInjection.updateInfoUseCase()
         }
     }
 
@@ -70,8 +81,7 @@ fun Application.module() {
             call.respond(response)
         }
         get("/getCase") {
-//            updateInfoUseCase.updateInfo()
-            val response = caseRepository.getCaseResponse()
+            val response = dependencyInjection.getCaseDataUseCase()
             call.respond(response)
         }
 
@@ -82,7 +92,7 @@ fun Application.module() {
 
 
         get("/getPortfolioData") {
-            val response = dependencyInjection.getPortfolioDataUseCase.invoke().sortedByDescending {
+            val response = dependencyInjection.getPortfolioDataUseCase().sortedByDescending {
                 it.overallValue
             }
             call.respond(response)
@@ -106,7 +116,7 @@ fun Application.module() {
             )
             transaction {
                 val portfolioItemDbo = AddedCaseDtoMapper.map(addedCase)
-                PortfolioStorage.updateCaseData(portfolioItemDbo)
+                dependencyInjection.updatePortfolioUseCase(portfolioItemDbo)
             }
             call.respond(postBody)
         }

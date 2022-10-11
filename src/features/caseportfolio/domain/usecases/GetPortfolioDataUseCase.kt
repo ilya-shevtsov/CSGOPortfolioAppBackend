@@ -7,7 +7,6 @@ import javax.inject.Inject
 class GetPortfolioDataUseCase @Inject constructor(
     private val portfolioRepository: PortfolioRepository
 ) {
-
     operator fun invoke(): List<PortfolioItemDto> {
         return portfolioRepository.getPortfolioData()
     }

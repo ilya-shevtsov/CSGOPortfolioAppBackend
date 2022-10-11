@@ -12,13 +12,14 @@ import features.caseanalytics.domain.entities.DailySellHistory
 import features.caseanalytics.domain.MathRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.sql.SQLException
 import java.time.ZoneOffset
+import javax.inject.Inject
 
-class DailySellHistoryTableRepository {
+class DailySellHistoryTableRepository@Inject constructor() {
     private val mathRepository = MathRepository()
-
 
 
     val numberOfCaseId = (1..34).toList()
@@ -99,13 +100,15 @@ class DailySellHistoryTableRepository {
         return casePriceDataList
     }
 
-    fun insertData() {
-        val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
-        for (dailySellHistoryDbo in dailySellHistoryDboList) {
-            try {
-                insertToCaseSellHistoryTable(dailySellHistoryDbo)
-            } catch (e: SQLException) {
-                continue
+    fun insertDailySellHistoryData() {
+        transaction {
+            val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
+            for (dailySellHistoryDbo in dailySellHistoryDboList) {
+                try {
+                    insertToCaseSellHistoryTable(dailySellHistoryDbo)
+                } catch (e: SQLException) {
+                    continue
+                }
             }
         }
     }

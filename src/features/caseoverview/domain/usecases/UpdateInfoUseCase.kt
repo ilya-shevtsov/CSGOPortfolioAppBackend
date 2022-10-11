@@ -1,28 +1,24 @@
 package features.caseoverview.domain.usecases
 
 import core.preferredCurrency
-import features.caseoverview.data.DatabaseRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.serialization.ExperimentalSerializationApi
-import features.caseoverview.domain.CaseRepository
+import javax.inject.Inject
 
-class UpdateInfoUseCase(
-    caseRepository: CaseRepository,
-    databaseRepository: DatabaseRepository
+class UpdateInfoUseCase @Inject constructor(
+    private val getCaseListUseCase: GetCaseListUseCase,
+    private val getMarketOverviewUseCase: GetMarketOverviewUseCase,
+    private val saveMarketOverviewUseCase: SaveMarketOverviewUseCase
 ) {
 
-    private val getCaseListUseCase = GetCaseListUseCase(databaseRepository)
-    private val saveMarketOverviewUseCase = SaveMarketOverviewUseCase(databaseRepository)
-    private val getMarketOverviewUseCase = GetMarketOverviewUseCase(caseRepository)
-
     @ExperimentalSerializationApi
-    suspend fun updateInfo() {
-        val caseList = getCaseListUseCase.getCaseList()
+    suspend operator fun invoke() {
+        val caseList = getCaseListUseCase()
         caseList.forEach { case ->
-            getMarketOverviewUseCase.getMarketOverviewUseCase(case.caseAccess, preferredCurrency.preferredCurrency)
+            getMarketOverviewUseCase(case.caseAccess, preferredCurrency.preferredCurrency)
                 .catch { println("Error") }
                 .collect { marketOverviewDto ->
-                    saveMarketOverviewUseCase.saveMarketOverviewUseCase(case.id, marketOverviewDto)
+                    saveMarketOverviewUseCase(case.id, marketOverviewDto)
                 }
         }
     }

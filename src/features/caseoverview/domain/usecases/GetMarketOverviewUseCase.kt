@@ -1,15 +1,16 @@
 package features.caseoverview.domain.usecases
 
+import features.caseoverview.domain.CaseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.ExperimentalSerializationApi
-import features.caseoverview.domain.CaseRepository
 import features.caseoverview.domain.entities.MarketOverview
+import javax.inject.Inject
 
-class GetMarketOverviewUseCase(
+class GetMarketOverviewUseCase @Inject constructor(
     private val caseRepository: CaseRepository
 ) {
     @ExperimentalSerializationApi
-    suspend fun getMarketOverviewUseCase(caseName: String,currency: Int): Flow<MarketOverview> {
-        return caseRepository.getMarketOverview(caseName,currency)
+    suspend operator fun invoke(caseName: String, currency: Int): Flow<MarketOverview> {
+        return caseRepository.getMarketOverview(caseName, currency)
     }
 }
