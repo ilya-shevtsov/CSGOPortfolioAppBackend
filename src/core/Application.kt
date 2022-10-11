@@ -1,12 +1,9 @@
 package core
 
-
-import invest.data.database.repository.AnalyticalDetailsRepository
-import invest.data.database.repository.DailySellHistoryTableRepository
-import invest.data.database.repository.PortfolioRepository
-import invest.data.database.table.portfolio.PortfolioStorage
-import invest.data.model.portfolio.addedcasedto.AddedCaseDto
-import invest.data.model.portfolio.addedcasedto.AddedCaseDtoMapper
+import core.dependencyInjection.DependencyInjection
+import features.caseanalytics.data.AnalyticalDetailsRepository
+import features.caseportfolio.data.entities.AddedCaseDto
+import features.caseportfolio.data.entities.AddedCaseDtoMapper
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
@@ -16,42 +13,56 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.ExperimentalSerializationApi
-import overview.data.repository.DatabaseRepository
-import overview.domain.repository.CaseRepository
-import overview.domain.usecase.UpdateInfoUseCase
-import overview.data.database.CaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.sql.transactions.transaction
-import overview.data.model.preferredcurrency.PreferredCurrencyDto
-
+import features.currency.PreferredCurrencyDto
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import java.util.*
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
 
-
 var preferredCurrency = PreferredCurrencyDto(1)
-
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
 
-    val portfolioRepository = PortfolioRepository()
-    val caseRepository = CaseRepository()
-    val databaseRepository = DatabaseRepository()
-    val updateInfoUseCase = UpdateInfoUseCase(caseRepository, databaseRepository)
+    @ExperimentalCoroutinesApi
+    fun tickFlow(millis: Long) = callbackFlow<Int> {
+        val timer = Timer()
+        var time = 0
+        timer.scheduleAtFixedRate(
+            object : TimerTask() {
+                override fun run() {
+                    try {
+                        trySend(time).isSuccess
+                    } catch (_: Exception) {
+                    }
+                    time += 1
+                }
+            },
+            0,
+            millis
+        )
+        awaitClose {
+            timer.cancel()
+        }
+    }
 
-    val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
+    val dependencyInjection = DependencyInjection()
     val analyticalDetailsRepository = AnalyticalDetailsRepository()
 
-    CaseStorage.createDatabase()
+    dependencyInjection.createDataBaseUseCase()
+    dependencyInjection.insertInitialDataUseCase()
     CoroutineScope(Dispatchers.Default).launch {
-        caseRepository.tickFlow(1800000000L).collect {
-            updateInfoUseCase.updateInfo()
+        tickFlow(1800000000L).collect {
+            dependencyInjection.updateInfoUseCase()
         }
     }
 
@@ -66,8 +77,7 @@ fun Application.module() {
             call.respond(response)
         }
         get("/getCase") {
-//            updateInfoUseCase.updateInfo()
-            val response = caseRepository.getCaseResponse()
+            val response = dependencyInjection.getCaseDataUseCase()
             call.respond(response)
         }
 
@@ -76,8 +86,9 @@ fun Application.module() {
             call.respond(response)
         }
 
+
         get("/getPortfolioData") {
-            val response = portfolioRepository.getCaseResponse().sortedByDescending {
+            val response = dependencyInjection.getPortfolioDataUseCase().sortedByDescending {
                 it.overallValue
             }
             call.respond(response)
@@ -101,7 +112,7 @@ fun Application.module() {
             )
             transaction {
                 val portfolioItemDbo = AddedCaseDtoMapper.map(addedCase)
-                PortfolioStorage.updateCaseData(portfolioItemDbo)
+                dependencyInjection.updatePortfolioUseCase(portfolioItemDbo)
             }
             call.respond(postBody)
         }
