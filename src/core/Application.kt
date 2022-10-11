@@ -1,6 +1,5 @@
 package core
 
-
 import core.dependencyInjection.DependencyInjection
 import features.caseanalytics.data.AnalyticalDetailsRepository
 import features.caseportfolio.data.entities.AddedCaseDto
@@ -24,15 +23,12 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import java.util.*
 
-
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
 
-
 var preferredCurrency = PreferredCurrencyDto(1)
-
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 fun Application.module() {
