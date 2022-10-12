@@ -1,6 +1,6 @@
-package features.caseportfolio.data.entities
+package features.caseportfolio.data.entities.portfolioitem
 
-object PortfolioDtoMapper {
+object PortfolioItemDtoMapper {
 
     fun map(portfolioItemDbo: PortfolioItemDbo): PortfolioItemDto {
         return PortfolioItemDto(

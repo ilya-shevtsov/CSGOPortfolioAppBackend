@@ -1,9 +1,9 @@
 package features.caseportfolio.data
 
-import features.caseportfolio.data.entities.PortfolioDtoMapper
-import features.caseportfolio.data.entities.PortfolioItemDbo
-import features.caseportfolio.data.entities.PortfolioItemDboMapper
-import features.caseportfolio.data.entities.PortfolioItemDto
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDtoMapper
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDbo
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDboMapper
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDto
 import features.caseportfolio.domain.PortfolioRepository
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
 import org.jetbrains.exposed.sql.insert
@@ -36,7 +36,7 @@ class PortfolioRepositoryImpl @Inject constructor(
     override fun getPortfolioData(): List<PortfolioItemDto> {
         return transaction {
             PortfolioTable.selectAll().map { PortfolioItemDboMapper.map(it) }
-        }.map { portfolioItemDbo -> PortfolioDtoMapper.map(portfolioItemDbo) }
+        }.map { portfolioItemDbo -> PortfolioItemDtoMapper.map(portfolioItemDbo) }
     }
 
     override fun insertInitialDataPortfolio() {
@@ -240,12 +240,12 @@ class PortfolioRepositoryImpl @Inject constructor(
                 imageUrl = "https://api.steamapis.com/image/item/730/Spectrum%20Case",
             ),
         )
-        storedCaseList.map { item -> insertPortfolioTable(item) }
-//        storedCaseList.forEach { item ->
-//            if (storedCaseList.all { storedCase -> item.name != storedCase.name }) {
-//                insertPortfolioTable(item)
-//            }
-//        }
+//        storedCaseList.map { item -> insertPortfolioTable(item) }
+        storedCaseList.forEach { item ->
+            if (storedCaseList.all { storedCase -> item.name != storedCase.name }) {
+                insertPortfolioTable(item)
+            }
+        }
     }
 
     private fun insertPortfolioTable(portfolioItemDbo: PortfolioItemDbo) {

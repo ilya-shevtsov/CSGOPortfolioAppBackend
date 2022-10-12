@@ -1,4 +1,4 @@
-package features.caseportfolio.data.entities
+package features.caseportfolio.data.entities.addedcase
 
 import kotlinx.serialization.Serializable
 

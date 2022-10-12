@@ -1,4 +1,4 @@
-package features.caseportfolio.data.entities
+package features.caseportfolio.data.entities.portfolioitem
 
 import features.caseportfolio.data.PortfolioTable
 import org.jetbrains.exposed.sql.ResultRow

@@ -1,6 +1,7 @@
-package features.caseportfolio.data.entities
+package features.caseportfolio.data.entities.addedcase
 
 import features.CommonRepository
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDbo
 
 object AddedCaseDtoMapper {
 

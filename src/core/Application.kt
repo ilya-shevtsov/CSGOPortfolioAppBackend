@@ -2,8 +2,8 @@ package core
 
 import core.dependencyInjection.DependencyInjection
 import features.caseanalytics.data.AnalyticalDetailsRepository
-import features.caseportfolio.data.entities.AddedCaseDto
-import features.caseportfolio.data.entities.AddedCaseDtoMapper
+import features.caseportfolio.data.entities.addedcase.AddedCaseDto
+import features.caseportfolio.data.entities.addedcase.AddedCaseDtoMapper
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
