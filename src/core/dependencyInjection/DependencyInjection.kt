@@ -1,5 +1,6 @@
 package core.dependencyInjection
 
+import features.caseanalytics.domain.usecases.GetAnalyticalDetailsUseCase
 import features.caseoverview.domain.usecases.*
 import features.caseportfolio.domain.usecases.*
 import javax.inject.Inject
@@ -24,6 +25,10 @@ class DependencyInjection {
 
     @Inject
     lateinit var insertInitialDataUseCase: InsertInitialDataUseCase
+
+    @Inject
+    lateinit var getAnalyticalDetailsUseCase: GetAnalyticalDetailsUseCase
+
 
     init {
         appComponent.inject(this)

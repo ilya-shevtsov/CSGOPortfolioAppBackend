@@ -1,6 +1,6 @@
 package features.caseanalytics.serializer
 
-import features.caseanalytics.data.entities.DailySellHistoryDto
+import features.caseanalytics.data.entities.sellhistory.DailySellHistoryDto
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor

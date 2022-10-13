@@ -1,33 +1,36 @@
 package features.caseanalytics.data
 
-import features.caseanalytics.data.tables.CaseAnalysisStorage.insertToCaseAnalysisTable
-import features.caseanalytics.data.entities.AnalyticalDetailsDbo
-import features.caseanalytics.data.entities.AnalyticalDetailsDboMapper
-import features.caseanalytics.data.entities.AnalyticalDetailsDto
-import features.caseanalytics.data.entities.AnalyticalDetailsDtoMapper
+import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDbo
+import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDboMapper
 import features.caseanalytics.data.tables.CaseAnalysisTable
+import features.caseanalytics.domain.CaseAnalyticsRepository
 import features.caseanalytics.domain.entities.DailyAnalyticalDetails
 import features.caseanalytics.domain.entities.MonthlyAnalyticalDetails
 import features.caseanalytics.domain.MathRepository
+import features.caseanalytics.domain.entities.CaseAnalytics
+import features.caseanalytics.domain.entities.CaseAnalyticsMapper
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.SQLException
 import javax.inject.Inject
 
-class AnalyticalDetailsRepository@Inject constructor() {
+class CaseAnalyticsRepositoryImpl @Inject constructor(
+
+): CaseAnalyticsRepository {
 
     private val mathRepository = MathRepository()
-    private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
-    private val numberOfCaseId = dailySellHistoryTableRepository.numberOfCaseId
+    private val sellHistoryRepositoryImpl = SellHistoryRepositoryImpl()
+    private val numberOfCaseId = sellHistoryRepositoryImpl.numberOfCaseId
 
 
-    fun getAnalyticalDetailsResponse(): List<AnalyticalDetailsDto> {
+    override fun getAnalyticalDetailsResponse(): List<CaseAnalytics> {
         return transaction {
-            CaseAnalysisTable.selectAll().map { AnalyticalDetailsDboMapper.mapFromRow(it) }
-        }.map { AnalyticalDetailsDbo -> AnalyticalDetailsDtoMapper.map(AnalyticalDetailsDbo) }
+            CaseAnalysisTable.selectAll().map { CaseAnalyticsDboMapper.mapFromRow(it) }
+        }.map { AnalyticalDetailsDbo -> CaseAnalyticsMapper.map(AnalyticalDetailsDbo) }
     }
 
-    fun insertAnalyticsData() {
+    override fun insertAnalyticsData() {
         transaction {
             val analyticalDetailsList = getAnalyticalDetailList()
             for (analyticalDetailsDbo in analyticalDetailsList) {
@@ -40,26 +43,39 @@ class AnalyticalDetailsRepository@Inject constructor() {
         }
     }
 
-    fun getAnalyticalDetailList(): List<AnalyticalDetailsDbo> {
-        val analyticalDetailsDboList = mutableListOf<AnalyticalDetailsDbo>()
+    private fun insertToCaseAnalysisTable(caseAnalyticsDbo: CaseAnalyticsDbo) {
+        CaseAnalysisTable.insert {
+            it[caseId] = caseAnalyticsDbo.id
+            it[name]= caseAnalyticsDbo.name
+            it[dailyAvgReturnInPercent] = caseAnalyticsDbo.dailyAvgReturnInPercent
+            it[dailyAvgReturnInRUB] = caseAnalyticsDbo.dailyAvgReturnInRUB
+            it[dailyStandardDeviation] = caseAnalyticsDbo.dailyStandardDeviation
+            it[dailySharpRatio] = caseAnalyticsDbo.dailySharpRatio
+            it[monthlyAvgReturnInPercent] = caseAnalyticsDbo.monthlyAvgReturnInPercent
+            it[monthlyAvgReturnInRUB] = caseAnalyticsDbo.monthlyAvgReturnInRUB
+            it[monthlyStandardDeviation] = caseAnalyticsDbo.monthlyStandardDeviation
+            it[monthlySharpRatio] = caseAnalyticsDbo.monthlySharpRatio
+        }
+    }
+
+    private fun getAnalyticalDetailList(): List<CaseAnalyticsDbo> {
+        val caseAnalyticsDboList = mutableListOf<CaseAnalyticsDbo>()
         val monthlyAnalyticalDetailList = getMonthlyAnalyticalDetailList()
         val dailyAnalyticalDetailList = getDailyAnalyticalDetailList()
         val newList =
             monthlyAnalyticalDetailList zip dailyAnalyticalDetailList
         newList.map { pair ->
-            analyticalDetailsDboList.add(
-                AnalyticalDetailsDboMapper.map(pair)
+            caseAnalyticsDboList.add(
+                CaseAnalyticsDboMapper.map(pair)
             )
         }
-        return analyticalDetailsDboList
+        return caseAnalyticsDboList
     }
 
-    fun getMonthlyAnalyticalDetailList(): List<MonthlyAnalyticalDetails> {
+    private fun getMonthlyAnalyticalDetailList(): List<MonthlyAnalyticalDetails> {
         val monthlyAnalyticalDetailsList = mutableListOf<MonthlyAnalyticalDetails>()
-
-        val monthlyCasePriceDataList = dailySellHistoryTableRepository
+        val monthlyCasePriceDataList = sellHistoryRepositoryImpl
             .getCasePriceDataList(30, numberOfCaseId)
-
         monthlyCasePriceDataList.forEach { case ->
             val priceList = case.priceList
             val caseName = case.name
@@ -80,10 +96,10 @@ class AnalyticalDetailsRepository@Inject constructor() {
         return monthlyAnalyticalDetailsList
     }
 
-    fun getDailyAnalyticalDetailList(): List<DailyAnalyticalDetails> {
+    private fun getDailyAnalyticalDetailList(): List<DailyAnalyticalDetails> {
         val dailyAnalyticalDetailsList = mutableListOf<DailyAnalyticalDetails>()
 
-        val dailyCasePriceDataList = dailySellHistoryTableRepository
+        val dailyCasePriceDataList = sellHistoryRepositoryImpl
             .getCasePriceDataList(1, numberOfCaseId)
 
         dailyCasePriceDataList.forEach { case ->

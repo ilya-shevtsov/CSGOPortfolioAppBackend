@@ -1,24 +1,30 @@
 package features.caseanalytics.data
 
-import features.caseanalytics.data.tables.CaseSellHistoryStorage.getDailyCasePriceData
-import features.caseanalytics.data.tables.CaseSellHistoryStorage.getMonthlyCasePriceData
-import features.caseanalytics.data.tables.CaseSellHistoryStorage.insertToCaseSellHistoryTable
-import features.caseanalytics.data.entities.DailySellHistoryDbo
-import features.caseanalytics.data.entities.DailySellHistoryDboMapper
-import features.caseanalytics.data.entities.SellHistoryDto
-import features.caseanalytics.data.entities.SellHistoryMapper
+
+import features.caseanalytics.data.entities.sellhistory.DailySellHistoryDbo
+import features.caseanalytics.data.entities.sellhistory.DailySellHistoryDboMapper
+import features.caseanalytics.data.entities.sellhistory.SellHistoryDto
+import features.caseanalytics.data.entities.sellhistory.SellHistoryMapper
+import features.caseanalytics.data.tables.CaseSellHistoryTable
 import features.caseanalytics.domain.entities.CasePriceData
 import features.caseanalytics.domain.entities.DailySellHistory
 import features.caseanalytics.domain.MathRepository
+import features.caseanalytics.domain.SellHistoryRepository
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.sql.Query
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.sql.SQLException
 import java.time.ZoneOffset
 import javax.inject.Inject
 
-class DailySellHistoryTableRepository@Inject constructor() {
+class SellHistoryRepositoryImpl@Inject constructor(
+
+): SellHistoryRepository {
     private val mathRepository = MathRepository()
 
 
@@ -100,7 +106,7 @@ class DailySellHistoryTableRepository@Inject constructor() {
         return casePriceDataList
     }
 
-    fun insertDailySellHistoryData() {
+    override fun insertDailySellHistoryData() {
         transaction {
             val dailySellHistoryDboList = getDailySellHistoryDboList("resources/caseJson")
             for (dailySellHistoryDbo in dailySellHistoryDboList) {
@@ -161,5 +167,68 @@ class DailySellHistoryTableRepository@Inject constructor() {
 
     private fun getResourceDirectory(path: String): String {
         return object {}.javaClass.getResource(path).readText()
+    }
+
+    fun insertToCaseSellHistoryTable(dailySellHistoryDbo: DailySellHistoryDbo) {
+        CaseSellHistoryTable.insert {
+            it[caseId] = dailySellHistoryDbo.id
+            it[name] = dailySellHistoryDbo.name
+            it[date] = dailySellHistoryDbo.date
+            it[price] = dailySellHistoryDbo.price
+            it[volume] = dailySellHistoryDbo.volume
+        }
+    }
+
+    private fun getDailyCasePriceData(id: Int): CasePriceData {
+        val list = mutableListOf<Double>()
+        var case = CasePriceData("", emptyList())
+        val query = getPriceListQuery()
+        transaction {
+            query.forEach {
+                if (it[CaseSellHistoryTable.caseId] == id) {
+                    list.add(it[CaseSellHistoryTable.price])
+                    case = CasePriceData(
+                        name = it[CaseSellHistoryTable.name],
+                        priceList = list
+                    )
+                }
+            }
+        }
+        return case
+    }
+
+    private fun getMonthlyCasePriceData(id: Int): CasePriceData {
+        val list = mutableListOf<Double>()
+        var case = CasePriceData("", emptyList())
+        val query = getPriceListQuery()
+        transaction {
+            query.forEach {
+                val caseId = it[CaseSellHistoryTable.caseId]
+                val date = it[CaseSellHistoryTable.date]
+                if (caseId == id && date.atZone(ZoneOffset.UTC).dayOfMonth == 13) {
+                    list.add(it[CaseSellHistoryTable.price])
+                    case = CasePriceData(
+                        name = it[CaseSellHistoryTable.name],
+                        priceList = list
+                    )
+                }
+            }
+        }
+        return case
+    }
+
+    private fun getPriceListQuery(): Query {
+        return CaseSellHistoryTable
+            .slice(
+                CaseSellHistoryTable.name,
+                CaseSellHistoryTable.caseId,
+                CaseSellHistoryTable.date,
+                CaseSellHistoryTable.price,
+            ).selectAll()
+            .groupBy(
+                CaseSellHistoryTable.caseId,
+                CaseSellHistoryTable.date,
+            )
+            .orderBy(CaseSellHistoryTable.date to SortOrder.ASC)
     }
 }

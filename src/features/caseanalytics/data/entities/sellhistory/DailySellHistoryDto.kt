@@ -1,4 +1,4 @@
-package features.caseanalytics.data.entities
+package features.caseanalytics.data.entities.sellhistory
 
 import features.caseanalytics.serializer.DailySellHistorySerializer
 import kotlinx.serialization.Serializable

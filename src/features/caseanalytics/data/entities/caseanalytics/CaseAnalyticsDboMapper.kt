@@ -1,4 +1,4 @@
-package features.caseanalytics.data.entities
+package features.caseanalytics.data.entities.caseanalytics
 
 import features.caseanalytics.data.tables.CaseAnalysisTable
 import features.CommonRepository
@@ -6,12 +6,12 @@ import features.caseanalytics.domain.entities.DailyAnalyticalDetails
 import features.caseanalytics.domain.entities.MonthlyAnalyticalDetails
 import org.jetbrains.exposed.sql.ResultRow
 
-object AnalyticalDetailsDboMapper {
+object CaseAnalyticsDboMapper {
 
     private val commonRepository = CommonRepository()
 
-    fun mapFromRow(row: ResultRow): AnalyticalDetailsDbo {
-        return AnalyticalDetailsDbo(
+    fun mapFromRow(row: ResultRow): CaseAnalyticsDbo {
+        return CaseAnalyticsDbo(
             id = row[CaseAnalysisTable.id],
             name = row[CaseAnalysisTable.name],
             dailyAvgReturnInPercent = row[CaseAnalysisTable.dailyAvgReturnInPercent],
@@ -26,8 +26,8 @@ object AnalyticalDetailsDboMapper {
     }
 
 
-    fun map(pair: Pair<MonthlyAnalyticalDetails, DailyAnalyticalDetails>): AnalyticalDetailsDbo {
-        return AnalyticalDetailsDbo(
+    fun map(pair: Pair<MonthlyAnalyticalDetails, DailyAnalyticalDetails>): CaseAnalyticsDbo {
+        return CaseAnalyticsDbo(
             id = commonRepository.assignId(pair.first.name),
             name = pair.first.name,
             dailyAvgReturnInPercent = pair.second.dailyAvgReturnInPercent,
