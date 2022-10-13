@@ -1,9 +1,10 @@
-package features.caseanalytics.data.entities
+package features.caseanalytics.data.entities.caseanalytics
 
-data class AnalyticalDetailsDbo(
-    val id: Int,
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CaseAnalyticsDto(
     val name: String,
-//    val date: Instant,
     val dailyAvgReturnInPercent: Double,
     val dailyAvgReturnInRUB: Double,
     val dailyStandardDeviation: Double,

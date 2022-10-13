@@ -1,10 +1,11 @@
 package features.caseanalytics.domain
 
-import features.caseanalytics.data.entities.AnalyticalDetailsDto
+import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDto
+import features.caseanalytics.domain.entities.CaseAnalytics
 
 interface CaseAnalyticsRepository {
 
-    fun getAnalyticalDetailsResponse(): List<AnalyticalDetailsDto>
+    fun getAnalyticalDetailsResponse(): List<CaseAnalytics>
 
     fun insertAnalyticsData()
 }

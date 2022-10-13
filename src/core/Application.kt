@@ -1,7 +1,7 @@
 package core
 
 import core.dependencyInjection.DependencyInjection
-import features.caseanalytics.data.AnalyticalDetailsRepositoryImpl
+import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDtoMapper
 import features.caseoverview.data.entities.CaseDtoMapper
 import features.caseportfolio.data.entities.addedcase.AddedCaseDto
 import features.caseportfolio.data.entities.addedcase.AddedCaseDtoMapper
@@ -100,8 +100,9 @@ fun Application.module() {
         }
 
         get("/getAnalyticalDetails") {
-            //getAnalyticalDetailsUseCase().map {}
-            val response = dependencyInjection.getAnalyticalDetailsUseCase()
+            val response = dependencyInjection.getAnalyticalDetailsUseCase().map {
+                CaseAnalyticsDtoMapper.map(it)
+            }
                 .filter { !it.monthlySharpRatio.isNaN() }
             call.respond(response)
         }

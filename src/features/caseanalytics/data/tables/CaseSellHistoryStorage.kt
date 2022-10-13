@@ -1,6 +1,6 @@
 package features.caseanalytics.data.tables
 
-import features.caseanalytics.data.entities.DailySellHistoryDbo
+import features.caseanalytics.data.entities.sellhistory.DailySellHistoryDbo
 import features.caseanalytics.domain.entities.CasePriceData
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction

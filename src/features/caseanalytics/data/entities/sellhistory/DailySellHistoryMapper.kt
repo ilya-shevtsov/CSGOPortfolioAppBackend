@@ -1,4 +1,4 @@
-package features.caseanalytics.data.entities
+package features.caseanalytics.data.entities.sellhistory
 
 import features.caseanalytics.domain.entities.DailySellHistory
 import java.time.LocalDateTime

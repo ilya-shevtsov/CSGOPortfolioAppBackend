@@ -3,10 +3,10 @@ package features.caseanalytics.data
 import features.caseanalytics.data.tables.CaseSellHistoryStorage.getDailyCasePriceData
 import features.caseanalytics.data.tables.CaseSellHistoryStorage.getMonthlyCasePriceData
 import features.caseanalytics.data.tables.CaseSellHistoryStorage.insertToCaseSellHistoryTable
-import features.caseanalytics.data.entities.DailySellHistoryDbo
-import features.caseanalytics.data.entities.DailySellHistoryDboMapper
-import features.caseanalytics.data.entities.SellHistoryDto
-import features.caseanalytics.data.entities.SellHistoryMapper
+import features.caseanalytics.data.entities.sellhistory.DailySellHistoryDbo
+import features.caseanalytics.data.entities.sellhistory.DailySellHistoryDboMapper
+import features.caseanalytics.data.entities.sellhistory.SellHistoryDto
+import features.caseanalytics.data.entities.sellhistory.SellHistoryMapper
 import features.caseanalytics.domain.entities.CasePriceData
 import features.caseanalytics.domain.entities.DailySellHistory
 import features.caseanalytics.domain.MathRepository

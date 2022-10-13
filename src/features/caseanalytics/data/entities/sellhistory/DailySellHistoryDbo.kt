@@ -1,4 +1,4 @@
-package features.caseanalytics.data.entities
+package features.caseanalytics.data.entities.sellhistory
 
 import java.time.Instant
 
