@@ -1,16 +1,18 @@
 package features.caseportfolio.data.entities.portfolioitem
 
+import features.caseportfolio.domain.entities.PortfolioItem
+
 object PortfolioItemDtoMapper {
 
-    fun map(portfolioItemDbo: PortfolioItemDbo): PortfolioItemDto {
+    fun map(portfolioItem: PortfolioItem): PortfolioItemDto {
         return PortfolioItemDto(
-            caseId = portfolioItemDbo.caseId,
-            name = portfolioItemDbo.name,
-            amount = portfolioItemDbo.amount,
-            purchasePrice = portfolioItemDbo.purchasePrice,
-            overallValue = portfolioItemDbo.overallValue,
-            profitLoss = portfolioItemDbo.profitLoss,
-            imageUrl = portfolioItemDbo.imageUrl
+            caseId = portfolioItem.caseId,
+            name = portfolioItem.name,
+            amount = portfolioItem.amount,
+            purchasePrice = portfolioItem.purchasePrice,
+            overallValue = portfolioItem.overallValue,
+            profitLoss = portfolioItem.profitLoss,
+            imageUrl = portfolioItem.imageUrl
         )
     }
 }

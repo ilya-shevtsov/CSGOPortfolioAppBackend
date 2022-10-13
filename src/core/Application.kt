@@ -2,8 +2,10 @@ package core
 
 import core.dependencyInjection.DependencyInjection
 import features.caseanalytics.data.AnalyticalDetailsRepository
+import features.caseoverview.data.entities.CaseDtoMapper
 import features.caseportfolio.data.entities.addedcase.AddedCaseDto
 import features.caseportfolio.data.entities.addedcase.AddedCaseDtoMapper
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDtoMapper
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
@@ -77,7 +79,9 @@ fun Application.module() {
             call.respond(response)
         }
         get("/getCase") {
-            val response = dependencyInjection.getCaseDataUseCase()
+            val response = dependencyInjection.getCaseDataUseCase().map{
+                CaseDtoMapper.map(it)
+            }
             call.respond(response)
         }
 
@@ -88,7 +92,9 @@ fun Application.module() {
 
 
         get("/getPortfolioData") {
-            val response = dependencyInjection.getPortfolioDataUseCase().sortedByDescending {
+            val response = dependencyInjection.getPortfolioDataUseCase().map {
+                PortfolioItemDtoMapper.map(it)
+            }.sortedByDescending {
                 it.overallValue
             }
             call.respond(response)

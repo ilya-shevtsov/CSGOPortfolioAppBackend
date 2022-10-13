@@ -5,6 +5,8 @@ import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDbo
 import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDboMapper
 import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDto
 import features.caseportfolio.domain.PortfolioRepository
+import features.caseportfolio.domain.entities.PortfolioItem
+import features.caseportfolio.domain.entities.PortfolioItemMapper
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -33,10 +35,10 @@ class PortfolioRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPortfolioData(): List<PortfolioItemDto> {
+    override fun getPortfolioData(): List<PortfolioItem> {
         return transaction {
             PortfolioTable.selectAll().map { PortfolioItemDboMapper.map(it) }
-        }.map { portfolioItemDbo -> PortfolioItemDtoMapper.map(portfolioItemDbo) }
+        }.map { portfolioItemDbo -> PortfolioItemMapper.map(portfolioItemDbo) }
     }
 
     override fun insertInitialDataPortfolio() {

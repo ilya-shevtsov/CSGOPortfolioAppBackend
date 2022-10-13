@@ -1,7 +1,6 @@
 package features.caseportfolio.domain.entities
 
 import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDbo
-import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDto
 
 object PortfolioItemMapper {
     fun map(portfolioItemDbo: PortfolioItemDbo): PortfolioItem {
