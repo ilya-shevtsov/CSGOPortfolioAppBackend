@@ -30,7 +30,7 @@ class AnalyticalDetailsRepositoryImpl @Inject constructor(
         }.map { AnalyticalDetailsDbo -> AnalyticalDetailsDtoMapper.map(AnalyticalDetailsDbo) }
     }
 
-    fun insertAnalyticsData() {
+    override fun insertAnalyticsData() {
         transaction {
             val analyticalDetailsList = getAnalyticalDetailList()
             for (analyticalDetailsDbo in analyticalDetailsList) {
@@ -59,7 +59,6 @@ class AnalyticalDetailsRepositoryImpl @Inject constructor(
 
     private fun getMonthlyAnalyticalDetailList(): List<MonthlyAnalyticalDetails> {
         val monthlyAnalyticalDetailsList = mutableListOf<MonthlyAnalyticalDetails>()
-
         val monthlyCasePriceDataList = dailySellHistoryTableRepository
             .getCasePriceDataList(30, numberOfCaseId)
 
