@@ -1,9 +1,10 @@
-package features.caseportfolio.data.entities
+package features.caseportfolio.domain.entities
 
-object PortfolioDtoMapper {
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDbo
 
-    fun map(portfolioItemDbo: PortfolioItemDbo): PortfolioItemDto {
-        return PortfolioItemDto(
+object PortfolioItemMapper {
+    fun map(portfolioItemDbo: PortfolioItemDbo): PortfolioItem {
+        return PortfolioItem(
             caseId = portfolioItemDbo.caseId,
             name = portfolioItemDbo.name,
             amount = portfolioItemDbo.amount,

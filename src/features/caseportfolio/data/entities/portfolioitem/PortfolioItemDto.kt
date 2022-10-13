@@ -1,6 +1,9 @@
-package features.caseportfolio.data.entities
+package features.caseportfolio.data.entities.portfolioitem
 
-data class PortfolioItemDbo(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class PortfolioItemDto(
     val caseId: Int,
     val name: String,
     val amount: Int,

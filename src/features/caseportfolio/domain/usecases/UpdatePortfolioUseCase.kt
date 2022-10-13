@@ -1,6 +1,6 @@
 package features.caseportfolio.domain.usecases
 
-import features.caseportfolio.data.entities.PortfolioItemDbo
+import features.caseportfolio.data.entities.portfolioitem.PortfolioItemDbo
 import features.caseportfolio.domain.PortfolioRepository
 import javax.inject.Inject
 
