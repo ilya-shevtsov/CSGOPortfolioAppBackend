@@ -2,6 +2,8 @@ package core.dependencyInjection
 
 import dagger.Binds
 import dagger.Module
+import features.caseanalytics.data.AnalyticalDetailsRepositoryImpl
+import features.caseanalytics.domain.CaseAnalyticsRepository
 import features.caseoverview.data.CaseRepositoryImpl
 import features.caseoverview.domain.CaseRepository
 import features.caseportfolio.data.PortfolioRepositoryImpl
@@ -19,4 +21,8 @@ interface DataModule {
     @Binds
     @Singleton
     fun caseRepository (impl: CaseRepositoryImpl): CaseRepository
+
+    @Binds
+    @Singleton
+    fun caseAnalyticsRepository (impl: AnalyticalDetailsRepositoryImpl): CaseAnalyticsRepository
 }

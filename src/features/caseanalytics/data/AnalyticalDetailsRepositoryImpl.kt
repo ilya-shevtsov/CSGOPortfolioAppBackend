@@ -6,6 +6,7 @@ import features.caseanalytics.data.entities.AnalyticalDetailsDboMapper
 import features.caseanalytics.data.entities.AnalyticalDetailsDto
 import features.caseanalytics.data.entities.AnalyticalDetailsDtoMapper
 import features.caseanalytics.data.tables.CaseAnalysisTable
+import features.caseanalytics.domain.CaseAnalyticsRepository
 import features.caseanalytics.domain.entities.DailyAnalyticalDetails
 import features.caseanalytics.domain.entities.MonthlyAnalyticalDetails
 import features.caseanalytics.domain.MathRepository
@@ -14,14 +15,16 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.SQLException
 import javax.inject.Inject
 
-class AnalyticalDetailsRepository@Inject constructor() {
+class AnalyticalDetailsRepositoryImpl @Inject constructor(
+
+): CaseAnalyticsRepository {
 
     private val mathRepository = MathRepository()
     private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
     private val numberOfCaseId = dailySellHistoryTableRepository.numberOfCaseId
 
 
-    fun getAnalyticalDetailsResponse(): List<AnalyticalDetailsDto> {
+    override fun getAnalyticalDetailsResponse(): List<AnalyticalDetailsDto> {
         return transaction {
             CaseAnalysisTable.selectAll().map { AnalyticalDetailsDboMapper.mapFromRow(it) }
         }.map { AnalyticalDetailsDbo -> AnalyticalDetailsDtoMapper.map(AnalyticalDetailsDbo) }
@@ -40,7 +43,7 @@ class AnalyticalDetailsRepository@Inject constructor() {
         }
     }
 
-    fun getAnalyticalDetailList(): List<AnalyticalDetailsDbo> {
+    private fun getAnalyticalDetailList(): List<AnalyticalDetailsDbo> {
         val analyticalDetailsDboList = mutableListOf<AnalyticalDetailsDbo>()
         val monthlyAnalyticalDetailList = getMonthlyAnalyticalDetailList()
         val dailyAnalyticalDetailList = getDailyAnalyticalDetailList()
@@ -54,7 +57,7 @@ class AnalyticalDetailsRepository@Inject constructor() {
         return analyticalDetailsDboList
     }
 
-    fun getMonthlyAnalyticalDetailList(): List<MonthlyAnalyticalDetails> {
+    private fun getMonthlyAnalyticalDetailList(): List<MonthlyAnalyticalDetails> {
         val monthlyAnalyticalDetailsList = mutableListOf<MonthlyAnalyticalDetails>()
 
         val monthlyCasePriceDataList = dailySellHistoryTableRepository
@@ -80,7 +83,7 @@ class AnalyticalDetailsRepository@Inject constructor() {
         return monthlyAnalyticalDetailsList
     }
 
-    fun getDailyAnalyticalDetailList(): List<DailyAnalyticalDetails> {
+    private fun getDailyAnalyticalDetailList(): List<DailyAnalyticalDetails> {
         val dailyAnalyticalDetailsList = mutableListOf<DailyAnalyticalDetails>()
 
         val dailyCasePriceDataList = dailySellHistoryTableRepository
