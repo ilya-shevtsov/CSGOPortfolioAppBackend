@@ -2,8 +2,6 @@ package features.caseanalytics.data
 
 import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDbo
 import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDboMapper
-import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDto
-import features.caseanalytics.data.entities.caseanalytics.CaseAnalyticsDtoMapper
 import features.caseanalytics.data.tables.CaseAnalysisTable
 import features.caseanalytics.domain.CaseAnalyticsRepository
 import features.caseanalytics.domain.entities.DailyAnalyticalDetails
@@ -22,8 +20,8 @@ class CaseAnalyticsRepositoryImpl @Inject constructor(
 ): CaseAnalyticsRepository {
 
     private val mathRepository = MathRepository()
-    private val dailySellHistoryTableRepository = DailySellHistoryTableRepository()
-    private val numberOfCaseId = dailySellHistoryTableRepository.numberOfCaseId
+    private val sellHistoryRepositoryImpl = SellHistoryRepositoryImpl()
+    private val numberOfCaseId = sellHistoryRepositoryImpl.numberOfCaseId
 
 
     override fun getAnalyticalDetailsResponse(): List<CaseAnalytics> {
@@ -76,9 +74,8 @@ class CaseAnalyticsRepositoryImpl @Inject constructor(
 
     private fun getMonthlyAnalyticalDetailList(): List<MonthlyAnalyticalDetails> {
         val monthlyAnalyticalDetailsList = mutableListOf<MonthlyAnalyticalDetails>()
-        val monthlyCasePriceDataList = dailySellHistoryTableRepository
+        val monthlyCasePriceDataList = sellHistoryRepositoryImpl
             .getCasePriceDataList(30, numberOfCaseId)
-
         monthlyCasePriceDataList.forEach { case ->
             val priceList = case.priceList
             val caseName = case.name
@@ -102,7 +99,7 @@ class CaseAnalyticsRepositoryImpl @Inject constructor(
     private fun getDailyAnalyticalDetailList(): List<DailyAnalyticalDetails> {
         val dailyAnalyticalDetailsList = mutableListOf<DailyAnalyticalDetails>()
 
-        val dailyCasePriceDataList = dailySellHistoryTableRepository
+        val dailyCasePriceDataList = sellHistoryRepositoryImpl
             .getCasePriceDataList(1, numberOfCaseId)
 
         dailyCasePriceDataList.forEach { case ->

@@ -13,4 +13,3 @@ data class CaseAnalyticsDbo(
     val monthlyStandardDeviation: Double,
     val monthlySharpRatio: Double
 )
-//
