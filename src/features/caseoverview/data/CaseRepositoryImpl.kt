@@ -30,18 +30,23 @@ class CaseRepositoryImpl @Inject constructor(
     }
 
     @ExperimentalSerializationApi
-    override suspend fun getMarketOverview(caseName: String, currency: Int): Flow<MarketOverview> = flow {
-        val response = ApiTools.getCaseApiService()
-            .getCase(
-                appId = 730,
-                currency = currency,
-                caseName = caseName
-            )
-        val marketOverviewDto = MarketOverviewDtoMapper.map(response, caseName)
-        emit(marketOverviewDto)
-    }.retryWhen { _, _ ->
-        delay(60000)
-        true
+    override suspend fun getMarketOverview(
+        caseName: String,
+        currency: Int
+    ): Flow<MarketOverview> = flow {
+        while (true) {
+            val response = ApiTools.getCaseApiService()
+                .getCase(
+                    appId = 730,
+                    currency = currency,
+                    caseName = caseName
+                )
+            val marketOverviewDto = MarketOverviewDtoMapper.map(response, caseName)
+            emit(marketOverviewDto)
+
+            // Wait 15 seconds before the next call
+            delay(15_000)
+        }
     }
 
     override fun getStoredCaseList(): List<CaseDbo> {
